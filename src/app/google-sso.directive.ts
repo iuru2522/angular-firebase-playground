@@ -4,6 +4,7 @@ import { GoogleAuthProvider } from "@firebase/auth";
 
 @Directive({
   selector: "[googleSso]",
+  standalone: false,
 })
 export class GoogleSsoDirective {
   constructor(private angularFireAuth: AngularFireAuth) {}
