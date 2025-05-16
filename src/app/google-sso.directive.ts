@@ -1,18 +1,29 @@
-import { Directive, HostListener } from "@angular/core";
+import { Directive, HostListener, Inject, PLATFORM_ID } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
 import { AngularFireAuth } from "@angular/fire/compat/auth";
-import { GoogleAuthProvider } from "@firebase/auth";
+import { GoogleAuthProvider } from "firebase/auth";
 
 @Directive({
   selector: "[googleSso]",
   standalone: false,
 })
 export class GoogleSsoDirective {
-  constructor(private angularFireAuth: AngularFireAuth) {}
+  constructor(
+    private afAuth: AngularFireAuth,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
+  
   @HostListener("click")
   async onClick() {
-    const creds = await this.angularFireAuth.signInWithPopup(
-      new GoogleAuthProvider(),
-    );
-   //firestore here  . .
+    if (!isPlatformBrowser(this.platformId)) {
+      console.warn("Authentication only works in browser environment");
+      return;
+    }
+
+    try {
+      await this.afAuth.signInWithRedirect(new GoogleAuthProvider());
+    } catch (error) {
+      console.error("Authentication failed:", error);
+    }
   }
 }

@@ -11,4 +11,19 @@
     </li>
   </ul>
 </nav>
+
+<div class="container">
+  <h1>{{ title }}</h1>
+  
+  <div *ngIf="!user">
+    <button googleSso>Sign in with Google</button>
+  </div>
+  
+  <div *ngIf="user">
+    <p>Welcome, {{ user.displayName }}</p>
+    <button (click)="logout()">Sign out</button>
+  </div>
+</div>
+
+<!-- Router outlet to display the routed components -->
 <router-outlet></router-outlet>
