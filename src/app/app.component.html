@@ -1,23 +1,26 @@
 <nav>
   <ul>
     <li>
-      <a routerLink="/">Landing page</a>
+      <a routerLink="/">Home</a>
     </li>
     <li>
-      <a routerLink="/signin">Signin page</a>
+      <a routerLink="/login">Login</a>
     </li>
+    <!-- <li>
+      <a routerLink="/signin">Sign In</a>
+    </li> -->
     <li>
-      <a routerLink="/require-auth">Auth protected</a>
+      <a routerLink="/dashboard">Dashboard (Protected)</a>
     </li>
   </ul>
 </nav>
 
 <div class="container">
   <h1>{{ title }}</h1>
-  
+<!--   
   <div *ngIf="!user">
     <button googleSso>Sign in with Google</button>
-  </div>
+  </div> -->
   
   <div *ngIf="user">
     <p>Welcome, {{ user.displayName }}</p>
@@ -25,5 +28,4 @@
   </div>
 </div>
 
-<!-- Router outlet to display the routed components -->
 <router-outlet></router-outlet>
