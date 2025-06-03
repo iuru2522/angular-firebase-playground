@@ -1,0 +1,58 @@
+<div class="admin-users-container">
+  <h2>👥 User Management</h2>
+  <p class="description">Manage user roles and permissions</p>
+  
+  <div class="users-list">
+    <div *ngIf="currentUser$ | async as currentUser" class="current-user-card">
+      <h3>Current User</h3>
+      <div class="user-card">
+        <div class="user-info">
+          <img [src]="currentUser.photoURL || '/assets/default-avatar.png'" 
+               alt="Profile" class="avatar">
+          <div class="user-details">
+            <h4>{{ currentUser.displayName }}</h4>
+            <p class="email">{{ currentUser.email }}</p>
+            <span class="role-badge role-{{ currentUser.role }}">
+              {{ getRoleLabel(currentUser.role) }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-actions">
+      <h3>Admin Actions</h3>
+      <div class="action-grid">
+        <button class="action-card" (click)="showUserList()">
+          <h4>📋 View All Users</h4>
+          <p>See all registered users</p>
+        </button>
+        
+        <button class="action-card" (click)="manageRoles()">
+          <h4>🔑 Manage Roles</h4>
+          <p>Assign and modify user roles</p>
+        </button>
+        
+        <button class="action-card" (click)="viewSystemStats()">
+          <h4>📊 System Stats</h4>
+          <p>View usage statistics</p>
+        </button>
+        
+        <button class="action-card" (click)="exportData()">
+          <h4>💾 Export Data</h4>
+          <p>Download user data</p>
+        </button>
+      </div>
+    </div>
+
+    <div class="role-overview">
+      <h3>Role Overview</h3>
+      <div class="roles-grid">
+        <div *ngFor="let role of userRoles" class="role-card">
+          <span class="role-badge role-{{ role }}">{{ getRoleLabel(role) }}</span>
+          <p class="role-desc">{{ getRoleDescription(role) }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

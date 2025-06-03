@@ -1,0 +1,110 @@
+<div class="dashboard-container">
+    <div *ngIf="user$ | async as user" class="dashboard-content">
+
+        <div class="welcome-header">
+            <div class="user-welcome">
+                <img [src]="user.photoURL || '/assets/default-avatar.png'" alt="Profile" class="user-avatar">
+                <div class="welcome-text">
+                    <h1>Welcome back, {{ user.displayName }}!</h1>
+                    <p class="user-role">{{ getRoleLabel(user.role) }}</p>
+                </div>
+            </div>
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <span class="stat-number">{{ getDayOfWeek() }}</span>
+                    <span class="stat-label">Today</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">{{ getTaskCount(user.role) }}</span>
+                    <span class="stat-label">Tasks</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <h3>Quick Actions</h3>
+            <div class="actions-grid">
+
+                <ng-container *hasRole="UserRole.ADMIN">
+                    <button routerLink="/admin/users" class="action-btn admin">
+                        <span class="action-icon">👥</span>
+                        <span>Manage Users</span>
+                    </button>
+                    <button routerLink="/admin/reports" class="action-btn admin">
+                        <span class="action-icon">📊</span>
+                        <span>View Reports</span>
+                    </button> </ng-container>
+
+                <ng-container *hasRole="UserRole.PROJECT_MANAGER">
+                    <button routerLink="/projects" class="action-btn pm">
+                        <span class="action-icon">📋</span>
+                        <span>Projects</span>
+                    </button>
+                    <button routerLink="/assign-tasks" class="action-btn pm">
+                        <span class="action-icon">📝</span>
+                        <span>Assign Tasks</span>
+                    </button> </ng-container>
+
+                <ng-container *hasRole="UserRole.DEVELOPER">
+                    <button routerLink="/my-tasks" class="action-btn dev">
+                        <span class="action-icon">⚡</span>
+                        <span>My Tasks</span>
+                    </button>
+                    <button routerLink="/code-review" class="action-btn dev">
+                        <span class="action-icon">🔍</span>
+                        <span>Code Review</span>
+                    </button> </ng-container>
+
+                <ng-container *hasRole="UserRole.QA_TESTER">
+                    <button routerLink="/test-cases" class="action-btn qa">
+                        <span class="action-icon">🧪</span>
+                        <span>Test Cases</span>
+                    </button>
+                    <button routerLink="/bug-verification" class="action-btn qa">
+                        <span class="action-icon">✅</span>
+                        <span>Verify Bugs</span>
+                    </button> </ng-container>
+
+                <ng-container *hasRole="UserRole.REPORTER">
+                    <button routerLink="/report-bug" class="action-btn reporter">
+                        <span class="action-icon">🐛</span>
+                        <span>Report Bug</span>
+                    </button>
+                    <button routerLink="/my-reports" class="action-btn reporter">
+                        <span class="action-icon">📄</span>
+                        <span>My Reports</span>
+                    </button>
+                </ng-container>
+            </div>
+        </div>
+
+        <div class="recent-activity">
+            <h3>Recent Activity</h3>
+            <div class="activity-list">
+                <div class="activity-item" *ngFor="let activity of getRecentActivities(user.role)">
+                    <span class="activity-icon">{{ activity.icon }}</span>
+                    <div class="activity-content">
+                        <p class="activity-text">{{ activity.text }}</p>
+                        <span class="activity-time">{{ activity.time }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <h3>{{ getRoleLabel(user.role) }} Information</h3>
+            <div class="info-content">
+                <p>{{ getRoleDescription(user.role) }}</p>
+                <div class="role-permissions">
+                    <h4>Your Permissions:</h4>
+                    <ul>
+                        <li *ngFor="let permission of getRolePermissions(user.role)">
+                            {{ permission }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

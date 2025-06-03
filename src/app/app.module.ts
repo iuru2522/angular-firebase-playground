@@ -4,11 +4,16 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { AngularFireModule } from "@angular/fire/compat";
 import { AngularFireAuth } from "@angular/fire/compat/auth";
+import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { LoginComponent } from './login/login.component';
 import { LandingComponent } from './landing/landing.component';
 import { SigninComponent } from './signin/signin.component';
 import { RequireAuthComponent } from './require-auth/require-auth.component';
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
+import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 import { GoogleSsoDirective } from './google-sso.directive';
+import { HasRoleDirective } from './directives/has-role.directive';
 
 export const firebaseConfig = {
  apiKey: "AIzaSyAxbWLeDDJRIDf45xorZiMTHdtZ67XlrTA",
@@ -27,16 +32,20 @@ export const firebaseConfig = {
     LandingComponent,
     SigninComponent,
     RequireAuthComponent,
-    GoogleSsoDirective
-  ],
-  imports: [
+    UnauthorizedComponent,
+    AdminUsersComponent,
+    UserDashboardComponent,
+    GoogleSsoDirective,
+    HasRoleDirective
+  ],  imports: [
     BrowserModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(firebaseConfig),
   ],
   providers: [
     provideClientHydration(withEventReplay()),
-    AngularFireAuth
+    AngularFireAuth,
+    AngularFirestore
   ],
   bootstrap: [AppComponent],
 })
