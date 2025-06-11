@@ -35,12 +35,13 @@ export const firebaseConfig = {
     UnauthorizedComponent,
     AdminUsersComponent,
     UserDashboardComponent,
-    GoogleSsoDirective,
     HasRoleDirective
-  ],  imports: [
+  ],
+  imports: [
     BrowserModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(firebaseConfig),
+    GoogleSsoDirective
   ],
   providers: [
     provideClientHydration(withEventReplay()),
