@@ -1,59 +1,87 @@
-import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, PLATFORM_ID, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat/app';
+import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { GoogleSsoDirective } from './google-sso.directive';
+
+interface AuthError extends Error {
+  code?: string;
+}
 
 @Component({
   selector: 'app-root',
-  standalone: false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    GoogleSsoDirective
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
-  title = 'angular-firebase-playground';
-  user: firebase.User | null = null;
+export class AppComponent implements OnInit, OnDestroy {
+  readonly title = 'angular-firebase-playground';
+  readonly user = signal<firebase.User | null>(null);
   
-  constructor(
-    private afAuth: AngularFireAuth,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-    // Only run authentication code in browser
-    if (isPlatformBrowser(this.platformId)) {
-      // Set persistence to LOCAL for better session handling
-      this.afAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-        .then(() => {
-          // Check for redirect result when the app initializes
-          return this.afAuth.getRedirectResult();
-        })
-        .then(result => {
-          if (result.user) {
-            // User successfully authenticated
-            console.log('User signed in after redirect:', result.user);
-            this.user = result.user;
-          }
-        }).catch(error => {
-          console.error('Error after redirect or setting persistence:', error);
-        });
+  private readonly afAuth = inject(AngularFireAuth);
+  private readonly platformId = inject(PLATFORM_ID);
+  private authSubscription?: Subscription;
+
+  constructor() {
+    this.initializeAuth();
+  }
+
+  private async initializeAuth(): Promise<void> {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    try {
+      await this.afAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+      const result = await this.afAuth.getRedirectResult();
+      
+      if (result.user) {
+        console.log('User signed in after redirect:', result.user);
+        this.user.set(result.user);
+      }
+    } catch (error) {
+      this.handleAuthError(error as AuthError, 'Error during auth initialization');
     }
   }
   
-  ngOnInit() {
-    // Track authentication state only in browser
-    if (isPlatformBrowser(this.platformId)) {
-      this.afAuth.authState.subscribe(user => {
-        this.user = user;
+  ngOnInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    this.authSubscription = this.afAuth.authState.subscribe({
+      next: (user) => {
+        this.user.set(user);
         console.log('Auth state changed:', user);
-      });
-    }
+      },
+      error: (error) => {
+        this.handleAuthError(error as AuthError, 'Error in auth state subscription');
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.authSubscription?.unsubscribe();
   }
   
-  logout() {
-    if (isPlatformBrowser(this.platformId)) {
-      this.afAuth.signOut().then(() => {
-        console.log('User signed out successfully');
-      }).catch(error => {
-        console.error('Sign out error:', error);
-      });
+  async logout(): Promise<void> {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    try {
+      await this.afAuth.signOut();
+      console.log('User signed out successfully');
+    } catch (error) {
+      this.handleAuthError(error as AuthError, 'Sign out error');
     }
+  }
+
+  private handleAuthError(error: AuthError, context: string): void {
+    console.error(`${context}:`, error);
+    // Here you could add error handling logic like showing a toast message
+    // or redirecting to an error page based on the error code
   }
 }

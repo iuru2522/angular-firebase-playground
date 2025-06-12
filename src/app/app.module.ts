@@ -27,7 +27,6 @@ export const firebaseConfig = {
 
 @NgModule({
   declarations: [
-    AppComponent, 
     LoginComponent,
     LandingComponent,
     SigninComponent,
@@ -41,7 +40,8 @@ export const firebaseConfig = {
     BrowserModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(firebaseConfig),
-    GoogleSsoDirective
+    GoogleSsoDirective,
+    AppComponent
   ],
   providers: [
     provideClientHydration(withEventReplay()),
