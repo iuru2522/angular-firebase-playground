@@ -6,10 +6,7 @@ import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { GoogleSsoDirective } from './google-sso.directive';
-
-interface AuthError extends Error {
-  code?: string;
-}
+import { AuthError, AuthErrorContext } from './models/auth.types';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +22,7 @@ interface AuthError extends Error {
 export class AppComponent implements OnInit, OnDestroy {
   readonly title = 'angular-firebase-playground';
   readonly user = signal<firebase.User | null>(null);
+  readonly isAuthenticated = signal<boolean>(false);
   
   private readonly afAuth = inject(AngularFireAuth);
   private readonly platformId = inject(PLATFORM_ID);
@@ -34,6 +32,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.initializeAuth();
   }
 
+  /**
+   * Initializes Firebase authentication with local persistence
+   * and handles redirect results from OAuth providers
+   */
   private async initializeAuth(): Promise<void> {
     if (!isPlatformBrowser(this.platformId)) return;
 
@@ -42,11 +44,10 @@ export class AppComponent implements OnInit, OnDestroy {
       const result = await this.afAuth.getRedirectResult();
       
       if (result.user) {
-        console.log('User signed in after redirect:', result.user);
-        this.user.set(result.user);
+        this.handleSuccessfulAuth(result.user);
       }
     } catch (error) {
-      this.handleAuthError(error as AuthError, 'Error during auth initialization');
+      this.handleAuthError(error as AuthError, 'initialization');
     }
   }
   
@@ -54,13 +55,8 @@ export class AppComponent implements OnInit, OnDestroy {
     if (!isPlatformBrowser(this.platformId)) return;
 
     this.authSubscription = this.afAuth.authState.subscribe({
-      next: (user) => {
-        this.user.set(user);
-        console.log('Auth state changed:', user);
-      },
-      error: (error) => {
-        this.handleAuthError(error as AuthError, 'Error in auth state subscription');
-      }
+      next: (user) => this.handleAuthStateChange(user),
+      error: (error) => this.handleAuthError(error as AuthError, 'state_change')
     });
   }
 
@@ -68,20 +64,59 @@ export class AppComponent implements OnInit, OnDestroy {
     this.authSubscription?.unsubscribe();
   }
   
+  /**
+   * Signs out the current user from Firebase Auth
+   */
   async logout(): Promise<void> {
     if (!isPlatformBrowser(this.platformId)) return;
 
     try {
       await this.afAuth.signOut();
-      console.log('User signed out successfully');
+      this.handleSuccessfulLogout();
     } catch (error) {
-      this.handleAuthError(error as AuthError, 'Sign out error');
+      this.handleAuthError(error as AuthError, 'sign_out');
     }
   }
 
-  private handleAuthError(error: AuthError, context: string): void {
-    console.error(`${context}:`, error);
-    // Here you could add error handling logic like showing a toast message
-    // or redirecting to an error page based on the error code
+  /**
+   * Handles successful authentication by updating the user state
+   */
+  private handleSuccessfulAuth(user: firebase.User): void {
+    this.user.set(user);
+    this.isAuthenticated.set(true);
+    console.log('User authenticated successfully:', user.email);
+  }
+
+  /**
+   * Handles successful logout by clearing the user state
+   */
+  private handleSuccessfulLogout(): void {
+    this.user.set(null);
+    this.isAuthenticated.set(false);
+    console.log('User signed out successfully');
+  }
+
+  /**
+   * Handles authentication state changes
+   */
+  private handleAuthStateChange(user: firebase.User | null): void {
+    this.user.set(user);
+    this.isAuthenticated.set(!!user);
+    console.log('Auth state changed:', user?.email ?? 'No user');
+  }
+
+  /**
+   * Handles authentication errors with proper error context
+   */
+  private handleAuthError(error: AuthError, context: AuthErrorContext): void {
+    const errorMessages: Record<AuthErrorContext, string> = {
+      initialization: 'Failed to initialize authentication',
+      state_change: 'Error occurred while monitoring authentication state',
+      sign_out: 'Failed to sign out'
+    };
+
+    console.error(`${errorMessages[context]}:`, error);
+    // TODO: Implement proper error handling (e.g., toast notifications)
+    // This could be enhanced with a proper error handling service
   }
 }
