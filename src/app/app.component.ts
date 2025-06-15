@@ -5,7 +5,6 @@ import firebase from 'firebase/compat/app';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { GoogleSsoDirective } from './google-sso.directive';
 import { AuthError, AuthErrorContext } from './models/auth.types';
 
 @Component({
@@ -13,8 +12,7 @@ import { AuthError, AuthErrorContext } from './models/auth.types';
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule,
-    GoogleSsoDirective
+    RouterModule
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
