@@ -84,16 +84,21 @@ export class AppComponent implements OnInit, OnDestroy {
       this.authSubscription = undefined;
     }
   }
-
   private async runDiagnostics(): Promise<void> {
+    // Only run diagnostics in browser context
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     // Run diagnostics after a short delay to ensure Firebase is initialized
-    setTimeout(async () => {
-      try {
-        await this.diagnosticService.diagnoseFirebase();
-        await this.diagnosticService.checkFirestoreRules();
-      } catch (error) {
-        console.error('Diagnostic failed:', error);
-      }
-    }, 3000);
+    try {
+      // Wait for Firebase to be ready
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
+      await this.diagnosticService.diagnoseFirebase();
+      await this.diagnosticService.checkFirestoreRules();
+    } catch (error) {
+      console.error('Diagnostic failed:', error);
+    }
   }
 }

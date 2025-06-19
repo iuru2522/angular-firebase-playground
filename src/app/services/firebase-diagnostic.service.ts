@@ -1,4 +1,5 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Auth } from '@angular/fire/auth';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { FirebaseApp } from '@angular/fire/app';
@@ -7,11 +8,17 @@ import { FirebaseApp } from '@angular/fire/app';
   providedIn: 'root'
 })
 export class FirebaseDiagnosticService {
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly app = inject(FirebaseApp);
   private readonly auth = inject(Auth);
   private readonly firestore = inject(Firestore);
-
   async diagnoseFirebase(): Promise<void> {
+    // Only run diagnostics in browser context
+    if (!isPlatformBrowser(this.platformId)) {
+      console.log('🔍 Skipping Firebase diagnostics (SSR context)');
+      return;
+    }
+
     console.log('🔍 Starting Firebase diagnostics...');
     
     try {
@@ -43,8 +50,13 @@ export class FirebaseDiagnosticService {
       console.error('❌ Firebase diagnostic failed:', error);
     }
   }
-
   async checkFirestoreRules(): Promise<void> {
+    // Only run diagnostics in browser context
+    if (!isPlatformBrowser(this.platformId)) {
+      console.log('🔍 Skipping Firestore rules check (SSR context)');
+      return;
+    }
+
     console.log('🔍 Checking Firestore security rules...');
     
     try {
