@@ -104,6 +104,19 @@
           },
           "defaultConfiguration": "production"
         },
+        "prerender": {
+          "builder": "@angular-devkit/build-angular:prerender",
+          "options": {
+            "browserTarget": "angular-firebase-playground:build:production",
+            "routes": [
+              "/",
+              "/login",
+              "/signin",
+              "/unauthorized",
+              "/offline"
+            ]
+          }
+        },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {

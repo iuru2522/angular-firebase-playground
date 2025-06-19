@@ -1,15 +1,12 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject, signal, PLATFORM_ID } from '@angular/core';
 import { Auth, authState, signOut, setPersistence, browserLocalPersistence, getRedirectResult } from '@angular/fire/auth';
-import { PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { User as FirebaseUser } from 'firebase/auth';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AuthError, AuthErrorContext } from '../models/auth.types';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly auth = inject(Auth);
   private readonly platformId = inject(PLATFORM_ID);
@@ -19,22 +16,17 @@ export class AuthService {
   private initialized = false;
 
   constructor() {
-    // Defer initialization to avoid timing issues
-    setTimeout(() => {
-      this.initializeAuth();
-    }, 0);
+    if (isPlatformBrowser(this.platformId)) {
+      setTimeout(() => { this.initializeAuth(); }, 0);
+    }
   }
 
   private async initializeAuth(): Promise<void> {
     if (!isPlatformBrowser(this.platformId) || this.initialized) return;
-
     try {
       await setPersistence(this.auth, browserLocalPersistence);
       const result = await getRedirectResult(this.auth);
-      
-      if (result?.user) {
-        this.handleSuccessfulAuth(result.user);
-      }
+      if (result?.user) this.handleSuccessfulAuth(result.user);
       this.initialized = true;
     } catch (error) {
       this.handleAuthError(error as AuthError, 'initialization');
@@ -42,14 +34,12 @@ export class AuthService {
   }
 
   getAuthState(): Observable<FirebaseUser | null> {
-    return authState(this.auth).pipe(
-      tap(user => this.handleAuthStateChange(user))
-    );
+    if (!isPlatformBrowser(this.platformId)) return of(null);
+    return authState(this.auth).pipe(tap(user => this.handleAuthStateChange(user)));
   }
 
   async logout(): Promise<void> {
     if (!isPlatformBrowser(this.platformId)) return;
-
     try {
       await signOut(this.auth);
       this.handleSuccessfulLogout();
@@ -82,7 +72,6 @@ export class AuthService {
       state_change: 'Error occurred while monitoring authentication state',
       sign_out: 'Failed to sign out'
     };
-
     console.error(`${errorMessages[context]}:`, error);
   }
 } 

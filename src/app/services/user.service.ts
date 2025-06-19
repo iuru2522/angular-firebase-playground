@@ -1,45 +1,40 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { Auth, authState } from '@angular/fire/auth';
 import { Firestore, doc, docData, setDoc, updateDoc, DocumentReference } from '@angular/fire/firestore';
-import { Observable, of, timeout, catchError } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
+import { Observable, of } from 'rxjs';
 import { switchMap, map, catchError as rxjsCatchError } from 'rxjs/operators';
 import { User, UserRole } from '../models';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class UserService {
     private readonly auth = inject(Auth);
     private readonly firestore = inject(Firestore);
+    private readonly platformId = inject(PLATFORM_ID);
 
     getCurrentUser(): Observable<User | null> {
+        if (!isPlatformBrowser(this.platformId)) return of(null);
         return authState(this.auth).pipe(
             switchMap(authUser => {
-                if (!authUser) {
-                    return of(null);
-                }
-
+                if (!authUser) return of(null);
                 return this.getUserDocument(authUser.uid).pipe(
                     switchMap(userData => {
                         if (!userData) {
-                            // If no user document exists, create one with default role
                             const newUser: User = {
                                 id: authUser.uid,
                                 email: authUser.email ?? '',
                                 displayName: authUser.displayName ?? '',
                                 photoURL: authUser.photoURL ?? undefined,
-                                role: UserRole.REPORTER, // Default role
+                                role: UserRole.REPORTER,
                                 isActive: true,
                                 createdAt: new Date(),
                                 updatedAt: new Date()
                             };
-                            
-                            // Create user document and return the new user
                             return this.createUserDocumentObservable(newUser).pipe(
                                 map(() => newUser),
                                 rxjsCatchError(error => {
                                     console.error('Failed to create user document:', error);
-                                    return of(newUser); // Return user even if document creation fails
+                                    return of(newUser);
                                 })
                             );
                         }
@@ -59,10 +54,10 @@ export class UserService {
     }
 
     private getUserDocument(userId: string): Observable<User | null> {
+        if (!isPlatformBrowser(this.platformId)) return of(null);
         try {
             const userDoc = doc(this.firestore, `users/${userId}`) as DocumentReference<User>;
             return docData<User>(userDoc).pipe(
-                timeout(15000), // 15 second timeout for Firestore operations
                 map(user => user || null),
                 rxjsCatchError(error => {
                     console.error('Firestore timeout or error:', error);
@@ -76,6 +71,7 @@ export class UserService {
     }
 
     private createUserDocumentObservable(user: User): Observable<void> {
+        if (!isPlatformBrowser(this.platformId)) return of();
         try {
             const userDoc = doc(this.firestore, `users/${user.id}`) as DocumentReference<User>;
             return new Observable<void>(observer => {
@@ -98,6 +94,7 @@ export class UserService {
     }
 
     updateUserRole(userId: string, role: UserRole): Promise<void> {
+        if (!isPlatformBrowser(this.platformId)) return Promise.resolve();
         try {
             const userDoc = doc(this.firestore, `users/${userId}`) as DocumentReference<User>;
             return updateDoc(userDoc, {

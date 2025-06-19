@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
   readonly title = 'angular-firebase-playground';
   private readonly authService = inject(AuthService);
   private readonly diagnosticService = inject(FirebaseDiagnosticService);
+  private readonly platformId = inject(PLATFORM_ID);
   private authSubscription?: Subscription;
   readonly user = this.authService.user;
   readonly isAuthenticated = this.authService.isAuthenticated;
@@ -30,8 +32,10 @@ export class AppComponent implements OnInit, OnDestroy {
   readonly showOfflineFallback = signal<boolean>(false);
 
   ngOnInit(): void {
-    this.initializeAuthState();
-    this.runDiagnostics();
+    if (isPlatformBrowser(this.platformId)) {
+      this.initializeAuthState();
+      this.runDiagnostics();
+    }
   }
 
   ngOnDestroy(): void {
@@ -39,6 +43,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   async logout(): Promise<void> {
+    if (!isPlatformBrowser(this.platformId)) return;
     try {
       this.isLoading.set(true);
       this.error.set(null);
