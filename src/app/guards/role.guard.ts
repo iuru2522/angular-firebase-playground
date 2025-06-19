@@ -1,4 +1,4 @@
-import { Injectable, inject, runInInjectionContext, Injector } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of, timeout, catchError } from 'rxjs';
 import { map, take } from 'rxjs/operators';
@@ -9,7 +9,6 @@ import { UserRole } from '../models';
   providedIn: 'root'
 })
 export class RoleGuard implements CanActivate {
-  private readonly injector = inject(Injector);
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
@@ -20,25 +19,23 @@ export class RoleGuard implements CanActivate {
       return of(true);
     }
 
-    return runInInjectionContext(this.injector, () => {
-      return this.userService.hasAnyRole(requiredRoles).pipe(
-        take(1),
-        timeout(10000), // 10 second timeout
-        map(hasRole => {
-          if (hasRole) {
-            return true;
-          } else {
-            this.router.navigate(['/unauthorized']);
-            return false;
-          }
-        }),
-        catchError(error => {
-          console.error('RoleGuard timeout or error:', error);
-          // On timeout or error, redirect to unauthorized
+    return this.userService.hasAnyRole(requiredRoles).pipe(
+      take(1),
+      timeout(10000), // 10 second timeout
+      map(hasRole => {
+        if (hasRole) {
+          return true;
+        } else {
           this.router.navigate(['/unauthorized']);
-          return of(false);
-        })
-      );
-    });
+          return false;
+        }
+      }),
+      catchError(error => {
+        console.error('RoleGuard timeout or error:', error);
+        // On timeout or error, redirect to unauthorized
+        this.router.navigate(['/unauthorized']);
+        return of(false);
+      })
+    );
   }
 } 

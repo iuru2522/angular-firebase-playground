@@ -23,7 +23,9 @@ bootstrapApplication(AppComponent, {
     provideClientHydration(withEventReplay()),
     provideFirebaseApp(() => {
       try {
-        return initializeApp(firebaseConfig);
+        const app = initializeApp(firebaseConfig);
+        console.log('Firebase app initialized successfully');
+        return app;
       } catch (error) {
         console.error('Failed to initialize Firebase app:', error);
         throw error;
@@ -32,6 +34,7 @@ bootstrapApplication(AppComponent, {
     provideAuth(() => {
       try {
         const auth = getAuth();
+        console.log('Firebase Auth initialized successfully');
         return auth;
       } catch (error) {
         console.error('Failed to initialize Firebase Auth:', error);
@@ -41,6 +44,7 @@ bootstrapApplication(AppComponent, {
     provideFirestore(() => {
       try {
         const firestore = getFirestore();
+        console.log('Firestore initialized successfully');
         return firestore;
       } catch (error) {
         console.error('Failed to initialize Firestore:', error);
@@ -48,4 +52,18 @@ bootstrapApplication(AppComponent, {
       }
     })
   ]
-}).catch(err => console.error('Bootstrap error:', err));
+}).catch(err => {
+  console.error('Bootstrap error:', err);
+  // Show a user-friendly error message
+  document.body.innerHTML = `
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: Arial, sans-serif;">
+      <div style="text-align: center; padding: 2rem;">
+        <h2>⚠️ Application Error</h2>
+        <p>Failed to initialize the application. Please refresh the page or try again later.</p>
+        <button onclick="window.location.reload()" style="padding: 0.5rem 1rem; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+          Refresh Page
+        </button>
+      </div>
+    </div>
+  `;
+});
