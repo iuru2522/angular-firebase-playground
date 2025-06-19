@@ -1,8 +1,8 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Injectable, inject, signal, runInInjectionContext, Injector } from '@angular/core';
+import { Auth, authState, signOut, setPersistence, browserLocalPersistence, getRedirectResult } from '@angular/fire/auth';
 import { PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import firebase from 'firebase/compat/app';
+import { User as FirebaseUser } from 'firebase/auth';
 import { Observable, from } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { AuthError, AuthErrorContext } from '../models/auth.types';
@@ -11,49 +11,67 @@ import { AuthError, AuthErrorContext } from '../models/auth.types';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly afAuth = inject(AngularFireAuth);
+  private readonly injector = inject(Injector);
   private readonly platformId = inject(PLATFORM_ID);
 
-  readonly user = signal<firebase.User | null>(null);
+  readonly user = signal<FirebaseUser | null>(null);
   readonly isAuthenticated = signal<boolean>(false);
+  private initialized = false;
 
   constructor() {
-    this.initializeAuth();
+    // Defer initialization to avoid timing issues
+    setTimeout(() => {
+      this.initializeAuth();
+    }, 0);
   }
 
   private async initializeAuth(): Promise<void> {
-    if (!isPlatformBrowser(this.platformId)) return;
+    if (!isPlatformBrowser(this.platformId) || this.initialized) return;
 
     try {
-      await this.afAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-      const result = await this.afAuth.getRedirectResult();
-      
-      if (result.user) {
-        this.handleSuccessfulAuth(result.user);
-      }
+      return runInInjectionContext(this.injector, async () => {
+        const auth = inject(Auth);
+        try {
+          await setPersistence(auth, browserLocalPersistence);
+          const result = await getRedirectResult(auth);
+          
+          if (result?.user) {
+            this.handleSuccessfulAuth(result.user);
+          }
+          this.initialized = true;
+        } catch (error) {
+          this.handleAuthError(error as AuthError, 'initialization');
+        }
+      });
     } catch (error) {
-      this.handleAuthError(error as AuthError, 'initialization');
+      console.error('Failed to initialize auth service:', error);
     }
   }
 
-  getAuthState(): Observable<firebase.User | null> {
-    return this.afAuth.authState.pipe(
-      tap(user => this.handleAuthStateChange(user))
-    );
+  getAuthState(): Observable<FirebaseUser | null> {
+    return runInInjectionContext(this.injector, () => {
+      const auth = inject(Auth);
+      return authState(auth).pipe(
+        tap(user => this.handleAuthStateChange(user))
+      );
+    });
   }
 
   async logout(): Promise<void> {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    try {
-      await this.afAuth.signOut();
-      this.handleSuccessfulLogout();
-    } catch (error) {
-      this.handleAuthError(error as AuthError, 'sign_out');
-    }
+    return runInInjectionContext(this.injector, async () => {
+      const auth = inject(Auth);
+      try {
+        await signOut(auth);
+        this.handleSuccessfulLogout();
+      } catch (error) {
+        this.handleAuthError(error as AuthError, 'sign_out');
+      }
+    });
   }
 
-  private handleSuccessfulAuth(user: firebase.User): void {
+  private handleSuccessfulAuth(user: FirebaseUser): void {
     this.user.set(user);
     this.isAuthenticated.set(true);
     console.log('User authenticated successfully:', user.email);
@@ -65,7 +83,7 @@ export class AuthService {
     console.log('User signed out successfully');
   }
 
-  private handleAuthStateChange(user: firebase.User | null): void {
+  private handleAuthStateChange(user: FirebaseUser | null): void {
     this.user.set(user);
     this.isAuthenticated.set(!!user);
     console.log('Auth state changed:', user?.email ?? 'No user');

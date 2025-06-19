@@ -1,31 +1,45 @@
-import { Component, OnInit } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import firebase from 'firebase/compat/app';
+import { Component, OnInit, inject, runInInjectionContext, Injector } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Auth, authState, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule]
 })
 export class LoginComponent implements OnInit {
+  private readonly injector = inject(Injector);
+  private readonly router = inject(Router);
 
-  constructor(
-    private afAuth: AngularFireAuth
-  ) { }
+  ngOnInit() {
+    // Redirect if user is already authenticated
+    runInInjectionContext(this.injector, () => {
+      const auth = inject(Auth);
+      authState(auth).subscribe(user => {
+        if (user) {
+          this.router.navigate(['/dashboard']);
+        }
+      });
+    });
+  }
 
-  ngOnInit() { }
-
-  _loginWithGoogle() {
-      this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
-        .then(googleResponse => {
-          // Successfully logged in
-          console.log(googleResponse);
-          // Add your logic here
-          
-        }).catch(err => {
-          // Login error
-          console.log(err);
-        });
+  async _loginWithGoogle() {
+    return runInInjectionContext(this.injector, async () => {
+      const auth = inject(Auth);
+      try {
+        const provider = new GoogleAuthProvider();
+        const googleResponse = await signInWithPopup(auth, provider);
+        // Successfully logged in
+        console.log(googleResponse);
+        // Navigate to dashboard after successful login
+        this.router.navigate(['/dashboard']);
+      } catch (err) {
+        // Login error
+        console.log(err);
+      }
+    });
   }
 }

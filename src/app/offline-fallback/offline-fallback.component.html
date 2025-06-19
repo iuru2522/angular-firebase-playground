@@ -1,0 +1,28 @@
+<div class="offline-container">
+  <div class="offline-content">
+    <h2>⚠️ Service Temporarily Unavailable</h2>
+    <p>We're experiencing connectivity issues with our authentication service.</p>
+    <p>Please try again in a few moments or check your internet connection.</p>
+    
+    <div class="actions">
+      <button (click)="retry()" class="retry-btn">
+        🔄 Retry Connection
+      </button>
+      <a routerLink="/" class="home-link">
+        🏠 Go to Home
+      </a>
+    </div>
+    
+    <div class="error-details">
+      <details>
+        <summary>Technical Details</summary>
+        <p>This error typically occurs when:</p>
+        <ul>
+          <li>Firebase services are temporarily unavailable</li>
+          <li>Network connectivity issues</li>
+          <li>Firebase project configuration problems</li>
+        </ul>
+      </details>
+    </div>
+  </div>
+</div> 

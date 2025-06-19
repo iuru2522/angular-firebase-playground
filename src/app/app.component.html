@@ -15,17 +15,37 @@
   </ul>
 </nav>
 
-<div class="container">
-  <h1>{{ title }}</h1>
-<!--   
-  <div *ngIf="!user()">
-    <button googleSso>Sign in with Google</button>
-  </div> -->
-  
-  <div *ngIf="user()">
-    <p>Welcome, {{ user()?.displayName }}</p>
-    <button (click)="logout()">Sign out</button>
-  </div>
-</div>
+@if (showOfflineFallback()) {
+  <app-offline-fallback />
+} @else {
+  <div class="app-container">
+    <header class="app-header">
+      <h1>{{ title }}</h1>
+      <div class="auth-status">
+        @if (isLoading()) {
+          <span class="loading">Loading...</span>
+        } @else if (error()) {
+          <span class="error">Error: {{ error() }}</span>
+        } @else if (isAuthenticated()) {
+          <div class="user-info">
+            <span>Welcome, {{ user()?.displayName || user()?.email }}</span>
+            <button (click)="logout()" class="logout-btn">Logout</button>
+          </div>
+        } @else {
+          <span>Not authenticated</span>
+        }
+      </div>
+    </header>
 
-<router-outlet></router-outlet>
+    <main class="app-main">
+      @if (!firebaseReady()) {
+        <div class="loading-container">
+          <div class="spinner"></div>
+          <p>Initializing Firebase...</p>
+        </div>
+      } @else {
+        <router-outlet />
+      }
+    </main>
+  </div>
+}

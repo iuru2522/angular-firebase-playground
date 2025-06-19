@@ -5,7 +5,7 @@ import { UserRole } from '../models';
 
 @Directive({
   selector: '[hasRole]',
-  standalone: false
+  standalone: true
 })
 export class HasRoleDirective implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();

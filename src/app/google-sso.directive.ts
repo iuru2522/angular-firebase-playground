@@ -1,14 +1,13 @@
-import { Directive, HostListener, inject, PLATFORM_ID } from '@angular/core';
+import { Directive, HostListener, inject, PLATFORM_ID, runInInjectionContext, Injector } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { GoogleAuthProvider } from 'firebase/auth';
+import { Auth, signInWithRedirect, GoogleAuthProvider } from '@angular/fire/auth';
 
 @Directive({
   selector: '[googleSso]',
   standalone: true,
 })
 export class GoogleSsoDirective {
-  private readonly afAuth = inject(AngularFireAuth);
+  private readonly injector = inject(Injector);
   private readonly platformId = inject(PLATFORM_ID);
 
   @HostListener('click')
@@ -18,12 +17,15 @@ export class GoogleSsoDirective {
       return;
     }
 
-    try {
-      const provider = new GoogleAuthProvider();
-      await this.afAuth.signInWithRedirect(provider);
-    } catch (error) {
-      console.error('[GoogleSsoDirective] Authentication failed:', error instanceof Error ? error.message : error);
-      throw new Error('Failed to authenticate with Google');
-    }
+    return runInInjectionContext(this.injector, async () => {
+      const auth = inject(Auth);
+      try {
+        const provider = new GoogleAuthProvider();
+        await signInWithRedirect(auth, provider);
+      } catch (error) {
+        console.error('[GoogleSsoDirective] Authentication failed:', error instanceof Error ? error.message : error);
+        throw new Error('Failed to authenticate with Google');
+      }
+    });
   }
 }

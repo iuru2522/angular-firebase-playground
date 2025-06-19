@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { User, UserRole, USER_ROLE_LABELS } from '../../models';
@@ -7,7 +9,8 @@ import { User, UserRole, USER_ROLE_LABELS } from '../../models';
   selector: 'app-admin-users',
   templateUrl: './admin-users.component.html',
   styleUrls: ['./admin-users.component.css'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, RouterModule]
 })
 export class AdminUsersComponent implements OnInit {
   currentUser$: Observable<User | null>;

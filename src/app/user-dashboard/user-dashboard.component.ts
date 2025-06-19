@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserService } from '../services/user.service';
 import { User, UserRole, USER_ROLE_LABELS } from '../models';
+import { HasRoleDirective } from '../directives/has-role.directive';
 
 @Component({
   selector: 'app-user-dashboard',
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.css'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, RouterModule, HasRoleDirective]
 })
 export class UserDashboardComponent implements OnInit {
   user$: Observable<User | null>;

@@ -8,21 +8,21 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
 import { AuthGuard } from './auth.guard';
-import { AdminGuard, ProjectManagerGuard, RoleGuard } from './guards/role.guard';
+import { RoleGuard } from './guards/role.guard';
 import { UserRole } from './models';
+import { OfflineFallbackComponent } from './offline-fallback/offline-fallback.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signin', component: SigninComponent },
-  { path: 'dashboard', component: UserDashboardComponent, canActivate: [AuthGuard] },
   { path: 'unauthorized', component: UnauthorizedComponent },
-    
+  { path: 'offline', component: OfflineFallbackComponent },
+  { path: 'dashboard', component: UserDashboardComponent, canActivate: [AuthGuard] },
   { 
     path: 'admin', 
-    // canActivate: [AuthGuard, AdminGuard], 
     children: [
-      { path: 'users', component: AdminUsersComponent },
+      { path: 'users', component: AdminUsersComponent, canActivate: [AuthGuard, RoleGuard], data: { roles: [UserRole.ADMIN] } },
       { path: 'reports', component: RequireAuthComponent }, 
     ]
   },
@@ -31,12 +31,12 @@ const routes: Routes = [
   { 
     path: 'projects', 
     component: RequireAuthComponent, 
-    canActivate: [AuthGuard, ProjectManagerGuard] 
+    canActivate: [AuthGuard] 
   },
   { 
     path: 'assign-tasks', 
     component: RequireAuthComponent, 
-    canActivate: [AuthGuard, ProjectManagerGuard] 
+    canActivate: [AuthGuard] 
   },
   
   { 
