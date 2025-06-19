@@ -34,16 +34,6 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              },
-              {
-                "glob": "_headers",
-                "input": ".",
-                "output": "/"
-              },
-              {
-                "glob": "_redirects",
-                "input": ".",
-                "output": "/"
               }
             ],
             "styles": [
@@ -51,24 +41,18 @@
             ],
             "scripts": [],
             "server": "src/main.server.ts",
-            "prerender": false,
+            "prerender": true,
             "ssr": {
               "entry": "src/server.ts"
-            },
-            "allowedCommonJsDependencies": [
-              "@grpc/grpc-js",
-              "@grpc/proto-loader",
-              "protobufjs",
-              "google-protobuf"
-            ]
+            }
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1MB",
-                  "maximumError": "2MB"
+                  "maximumWarning": "800kB",
+                  "maximumError": "1MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -77,45 +61,13 @@
                 }
               ],
               "outputHashing": "all"
-            },
-            "development": {
+            },            "development": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
-            },
-            "static": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "1MB",
-                  "maximumError": "2MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
-                }
-              ],
-              "outputHashing": "all",
-              "optimization": true,
-              "extractLicenses": true,
-              "sourceMap": false
             }
           },
           "defaultConfiguration": "production"
-        },
-        "prerender": {
-          "builder": "@angular-devkit/build-angular:prerender",
-          "options": {
-            "browserTarget": "angular-firebase-playground:build:production",
-            "routes": [
-              "/",
-              "/login",
-              "/signin",
-              "/unauthorized",
-              "/offline"
-            ]
-          }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
