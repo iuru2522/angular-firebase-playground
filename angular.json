@@ -41,7 +41,7 @@
             ],
             "scripts": [],
             "server": "src/main.server.ts",
-            "prerender": true,
+            "prerender": false,
             "ssr": {
               "entry": "src/server.ts"
             }
@@ -61,7 +61,8 @@
                 }
               ],
               "outputHashing": "all"
-            },            "development": {
+            },
+            "development": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
