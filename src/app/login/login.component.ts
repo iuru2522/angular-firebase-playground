@@ -1,7 +1,7 @@
-import { Component, OnInit, inject, runInInjectionContext, Injector } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Auth, authState, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,35 +11,21 @@ import { Router } from '@angular/router';
   imports: [CommonModule]
 })
 export class LoginComponent implements OnInit {
-  private readonly injector = inject(Injector);
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   ngOnInit() {
     // Redirect if user is already authenticated
-    runInInjectionContext(this.injector, () => {
-      const auth = inject(Auth);
-      authState(auth).subscribe(user => {
-        if (user) {
-          this.router.navigate(['/dashboard']);
-        }
-      });
+    this.authService.getAuthState().subscribe(user => {
+      if (user) {
+        this.router.navigate(['/dashboard']);
+      }
     });
   }
 
   async _loginWithGoogle() {
-    return runInInjectionContext(this.injector, async () => {
-      const auth = inject(Auth);
-      try {
-        const provider = new GoogleAuthProvider();
-        const googleResponse = await signInWithPopup(auth, provider);
-        // Successfully logged in
-        console.log(googleResponse);
-        // Navigate to dashboard after successful login
-        this.router.navigate(['/dashboard']);
-      } catch (err) {
-        // Login error
-        console.log(err);
-      }
-    });
+    // This method should be implemented in AuthService
+    // For now, we'll redirect to signin page
+    this.router.navigate(['/signin']);
   }
 }

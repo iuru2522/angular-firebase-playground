@@ -1,10 +1,10 @@
-import { Component, inject, runInInjectionContext, Injector } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
-import { Auth, authState, signOut } from "@angular/fire/auth";
 import { Observable } from "rxjs";
 import { User } from "firebase/auth";
 import { GoogleSsoDirective } from "../google-sso.directive";
+import { AuthService } from "../services/auth.service";
 
 @Component({
   selector: "app-signin",
@@ -14,19 +14,13 @@ import { GoogleSsoDirective } from "../google-sso.directive";
   styleUrl: "./signin.component.css",
 })
 export class SigninComponent {
-  private readonly injector = inject(Injector);
+  private readonly authService = inject(AuthService);
   
   get authState$(): Observable<User | null> {
-    return runInInjectionContext(this.injector, () => {
-      const auth = inject(Auth);
-      return authState(auth);
-    });
+    return this.authService.getAuthState();
   }
 
   async logOut(): Promise<void> {
-    return runInInjectionContext(this.injector, async () => {
-      const auth = inject(Auth);
-      await signOut(auth);
-    });
+    await this.authService.logout();
   }
 }
