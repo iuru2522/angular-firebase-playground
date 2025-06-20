@@ -4,16 +4,17 @@
   "newProjectRoot": "projects",
   "projects": {
     "angular-firebase-playground": {
-      "projectType": "application",
-      "schematics": {
+      "projectType": "application",      "schematics": {
         "@schematics/angular:component": {
-          "standalone": false
+          "standalone": true,
+          "style": "css",
+          "changeDetection": "OnPush"
         },
         "@schematics/angular:directive": {
-          "standalone": false
+          "standalone": true
         },
         "@schematics/angular:pipe": {
-          "standalone": false
+          "standalone": true
         }
       },
       "root": "",
@@ -35,11 +36,11 @@
                 "glob": "**/*",
                 "input": "public"
               }
-            ],
-            "styles": [
+            ],            "styles": [
               "src/styles.css"
             ],
             "scripts": [],
+            "inlineStyleLanguage": "css",
             "server": "src/main.server.ts",
             "prerender": true,
             "ssr": {
@@ -98,8 +99,7 @@
                 "input": "public",
                 "output": "/"
               }
-            ],
-            "styles": [
+            ],            "styles": [
               "src/styles.css"
             ],
             "scripts": []

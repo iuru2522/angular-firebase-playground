@@ -1,102 +1,71 @@
-import { Injectable, inject, PLATFORM_ID } from '@angular/core';
-import { Auth, authState } from '@angular/fire/auth';
-import { Firestore, doc, docData, setDoc, updateDoc, DocumentReference } from '@angular/fire/firestore';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Observable, of } from 'rxjs';
-import { switchMap, map, catchError as rxjsCatchError } from 'rxjs/operators';
-import { User, UserRole } from '../models';
+import { from, Observable, of } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
+import { getAuth, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import { getFirestore, doc, getDoc, setDoc, updateDoc, DocumentReference } from 'firebase/firestore';
+import { FirebaseInitService } from './firebase-init.service';
+import { User as AppUser } from '../models/user.interface';
+import { UserRole } from '../models/user-role.enum';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-    private readonly auth = inject(Auth);
-    private readonly firestore = inject(Firestore);
+    private readonly firebase = inject(FirebaseInitService);
     private readonly platformId = inject(PLATFORM_ID);
 
-    getCurrentUser(): Observable<User | null> {
+    getCurrentUser(): Observable<AppUser | null> {
         if (!isPlatformBrowser(this.platformId)) return of(null);
-        return authState(this.auth).pipe(
-            switchMap(authUser => {
+        return new Observable<FirebaseUser | null>(subscriber => {
+            return onAuthStateChanged(this.firebase.auth, user => subscriber.next(user));
+        }).pipe(
+            switchMap((authUser: FirebaseUser | null) => {
                 if (!authUser) return of(null);
                 return this.getUserDocument(authUser.uid).pipe(
-                    switchMap(userData => {
-                        if (!userData) {
-                            const newUser: User = {
-                                id: authUser.uid,
-                                email: authUser.email ?? '',
-                                displayName: authUser.displayName ?? '',
-                                photoURL: authUser.photoURL ?? undefined,
-                                role: UserRole.REPORTER,
-                                isActive: true,
-                                createdAt: new Date(),
-                                updatedAt: new Date()
-                            };
-                            return this.createUserDocumentObservable(newUser).pipe(
-                                map(() => newUser),
-                                rxjsCatchError(error => {
-                                    console.error('Failed to create user document:', error);
-                                    return of(newUser);
-                                })
-                            );
-                        }
-                        return of(userData);
-                    }),
-                    rxjsCatchError(error => {
-                        console.error('Error fetching user document:', error);
-                        return of(null);
+                    switchMap((userDoc: AppUser | null) => {
+                        if (userDoc) return of(userDoc);
+                        // If user doc doesn't exist, create it
+                        const now = new Date();
+                        const newUser: AppUser = {
+                            id: authUser.uid,
+                            email: authUser.email ?? '',
+                            displayName: authUser.displayName ?? '',
+                            photoURL: authUser.photoURL ?? undefined,
+                            role: UserRole.REPORTER,
+                            isActive: true,
+                            createdAt: now,
+                            updatedAt: now
+                        };
+                        return this.createUserDocument(newUser).pipe(
+                            switchMap(() => this.getUserDocument(authUser.uid))
+                        );
                     })
                 );
             }),
-            rxjsCatchError(error => {
-                console.error('Error in authState observable:', error);
-                return of(null);
-            })
+            map((userDoc: any) => userDoc ? this.mapToAppUser(userDoc) : null)
         );
     }
 
-    private getUserDocument(userId: string): Observable<User | null> {
-        if (!isPlatformBrowser(this.platformId)) return of(null);
-        try {
-            const userDoc = doc(this.firestore, `users/${userId}`) as DocumentReference<User>;
-            return docData<User>(userDoc).pipe(
-                map(user => user || null),
-                rxjsCatchError(error => {
-                    console.error('Firestore timeout or error:', error);
-                    return of(null);
-                })
-            );
-        } catch (error) {
-            console.error('Error creating document reference:', error);
-            return of(null);
-        }
+    getUserDocument(uid: string): Observable<AppUser | null> {
+        const userDocRef = doc(this.firebase.firestore, 'users', uid);
+        return from(getDoc(userDocRef)).pipe(
+            map(snapshot => snapshot.exists() ? this.mapToAppUser(snapshot.data()) : null)
+        );
     }
 
-    private createUserDocumentObservable(user: User): Observable<void> {
-        if (!isPlatformBrowser(this.platformId)) return of();
-        try {
-            const userDoc = doc(this.firestore, `users/${user.id}`) as DocumentReference<User>;
-            return new Observable<void>(observer => {
-                setDoc(userDoc, user)
-                    .then(() => {
-                        observer.next();
-                        observer.complete();
-                    })
-                    .catch(error => {
-                        console.error('Error in setDoc:', error);
-                        observer.error(error);
-                    });
-            });
-        } catch (error) {
-            console.error('Error creating user document:', error);
-            return new Observable<void>(observer => {
-                observer.error(error);
-            });
-        }
+    createUserDocument(user: AppUser): Observable<void> {
+        const userDocRef = doc(this.firebase.firestore, 'users', user.id);
+        return from(setDoc(userDocRef, user));
+    }
+
+    updateUserDocument(uid: string, data: Partial<AppUser>): Observable<void> {
+        const userDocRef = doc(this.firebase.firestore, 'users', uid);
+        return from(updateDoc(userDocRef, data));
     }
 
     updateUserRole(userId: string, role: UserRole): Promise<void> {
         if (!isPlatformBrowser(this.platformId)) return Promise.resolve();
         try {
-            const userDoc = doc(this.firestore, `users/${userId}`) as DocumentReference<User>;
+            const userDoc = doc(this.firebase.firestore, `users/${userId}`) as DocumentReference<AppUser>;
             return updateDoc(userDoc, {
                 role,
                 updatedAt: new Date()
@@ -117,5 +86,18 @@ export class UserService {
         return this.getCurrentUser().pipe(
             map(user => user ? roles.includes(user.role) : false)
         );
+    }
+
+    private mapToAppUser(data: any): AppUser {
+        return {
+            id: data.id,
+            email: data.email,
+            displayName: data.displayName,
+            photoURL: data.photoURL,
+            role: data.role,
+            isActive: data.isActive,
+            createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(data.createdAt),
+            updatedAt: data.updatedAt instanceof Date ? data.updatedAt : new Date(data.updatedAt),
+        };
     }
 }

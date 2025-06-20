@@ -1,27 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
-import { UserService } from '../services/user.service';
+import { AuthService } from '../services/auth.service';
 import { User, UserRole, USER_ROLE_LABELS } from '../models';
-import { HasRoleDirective } from '../directives/has-role.directive';
+import { UserService } from '../services/user.service';
+import { LoginPlaceholderComponent } from '../login-placeholder/login-placeholder.component';
 
 @Component({
   selector: 'app-user-dashboard',
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.css'],
   standalone: true,
-  imports: [CommonModule, RouterModule, HasRoleDirective]
+  imports: [CommonModule, RouterModule, LoginPlaceholderComponent]
 })
 export class UserDashboardComponent implements OnInit {
   user$: Observable<User | null>;
   UserRole = UserRole;
+  private authService = inject(AuthService);
+  private userService = inject(UserService);
+  private isUserAuthenticated = signal(false);
 
-  constructor(private userService: UserService) {
+  constructor() {
     this.user$ = this.userService.getCurrentUser();
+    // Subscribe to auth state to ensure currentUser signal is updated
+    this.authService.authState$.subscribe();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // Removed broken authentication code
+  }
+
+  isAuthenticated() {
+    return this.isUserAuthenticated();
+  }
 
   getRoleLabel(role: UserRole): string {
     return USER_ROLE_LABELS[role] || role;

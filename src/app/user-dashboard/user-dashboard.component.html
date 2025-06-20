@@ -1,5 +1,6 @@
 <div class="dashboard-container">
-    <div *ngIf="user$ | async as user" class="dashboard-content">
+    @if (user$ | async; as user) {
+        <div class="dashboard-content">
 
         <div class="welcome-header">
             <div class="user-welcome">
@@ -25,7 +26,7 @@
             <h3>Quick Actions</h3>
             <div class="actions-grid">
 
-                <ng-container *hasRole="UserRole.ADMIN">
+                @if (user.role === UserRole.ADMIN) {
                     <button routerLink="/admin/users" class="action-btn admin">
                         <span class="action-icon">👥</span>
                         <span>Manage Users</span>
@@ -33,9 +34,10 @@
                     <button routerLink="/admin/reports" class="action-btn admin">
                         <span class="action-icon">📊</span>
                         <span>View Reports</span>
-                    </button> </ng-container>
+                    </button>
+                }
 
-                <ng-container *hasRole="UserRole.PROJECT_MANAGER">
+                @if (user.role === UserRole.PROJECT_MANAGER) {
                     <button routerLink="/projects" class="action-btn pm">
                         <span class="action-icon">📋</span>
                         <span>Projects</span>
@@ -43,9 +45,10 @@
                     <button routerLink="/assign-tasks" class="action-btn pm">
                         <span class="action-icon">📝</span>
                         <span>Assign Tasks</span>
-                    </button> </ng-container>
+                    </button>
+                }
 
-                <ng-container *hasRole="UserRole.DEVELOPER">
+                @if (user.role === UserRole.DEVELOPER) {
                     <button routerLink="/my-tasks" class="action-btn dev">
                         <span class="action-icon">⚡</span>
                         <span>My Tasks</span>
@@ -53,9 +56,10 @@
                     <button routerLink="/code-review" class="action-btn dev">
                         <span class="action-icon">🔍</span>
                         <span>Code Review</span>
-                    </button> </ng-container>
+                    </button>
+                }
 
-                <ng-container *hasRole="UserRole.QA_TESTER">
+                @if (user.role === UserRole.QA_TESTER) {
                     <button routerLink="/test-cases" class="action-btn qa">
                         <span class="action-icon">🧪</span>
                         <span>Test Cases</span>
@@ -63,9 +67,10 @@
                     <button routerLink="/bug-verification" class="action-btn qa">
                         <span class="action-icon">✅</span>
                         <span>Verify Bugs</span>
-                    </button> </ng-container>
+                    </button>
+                }
 
-                <ng-container *hasRole="UserRole.REPORTER">
+                @if (user.role === UserRole.REPORTER) {
                     <button routerLink="/report-bug" class="action-btn reporter">
                         <span class="action-icon">🐛</span>
                         <span>Report Bug</span>
@@ -74,7 +79,7 @@
                         <span class="action-icon">📄</span>
                         <span>My Reports</span>
                     </button>
-                </ng-container>
+                }
             </div>
         </div>
 
@@ -103,8 +108,8 @@
                         </li>
                     </ul>
                 </div>
-            </div>
-        </div>
-
-    </div>
+            </div>        </div>        </div>
+    } @else {
+        <app-login-placeholder />
+    }
 </div>

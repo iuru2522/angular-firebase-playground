@@ -14,7 +14,8 @@ export const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'signin', component: SigninComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
-  { path: 'offline', component: OfflineFallbackComponent },  { 
+  { path: 'offline', component: OfflineFallbackComponent },
+  { 
     path: 'dashboard', 
     component: UserDashboardComponent
   },

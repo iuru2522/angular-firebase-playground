@@ -1,42 +1,27 @@
-<nav>
-  <ul>
-    <li>
-      <a routerLink="/">Home</a>
-    </li>
-    <li>
-      <a routerLink="/login">Login</a>
-    </li>
-    <!-- <li>
-      <a routerLink="/signin">Sign In</a>
-    </li> -->
-    <li>
-      <a routerLink="/dashboard">Dashboard (Protected)</a>
-    </li>
+<nav class="main-nav">  <ul>
+    <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a></li>
+    <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard (Protected)</a></li>
   </ul>
+  
+  <div class="nav-auth-status">
+    @if (isLoading()) {
+      <span class="loading">Loading...</span>
+    } @else if (error()) {
+      <span class="error">Error: {{ error() }}</span>
+    } @else if (isAuthenticated()) {
+      <div class="user-info">
+        <span>Welcome, {{ user()?.displayName || user()?.email }}</span>
+        <button (click)="logout()" class="logout-btn">Logout</button>
+      </div>    } @else {
+      <button (click)="login()" class="login-btn">Login</button>
+    }
+  </div>
 </nav>
 
 @if (showOfflineFallback()) {
   <app-offline-fallback />
 } @else {
   <div class="app-container">
-    <header class="app-header">
-      <h1>{{ title }}</h1>
-      <div class="auth-status">
-        @if (isLoading()) {
-          <span class="loading">Loading...</span>
-        } @else if (error()) {
-          <span class="error">Error: {{ error() }}</span>
-        } @else if (isAuthenticated()) {
-          <div class="user-info">
-            <span>Welcome, {{ user()?.displayName || user()?.email }}</span>
-            <button (click)="logout()" class="logout-btn">Logout</button>
-          </div>
-        } @else {
-          <span>Not authenticated</span>
-        }
-      </div>
-    </header>
-
     <main class="app-main">
       @if (!firebaseReady()) {
         <div class="loading-container">

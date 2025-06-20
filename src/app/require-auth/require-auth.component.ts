@@ -17,7 +17,7 @@ export class RequireAuthComponent implements OnInit {
   user: User | null = null;
 
   ngOnInit(): void {
-    this.authService.getAuthState().subscribe(user => {
+    this.authService.authState$.subscribe((user: any) => {
       this.user = user;
       if (!user) {
         this.router.navigate(['/signin']);

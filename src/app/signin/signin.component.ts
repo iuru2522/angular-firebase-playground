@@ -16,9 +16,7 @@ import { AuthService } from "../services/auth.service";
 export class SigninComponent {
   private readonly authService = inject(AuthService);
   
-  get authState$(): Observable<User | null> {
-    return this.authService.getAuthState();
-  }
+  public readonly authState$ = this.authService.authState$;
 
   async logOut(): Promise<void> {
     await this.authService.logout();

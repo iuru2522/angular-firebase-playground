@@ -1,77 +1,75 @@
-import { Injectable, inject, signal, PLATFORM_ID } from '@angular/core';
-import { Auth, authState, signOut, setPersistence, browserLocalPersistence, getRedirectResult } from '@angular/fire/auth';
+import { inject, Injectable, PLATFORM_ID, Injector, runInInjectionContext, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { User as FirebaseUser } from 'firebase/auth';
-import { Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { from, Observable, of } from 'rxjs';
+import { tap, switchMap } from 'rxjs/operators';
+import { getAuth, signInWithEmailAndPassword, signOut as firebaseSignOut, setPersistence, getRedirectResult, browserLocalPersistence, onAuthStateChanged, User, UserCredential, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { FirebaseInitService } from './firebase-init.service';
 import { AuthError, AuthErrorContext } from '../models/auth.types';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly auth = inject(Auth);
+  private readonly firebase = inject(FirebaseInitService);
   private readonly platformId = inject(PLATFORM_ID);
-
-  readonly user = signal<FirebaseUser | null>(null);
-  readonly isAuthenticated = signal<boolean>(false);
+  private readonly injector = inject(Injector);
   private initialized = false;
 
-  constructor() {
-    if (isPlatformBrowser(this.platformId)) {
-      setTimeout(() => { this.initializeAuth(); }, 0);
+  // Current user signal
+  currentUser = signal<User | null>(null);
+
+  public readonly authState$ = new Observable<User | null>(subscriber => {
+    if (!isPlatformBrowser(this.platformId)) {
+      subscriber.next(null);
+      subscriber.complete();
+      return;
     }
+    return onAuthStateChanged(this.firebase.auth, user => subscriber.next(user));
+  }).pipe(
+    tap(user => this.handleAuthStateChange(user))
+  );
+  constructor() {
+    this.initializeAuth();
+    // Initialize auth state subscription
+    this.authState$.subscribe();
   }
 
   private async initializeAuth(): Promise<void> {
     if (!isPlatformBrowser(this.platformId) || this.initialized) return;
     try {
-      await setPersistence(this.auth, browserLocalPersistence);
-      const result = await getRedirectResult(this.auth);
+      await setPersistence(this.firebase.auth, browserLocalPersistence);
+      const result = await getRedirectResult(this.firebase.auth);
       if (result?.user) this.handleSuccessfulAuth(result.user);
       this.initialized = true;
     } catch (error) {
-      this.handleAuthError(error as AuthError, 'initialization');
+      console.error('Failed to initialize authentication:', error);
     }
   }
 
-  getAuthState(): Observable<FirebaseUser | null> {
-    if (!isPlatformBrowser(this.platformId)) return of(null);
-    return authState(this.auth).pipe(tap(user => this.handleAuthStateChange(user)));
+  login(email: string, password: string): Observable<UserCredential> {
+    return from(signInWithEmailAndPassword(this.firebase.auth, email, password)).pipe(
+      tap(result => this.handleSuccessfulAuth(result.user))
+    );
   }
 
-  async logout(): Promise<void> {
-    if (!isPlatformBrowser(this.platformId)) return;
+  logout(): Observable<void> {
+    return from(firebaseSignOut(this.firebase.auth));
+  }
+
+  async loginWithGoogle(): Promise<User> {
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    
     try {
-      await signOut(this.auth);
-      this.handleSuccessfulLogout();
+      const result = await signInWithPopup(auth, provider);
+      return result.user;
     } catch (error) {
-      this.handleAuthError(error as AuthError, 'sign_out');
+      console.error('Error during Google sign-in:', error);
+      throw error;
     }
   }
-
-  private handleSuccessfulAuth(user: FirebaseUser): void {
-    this.user.set(user);
-    this.isAuthenticated.set(true);
-    console.log('User authenticated successfully:', user.email);
+  private handleSuccessfulAuth(user: User): void {
+    this.currentUser.set(user);
   }
-
-  private handleSuccessfulLogout(): void {
-    this.user.set(null);
-    this.isAuthenticated.set(false);
-    console.log('User signed out successfully');
+  private handleAuthStateChange(user: User | null): void {
+    this.currentUser.set(user);
   }
-
-  private handleAuthStateChange(user: FirebaseUser | null): void {
-    this.user.set(user);
-    this.isAuthenticated.set(!!user);
-    console.log('Auth state changed:', user?.email ?? 'No user');
-  }
-
-  private handleAuthError(error: AuthError, context: AuthErrorContext): void {
-    const errorMessages: Record<AuthErrorContext, string> = {
-      initialization: 'Failed to initialize authentication',
-      state_change: 'Error occurred while monitoring authentication state',
-      sign_out: 'Failed to sign out'
-    };
-    console.error(`${errorMessages[context]}:`, error);
-  }
-} 
+}

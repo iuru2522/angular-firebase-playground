@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, PLATFORM_ID, Injector, runInInjectionContext } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -6,6 +6,9 @@ import { Subscription } from 'rxjs';
 import { AuthService } from './services/auth.service';
 import { FirebaseDiagnosticService } from './services/firebase-diagnostic.service';
 import { OfflineFallbackComponent } from './offline-fallback/offline-fallback.component';
+import { effect, Signal, computed } from '@angular/core';
+import { User as AppUser } from './models/user.interface';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -16,16 +19,34 @@ import { OfflineFallbackComponent } from './offline-fallback/offline-fallback.co
     OfflineFallbackComponent
   ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  styles: [`
+    .login-btn {
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    }
+
+    .login-btn:hover {
+      background-color: #3367d6;
+    }
+  `]
 })
 export class AppComponent implements OnInit, OnDestroy {
   readonly title = 'angular-firebase-playground';
   private readonly authService = inject(AuthService);
   private readonly diagnosticService = inject(FirebaseDiagnosticService);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly injector = inject(Injector);
   private authSubscription?: Subscription;
-  readonly user = this.authService.user;
-  readonly isAuthenticated = this.authService.isAuthenticated;
+  readonly user = signal<AppUser | null>(null);
+  readonly isAuthenticated = computed(() => !!this.user());
   readonly isLoading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
   readonly firebaseReady = signal<boolean>(false);
@@ -41,41 +62,53 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.cleanupAuthSubscription();
   }
-
   async logout(): Promise<void> {
     if (!isPlatformBrowser(this.platformId)) return;
     try {
       this.isLoading.set(true);
       this.error.set(null);
       await this.authService.logout();
+      this.user.set(null);
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Failed to logout');
       throw err;
     } finally {
       this.isLoading.set(false);
     }
+  }  async login() {
+    try {
+      this.isLoading.set(true);
+      this.error.set(null);
+      await this.authService.loginWithGoogle();
+    } catch (error) {
+      this.error.set(error instanceof Error ? error.message : 'Login failed');
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   private initializeAuthState(): void {
-    // Add timeout to prevent hanging
     const timeoutId = setTimeout(() => {
       console.warn('Auth initialization taking too long, showing offline fallback...');
       this.showOfflineFallback.set(true);
-    }, 15000); // 15 second timeout
+    }, 15000);
 
-    this.authSubscription = this.authService.getAuthState().subscribe({
-      next: () => {
-        clearTimeout(timeoutId);
-        this.firebaseReady.set(true);
-        this.showOfflineFallback.set(false);
-      },
-      error: (err) => {
-        clearTimeout(timeoutId);
-        console.error('Auth initialization error:', err);
-        this.error.set(err instanceof Error ? err.message : 'Authentication error');
-        this.showOfflineFallback.set(true);
-      }
-    });
+    this.authSubscription = runInInjectionContext(this.injector, () =>
+      inject(UserService).getCurrentUser().subscribe({
+        next: (user) => {
+          clearTimeout(timeoutId);
+          this.user.set(user);
+          this.firebaseReady.set(true);
+          this.showOfflineFallback.set(false);
+        },
+        error: (err: any) => {
+          clearTimeout(timeoutId);
+          console.error('Auth initialization error:', err);
+          this.error.set(err instanceof Error ? err.message : 'Authentication error');
+          this.showOfflineFallback.set(true);
+        }
+      })
+    );
   }
 
   private cleanupAuthSubscription(): void {
@@ -84,17 +117,13 @@ export class AppComponent implements OnInit, OnDestroy {
       this.authSubscription = undefined;
     }
   }
+
   private async runDiagnostics(): Promise<void> {
-    // Only run diagnostics in browser context
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-
-    // Run diagnostics after a short delay to ensure Firebase is initialized
     try {
-      // Wait for Firebase to be ready
       await new Promise(resolve => setTimeout(resolve, 3000));
-      
       await this.diagnosticService.diagnoseFirebase();
       await this.diagnosticService.checkFirestoreRules();
     } catch (error) {

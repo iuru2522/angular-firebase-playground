@@ -14,7 +14,6 @@
     "@angular/common": "^19.2.11",
     "@angular/compiler": "^19.2.11",
     "@angular/core": "^19.2.11",
-    "@angular/fire": "^19.1.0",
     "@angular/forms": "^19.2.11",
     "@angular/platform-browser": "^19.2.11",
     "@angular/platform-browser-dynamic": "^19.2.11",
@@ -22,7 +21,7 @@
     "@angular/router": "^19.2.11",
     "@angular/ssr": "^19.2.12",
     "express": "^4.18.2",
-    "firebase": "^11.7.3",
+    "firebase": "10.12.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "wrangler": "^4.14.4",
@@ -43,5 +42,8 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.7.2",
     "webpack-bundle-analyzer": "^4.10.2"
+  },
+  "overrides": {
+    "firebase": "10.12.0"
   }
 }

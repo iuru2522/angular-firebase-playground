@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Auth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { LoginComponent } from './login.component';
 
@@ -9,9 +8,8 @@ describe('LoginComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LoginComponent ],
+      imports: [LoginComponent],
       providers: [
-        { provide: Auth, useValue: {} },
         { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } }
       ]
     })

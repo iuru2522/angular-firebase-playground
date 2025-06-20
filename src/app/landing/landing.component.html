@@ -1,15 +1,11 @@
 <div class="landing-container">
-  <h2>Welcome to Angular Firebase Playground</h2>
-  
-  <!-- Show different content based on authentication -->
-  <div *ngIf="user$ | async as user; else notAuthenticated">
+  @if (user$ | async; as user) {
     <div class="user-info">
       <h3>Hello, {{ user.displayName }}!</h3>
       <p class="role-badge role-{{ user.role }}">{{ getRoleLabel(user.role) }}</p>
       <p class="role-description">{{ getRoleDescription(user.role) }}</p>
     </div>
 
-    <!-- Role-based navigation -->
     <div class="role-actions">
       <div *ngIf="isAdmin$ | async">
         <h4>Admin Actions</h4>
@@ -38,21 +34,18 @@
       <div *ngIf="isReporter$ | async">
         <h4>Reporter Actions</h4>
         <button routerLink="/report-bug" class="action-btn reporter">Report New Bug</button>
-        <button routerLink="/my-reports" class="action-btn reporter">My Reports</button>      </div>
-
-      <!-- Temporary testing links -->
-      <div class="testing-links" style="margin-top: 30px; padding: 20px; background: #f0f0f0; border-radius: 8px;">
+        <button routerLink="/my-reports" class="action-btn reporter">My Reports</button>      </div>      <div class="testing-links" style="margin-top: 30px; padding: 20px; background: #f0f0f0; border-radius: 8px;">
         <h4>🧪 Testing Links (Remove later)</h4>
         <button routerLink="/admin/users" class="action-btn admin">Admin Users Page</button>
         <button routerLink="/dashboard" class="action-btn dev">User Dashboard</button>
       </div>
     </div>
-  </div>
-
-  <ng-template #notAuthenticated>
-    <div class="auth-prompt">
-      <p>Please sign in to access role-based features</p>
-      <button routerLink="/login" class="auth-btn">Sign In</button>
+  } @else {
+    <div class="not-authenticated">
+      <div class="auth-prompt">
+        <p>Please access the dashboard to sign in</p>
+        <button routerLink="/dashboard" class="auth-btn">Go to Dashboard</button>
+      </div>
     </div>
-  </ng-template>
+  }
 </div>
