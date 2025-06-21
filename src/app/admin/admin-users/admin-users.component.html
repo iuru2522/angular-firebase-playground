@@ -3,7 +3,7 @@
   <p class="description">Manage user roles and permissions</p>
   
   <div class="users-list">
-    <div *ngIf="currentUser$ | async as currentUser" class="current-user-card">
+    <div *ngIf="currentUser() as currentUser" class="current-user-card">
       <h3>Current User</h3>
       <div class="user-card">
         <div class="user-info">
@@ -18,10 +18,15 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="admin-actions">
+    </div>    <div class="admin-actions">
       <h3>Admin Actions</h3>
+      
+      @if (actionMessage()) {
+        <div class="action-feedback" [class.success]="!actionMessage()?.includes('Failed')" [class.error]="actionMessage()?.includes('Failed')">
+          {{ actionMessage() }}
+        </div>
+      }
+      
       <div class="action-grid">
         <button class="action-card" (click)="showUserList()">
           <h4>📋 View All Users</h4>
