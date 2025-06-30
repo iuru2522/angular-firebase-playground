@@ -1,0 +1,86 @@
+<div class="users-table-container">
+
+    <div class="header">
+        <h1>All Users</h1>
+        <p class="subtitle">Manage user roles and permissions</p>
+        <button routerLink="/admin/users" class="back-btn">Back to Admin</button>
+    </div>
+</div>
+
+@if(error()){
+<div class="alert alert-error">
+    {{error()}}
+</div>
+}
+
+@if(successMessage()){
+<div class="alert alert-success">
+    {{successMessage()}}
+</div>
+}
+
+<div class="table-wrapper">
+    <table class="users-table">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Current Role</th>
+                <th>Actions</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for(user of users(); track user.id){
+            <tr [class.current-user]="currentUser()?.id === user.id">
+                <td class="user-cell">
+                    <div class="user-info">
+                        <img [src]="user.photoURL || '/assets/default-avatar.png'" alt="Avatar" class="user-avatar">
+                        <div class="user-details">
+                            <div class="user-name">{{user.displayName}} </div>
+                            @if(currentUser()?.id === user.id){
+                            <span class="current-user-badge">You</span>
+                            }
+                        </div>
+                    </div>
+                </td>
+                <td>{{user.email}}</td>
+                <td>
+                    <span class="role-badge" [class]="getRoleBadgeClass(user.role)">
+                        {{roleLabels[user.role]}}
+                    </span>
+                </td>
+
+                <td>
+                    @if(canEditUser(user)){
+                    <select class="role-select" 
+                            [value]="user.role" 
+                            (change)="onRoleChange(user, $event)"
+                            [disabled]="isLoading()">
+                        @for(role of userRoles; track role) {
+                        <option [value]="role">{{roleLabels[role]}}</option>
+                        }
+                    </select>
+                    }@else{
+                    <span class="no-edit">Cannot edit</span>
+                    }
+                </td>
+
+                <td>
+                    <span class="status-badge" [class.active]="user.isActive">
+                        {{user.isActive ? 'Active' : 'Inactive'}}
+                    </span>
+                </td>
+            </tr>
+
+            } @empty {
+
+            <tr>
+                <td colspan="5" class="empty-state">
+                    No users found
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

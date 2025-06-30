@@ -9,6 +9,7 @@ import { OfflineFallbackComponent } from './offline-fallback/offline-fallback.co
 import { AuthGuard } from './auth.guard';
 import { RoleGuard } from './guards/role.guard';
 import { UserRole } from './models';
+import { AdminUsersTableComponent } from './admin/admin-users-table/admin-users-table.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -24,6 +25,12 @@ export const routes: Routes = [
     component: AdminUsersComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: [UserRole.ADMIN] }
+  },
+  {
+    path: 'admin/users-table',
+    component: AdminUsersTableComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {roles: [UserRole.ADMIN]}
   },
   { 
     path: 'require-auth', 

@@ -1,9 +1,10 @@
 import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UserService } from '../../services/user.service';
 import { User, UserRole, USER_ROLE_LABELS } from '../../models';
+
 
 interface AdminAction {
   id: string;
@@ -27,6 +28,8 @@ export class AdminUsersComponent {
   // Convert Observable to signal for better reactivity
   readonly currentUser = toSignal(this.userService.getCurrentUser());
   readonly userRoles = Object.values(UserRole);
+
+  private readonly router = inject(Router);
   
   // Action feedback signals
   readonly actionInProgress = signal<string | null>(null);
@@ -107,6 +110,7 @@ export class AdminUsersComponent {
     switch (actionId) {
       case 'user-list':
         console.log('Fetching user list...');
+        this.router.navigate(['/admin/users-table']);
         break;
       case 'manage-roles':
         console.log('Opening role management interface...');

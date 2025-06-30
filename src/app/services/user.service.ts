@@ -1,9 +1,10 @@
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { from, Observable, of } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, catchError } from 'rxjs/operators';
 import { getAuth, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc, updateDoc, DocumentReference } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc, updateDoc, DocumentReference, collection, getDocs } from 'firebase/firestore';
+
 import { FirebaseInitService } from './firebase-init.service';
 import { User as AppUser } from '../models/user.interface';
 import { UserRole } from '../models/user-role.enum';
@@ -86,6 +87,29 @@ export class UserService {
         return this.getCurrentUser().pipe(
             map(user => user ? roles.includes(user.role) : false)
         );
+    }
+
+    getAllUsers(): Observable<AppUser[]> {
+        if (!isPlatformBrowser(this.platformId)) {
+            return of([])
+        }
+
+        const usersRef = collection(this.firebase.firestore, 'users');
+
+        return from(getDocs(usersRef)).pipe(
+            map(snapshot => {
+                return snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return this.mapToAppUser({ id: doc.id, ...data });
+                });
+            }),
+            catchError(error => {
+                console.error('Error fetching users:', error);
+                return of([]);
+            })
+        );
+
+
     }
 
     private mapToAppUser(data: any): AppUser {
