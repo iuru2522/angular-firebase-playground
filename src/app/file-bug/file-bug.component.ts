@@ -62,8 +62,8 @@ export class FileBugComponent {
 
 
       } catch (error) {
-        console.log('Eror submitting bug:', error);
-        alert('Failed to submit but report. Please try again');
+        console.log('Error submitting bug:', error);
+        alert('Failed to submit bug report. Please try again');
 
       } finally {
         this.isSubmitting.set(false);
@@ -75,7 +75,7 @@ export class FileBugComponent {
   }
 
   onCancel(): void {
-    this.router.navigate(['./dashboard']);
+    this.router.navigate(['/dashboard']);
   }
 
 }

@@ -6,6 +6,9 @@ import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { RequireAuthComponent } from './require-auth/require-auth.component';
 import { OfflineFallbackComponent } from './offline-fallback/offline-fallback.component';
+import { FileBugComponent } from './file-bug/file-bug.component';
+import { BugListComponent } from './bug-list/bug-list.component';
+import { BugDetailsComponent } from './bug-details/bug-details.component';
 import { AuthGuard } from './auth.guard';
 import { RoleGuard } from './guards/role.guard';
 import { UserRole } from './models';
@@ -19,6 +22,21 @@ export const routes: Routes = [
   { 
     path: 'dashboard', 
     component: UserDashboardComponent
+  },
+  {
+    path: 'file-bug',
+    component: FileBugComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'bug-list',
+    component: BugListComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'bug-details/:id',
+    component: BugDetailsComponent,
+    canActivate: [AuthGuard]
   },
   { 
     path: 'admin/users', 
