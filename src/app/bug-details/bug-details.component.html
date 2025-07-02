@@ -1,0 +1,63 @@
+<div class="bug-details-container">
+  @if (bug()) {
+    <div class="bug-details-card">
+      <div class="bug-header">
+        <div class="bug-title-section">
+          <h1 class="bug-title">{{ bug()!.title }}</h1>
+          <span class="bug-id">#{{ bug()!.id }}</span>
+        </div>
+        
+        <div class="bug-meta">
+          <span [class]="'severity-badge severity-' + bug()!.severity">
+            {{ bug()!.severity }}
+          </span>
+          <span [class]="'status-badge status-' + bug()!.status">
+            {{ bug()!.status }}
+          </span>
+        </div>
+      </div>
+
+      <div class="bug-content">
+        <div class="bug-section">
+          <h3>Description</h3>
+          <p class="bug-description">{{ bug()!.description }}</p>
+        </div>
+
+        <div class="bug-info-grid">
+          <div class="info-item">
+            <label>Reporter:</label>
+            <span>{{ bug()!.reporter }}</span>
+          </div>
+          
+          <div class="info-item">
+            <label>Created:</label>
+            <span>{{ formatDate(bug()!.createdAt) }}</span>
+          </div>
+          
+          <div class="info-item">
+            <label>Last Updated:</label>
+            <span>{{ formatDate(bug()!.updatedAt) }}</span>
+          </div>
+          
+          @if (bug()!.assignee) {
+            <div class="info-item">
+              <label>Assignee:</label>
+              <span>{{ bug()!.assignee }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="bug-actions">
+        <button class="btn-primary" (click)="editBug()">Edit Bug</button>
+        <button class="btn-secondary" (click)="goBack()">Back to List</button>
+      </div>
+    </div>
+  } @else {
+    <div class="not-found">
+      <h2>Bug Not Found</h2>
+      <p>The bug you're looking for doesn't exist.</p>
+      <button class="btn-primary" (click)="goBack()">Back to List</button>
+    </div>
+  }
+</div>

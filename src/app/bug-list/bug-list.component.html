@@ -1,0 +1,73 @@
+<div class="bug-list-container">
+    <div class="header">
+        <h2>Bug Reports</h2>
+        <div class="controls">
+            <input type="text" class="search-box" placeholder="Search bugs..." [value]="searchTerm()"
+                (input)="updateSearchTerm($event)">
+            <select class="filter-select" [value]="selectedSeverity()" (change)="updateSeverityFilter($event)">
+                <option value="">All Severities</option>
+                <option value="critical">Critical</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+
+
+
+        </div>
+    </div>
+
+    <div class="content">
+
+        @if(isLoading()){
+        <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading bugs...</p>
+        </div>
+        } @else if (filteredBugs().length === 0){
+        <div class="empty-state">
+            <div class="empty-state-icon">🐛</div>
+            <h3>No bugs found</h3>
+            <p>No bug reports match your current filters.</p>
+        </div>
+        } @else {
+        <table class="bug-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Severity</th>
+                    <th>Reporter</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @for (bug of filteredBugs(); track bug.id){
+                <tr>
+                    <td class="bug-id">#{{bug.id}}</td>
+                    <td>{{bug.title}}</td>
+                    <td>
+                        <span [class]="'severity-badge severity-' + bug.severity">
+                            {{bug.severity}}
+                        </span>
+                    </td>
+                    <td>{{bug.reporter}}</td>
+                    <td>{{bug.status}}</td>
+                    <td>{{formatDate(bug.createdAt)}}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-small btn-view" (click)="viewBug(bug.id)">View</button>
+                            <button class="btn-small btn-edit" >Edit</button>
+                        </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+        }
+    </div>
+</div>
