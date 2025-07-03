@@ -1,0 +1,15 @@
+<div class="test-cases-container">
+  <h2>Test Cases</h2>
+  <button (click)="onAddNew()">Add New Test Case</button>
+
+  @if(testCases().length === 0){
+
+  <p>No test cases yet. Click "Add new" to create one!</p>
+  } @else {
+  <ul>
+    @for(testCase of testCases(); track testCase.id){
+    <li>{{testCase.title}} - {{testCase.status}}</li>
+    }
+  </ul>
+  }
+</div>

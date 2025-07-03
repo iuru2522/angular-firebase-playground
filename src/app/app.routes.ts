@@ -13,6 +13,8 @@ import { AuthGuard } from './auth.guard';
 import { RoleGuard } from './guards/role.guard';
 import { UserRole } from './models';
 import { AdminUsersTableComponent } from './admin/admin-users-table/admin-users-table.component';
+import { TestCasesComponent } from './test-cases/test-cases.component';
+import { TestCaseFormComponent } from './test-case-form/test-case-form.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -49,6 +51,14 @@ export const routes: Routes = [
     component: AdminUsersTableComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: {roles: [UserRole.ADMIN]}
+  },
+  {
+    path: 'test-cases',
+    component: TestCasesComponent
+  },
+  {
+    path: 'test-cases-form',
+    component: TestCaseFormComponent
   },
   { 
     path: 'require-auth', 

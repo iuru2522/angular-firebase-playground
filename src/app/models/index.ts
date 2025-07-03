@@ -8,3 +8,4 @@
 
 export * from './user-role.enum';
 export * from './user.interface';
+export * from './test-case.interface';
