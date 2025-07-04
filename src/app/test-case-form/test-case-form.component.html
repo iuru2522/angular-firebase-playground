@@ -92,6 +92,61 @@
         }
 
       </div>
+
+
+      <div class="form-row">
+
+        <!-- Test Type Field -->
+
+
+        <div class="form-group">
+
+          <label for="testType" class="form-label required"> Test Type</label>
+
+          <select id="testType" formControlName="testType" class="form-control select"
+            [class.error]="testCaseForm.get('testType')?.invalid && testCaseForm.get('testType')?.touched">
+            <option value="" disabled>Select test type</option>
+
+            @for (option of testTypeOptions; track option.value){
+            <option [value]="option.value">{{option.value}}</option>
+            }
+          </select>
+
+
+          @if(testCaseForm.get('testType')?.invalid && testCaseForm.get('testType')?.touched){
+          <div class="error-message">
+            <span>Test Type is required</span>
+          </div>
+          }
+        </div>
+
+
+        <!-- Priority Field -->
+        <div class="from-group">
+          <label for="priority" class="form-label required">Priority</label>
+
+          <select id="priority" formControlName="priority" class="form-control select">
+            @for (option of priorityOptions; track option.value){
+            <option [value]="option.value">{{option.label}}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+
+        <!-- Status Field -->
+
+        <div class="form-group">
+          <label for="status" class="form-label required">Status</label>
+
+          <select id="status" formControlName="status" class="form-control select">
+            @for(option of statusOptions; track option.value){
+            <option [value]="option.value">{{option.value}}</option>
+            }
+          </select>
+        </div>
+      </div>
     </div>
 
     <!-- Form Actions -->
@@ -105,11 +160,8 @@
         }
 
       </button>
-
       <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="isSubmitting()">
-
         Cancel
-
       </button>
     </div>
   </form>
