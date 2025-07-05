@@ -1,15 +1,61 @@
 <div class="test-cases-container">
-  <h2>Test Cases</h2>
-  <button (click)="onAddNew()">Add New Test Case</button>
+  <div class="header">
+    <h2>Test Cases</h2>
+    <button (click)="onAddNew()" class="btn btn-primary">Add New Test Case</button>
+  </div>
 
   @if(testCases().length === 0){
-
-  <p>No test cases yet. Click "Add new" to create one!</p>
+  <div class="empty-state">
+    <p>No test cases yet. Click "Add New Test Case" to create one!</p>
+  </div>
   } @else {
-  <ul>
-    @for(testCase of testCases(); track testCase.id){
-    <li>{{testCase.title}} - {{testCase.status}}</li>
-    }
-  </ul>
+  <div class="table-container">
+    <table class="test-cases-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Type</th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(testCase of testCases(); track testCase.id){
+        <tr>
+          <td class="test-case-id">{{testCase.id}}</td>
+          <td class="title">{{testCase.title}}</td>
+          <td class="description">
+            @if(testCase.description) {
+            {{testCase.description.length > 50 ?
+            (testCase.description | slice:0:50) + '...' :
+            testCase.description}}
+            }
+          </td>
+          <td class="test-type">{{testCase.testType || 'N/A'}}</td>
+          <td class="priority">
+            <span [class]="'priority priority-' + testCase.priority">
+              {{testCase.priority || 'N/A'}}
+            </span>
+          </td>
+          <td class="status">
+            <span [class]="'status status-' + testCase.status.toLowerCase()">
+              {{testCase.status}}
+            </span>
+          </td>
+          <td class="date">{{testCase.createdAt | date:'short'}}</td>
+          <td class="actions">
+            <button (click)="onView(testCase)" class="btn btn-sm btn-outline">View</button>
+            <button (click)="onEdit(testCase)" class="btn btn-sm btn-outline">Edit</button>
+            <button (click)="onDelete(testCase.id)"class="btn btn-sm btn-danger">Delete</button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
   }
 </div>
