@@ -30,12 +30,16 @@ export class UserService {
                             id: authUser.uid,
                             email: authUser.email ?? '',
                             displayName: authUser.displayName ?? '',
-                            photoURL: authUser.photoURL ?? undefined,
                             role: UserRole.REPORTER,
                             isActive: true,
                             createdAt: now,
                             updatedAt: now
                         };
+                        
+                        // Only add photoURL if it exists
+                        if (authUser.photoURL) {
+                            newUser.photoURL = authUser.photoURL;
+                        }
                         return this.createUserDocument(newUser).pipe(
                             switchMap(() => this.getUserDocument(authUser.uid))
                         );
@@ -55,7 +59,13 @@ export class UserService {
 
     createUserDocument(user: AppUser): Observable<void> {
         const userDocRef = doc(this.firebase.firestore, 'users', user.id);
-        return from(setDoc(userDocRef, user));
+        
+        // Filter out undefined values to prevent Firestore errors
+        const cleanUserData = Object.fromEntries(
+            Object.entries(user).filter(([_, value]) => value !== undefined)
+        );
+        
+        return from(setDoc(userDocRef, cleanUserData));
     }
 
     updateUserDocument(uid: string, data: Partial<AppUser>): Observable<void> {

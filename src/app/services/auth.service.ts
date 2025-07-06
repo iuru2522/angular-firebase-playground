@@ -6,6 +6,8 @@ import { getAuth, signInWithEmailAndPassword, signOut as firebaseSignOut, setPer
 import { FirebaseInitService } from './firebase-init.service';
 import { AuthError, AuthErrorContext } from '../models/auth.types';
 
+import { createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile } from 'firebase/auth';
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly firebase = inject(FirebaseInitService);
@@ -13,7 +15,7 @@ export class AuthService {
   private readonly injector = inject(Injector);
   private initialized = false;
 
-  // Current user signal
+
   currentUser = signal<User | null>(null);
 
   public readonly authState$ = new Observable<User | null>(subscriber => {
@@ -28,7 +30,6 @@ export class AuthService {
   );
   constructor() {
     this.initializeAuth();
-    // Initialize auth state subscription
     this.authState$.subscribe();
   }
 
@@ -54,12 +55,38 @@ export class AuthService {
     return from(firebaseSignOut(this.firebase.auth));
   }
 
+  registerWithEmail(email: string, password: string): Observable<UserCredential> {
+    return from(createUserWithEmailAndPassword(this.firebase.auth, email, password)).pipe(
+      tap(result => this.handleSuccessfulAuth(result.user))
+    );
+  }
+
+  sendPasswordResetEmail(email: string): Observable<void> {
+    return from(sendPasswordResetEmail(this.firebase.auth, email));
+  }
+
+  updateUserProfile(displayName: string, photoUrl?: string): Observable<void> {
+    const user = this.firebase.auth.currentUser;
+
+    if (!user) {
+      throw new Error('No user is currently signed in');
+    }
+
+    const profileData: any = { displayName };
+    if (photoUrl) {
+      profileData.photoURL = photoUrl;
+    }
+
+    return from(updateProfile(user, profileData));
+
+  }
+
   async loginWithGoogle(): Promise<User> {
-    const auth = getAuth();
     const provider = new GoogleAuthProvider();
-    
+
     try {
-      const result = await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(this.firebase.auth, provider);
+      this.handleSuccessfulAuth(result.user);
       return result.user;
     } catch (error) {
       console.error('Error during Google sign-in:', error);

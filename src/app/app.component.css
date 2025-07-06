@@ -154,3 +154,33 @@
   align-items: center;
   gap: 1rem;
 }
+
+/* Auth button styles */
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.login-btn {
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color: #3367d6;
+}
+
+.signup-btn {
+  background-color: #34a853;
+}
+
+.signup-btn:hover {
+  background-color: #2d8f47;
+}

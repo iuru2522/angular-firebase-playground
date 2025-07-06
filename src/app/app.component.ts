@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject, signal, PLATFORM_ID, Injector, runInInjectionContext } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from './services/auth.service';
 import { FirebaseDiagnosticService } from './services/firebase-diagnostic.service';
@@ -19,24 +19,7 @@ import { UserService } from './services/user.service';
     OfflineFallbackComponent
   ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  styles: [`
-    .login-btn {
-      background-color: #4285f4;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      transition: background-color 0.3s ease;
-    }
-
-    .login-btn:hover {
-      background-color: #3367d6;
-    }
-  `]
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
   readonly title = 'angular-firebase-playground';
@@ -44,6 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private readonly diagnosticService = inject(FirebaseDiagnosticService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly injector = inject(Injector);
+  private readonly router = inject(Router);
   private authSubscription?: Subscription;
   readonly user = signal<AppUser | null>(null);
   readonly isAuthenticated = computed(() => !!this.user());
@@ -85,6 +69,14 @@ export class AppComponent implements OnInit, OnDestroy {
     } finally {
       this.isLoading.set(false);
     }
+  }
+
+  signUp(): void {
+    this.router.navigate(['/register']);
+  }
+
+  signIn(): void {
+    this.router.navigate(['/signin']);
   }
 
   private initializeAuthState(): void {

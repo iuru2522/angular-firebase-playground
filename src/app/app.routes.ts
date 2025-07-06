@@ -15,15 +15,19 @@ import { UserRole } from './models';
 import { AdminUsersTableComponent } from './admin/admin-users-table/admin-users-table.component';
 import { TestCasesComponent } from './test-cases/test-cases.component';
 import { TestCaseFormComponent } from './test-case-form/test-case-form.component';
+import { RegisterComponent } from './register/register.component';
+
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'signin', component: SigninComponent },
+  { path: 'register', component: RegisterComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: 'offline', component: OfflineFallbackComponent },
-  { 
-    path: 'dashboard', 
-    component: UserDashboardComponent
+  {
+    path: 'dashboard',
+    component: UserDashboardComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'file-bug',
@@ -40,8 +44,8 @@ export const routes: Routes = [
     component: BugDetailsComponent,
     canActivate: [AuthGuard]
   },
-  { 
-    path: 'admin/users', 
+  {
+    path: 'admin/users',
     component: AdminUsersComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: [UserRole.ADMIN] }
@@ -50,7 +54,7 @@ export const routes: Routes = [
     path: 'admin/users-table',
     component: AdminUsersTableComponent,
     canActivate: [AuthGuard, RoleGuard],
-    data: {roles: [UserRole.ADMIN]}
+    data: { roles: [UserRole.ADMIN] }
   },
   {
     path: 'test-cases',
@@ -60,10 +64,11 @@ export const routes: Routes = [
     path: 'test-cases-form',
     component: TestCaseFormComponent
   },
-  { 
-    path: 'require-auth', 
+  {
+    path: 'require-auth',
     component: RequireAuthComponent,
     canActivate: [AuthGuard]
   },
+  { path: 'register', component: RegisterComponent },
   { path: '**', redirectTo: '' }
 ];
