@@ -16,12 +16,14 @@ import { AdminUsersTableComponent } from './admin/admin-users-table/admin-users-
 import { TestCasesComponent } from './test-cases/test-cases.component';
 import { TestCaseFormComponent } from './test-case-form/test-case-form.component';
 import { RegisterComponent } from './register/register.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'signin', component: SigninComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: 'offline', component: OfflineFallbackComponent },
   {
