@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { firstValueFrom } from 'rxjs';
@@ -36,42 +36,35 @@ export class RegisterComponent {
     }),
     confirmPassword: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(2)]
+      validators: [Validators.required]
     }),
     displayName: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(2)]
     })
-  })
+  }, { validators: this.passwordMatchValidator });
 
   async onSubmit(): Promise<void> {
     if (this.registerForm.valid && !this.isSubmitting()) {
-      const { email, password, confirmPassword, displayName } = this.registerForm.getRawValue();
-
-      if (password !== confirmPassword) {
-        this.error.set('Password do not match');
-        return;
-      }
+      const { email, password, displayName } = this.registerForm.getRawValue();
 
       this.isSubmitting.set(true);
       this.error.set(null);
       this.successMessage.set(null);
 
       try {
-       const userCredential = await firstValueFrom(this.authService.registerWithEmail(email, password));
-        this.successMessage.set('Registration successful! Redirecting..');
+        const userCredential = await firstValueFrom(this.authService.registerWithEmail(email, password));
+        this.successMessage.set('Registration successful! Redirecting...');
 
         setTimeout(() => {
-          this.router.navigate(['/dashboard]']);
+          this.router.navigate(['/dashboard']);
         }, 1500);
 
       } catch (error: any) {
-        console.error('Registration failed', error);
         this.error.set(this.getErrorMessage(error));
       } finally {
         this.isSubmitting.set(false);
       }
-
     }
   }
 
@@ -88,6 +81,13 @@ export class RegisterComponent {
     this.isSubmitting.set(false);
   }
 }
+
+  private passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.get('password')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
+    
+    return password === confirmPassword ? null : { passwordMismatch: true };
+  }
 
   private getErrorMessage(error: any): string {
     switch (error.code) {
