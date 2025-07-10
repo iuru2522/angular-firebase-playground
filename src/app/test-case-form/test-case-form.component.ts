@@ -13,18 +13,13 @@ import { TestCase } from '../models';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestCaseFormComponent {
-
   private router = inject(Router);
   private testCaseService = inject(TestCaseService);
   private fb = inject(FormBuilder);
 
-  //Form state
   readonly isSubmitting = signal(false);
   readonly error = signal<string | null>(null);
   readonly successMessage = signal<string | null>(null);
-
-  //title = signal('');
-  //status = signal<TestCase['status']>('Draft');
 
   testCaseForm: FormGroup;
 
@@ -58,26 +53,28 @@ export class TestCaseFormComponent {
     this.testCaseForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       testCaseId: ['', [Validators.required, Validators.pattern(/^TC-\d+$/)]],
-      description: ['', Validators.required],
+      description: ['', [Validators.required, Validators.minLength(10)]],
       testType: ['', Validators.required],
       priority: ['medium', Validators.required],
       status: ['draft', Validators.required]
     });
   }
 
-
-  readonly isFormValid = computed(() => this.testCaseForm.valid)
+  readonly isFormValid = computed(() => this.testCaseForm.valid && !this.isSubmitting());
 
   async onSave(): Promise<void> {
-    if(!this.testCaseForm.valid || this.isSubmitting()) return;
+    if (!this.testCaseForm.valid || this.isSubmitting()) {
+      this.markAllFieldsAsTouched();
+      return;
+    }
 
     this.isSubmitting.set(true);
     this.error.set(null);
     this.successMessage.set(null);
 
-    try{
+    try {
       const formData = this.testCaseForm.getRawValue();
-      const newTestCase:TestCase = {
+      const newTestCase: TestCase = {
         id: formData.testCaseId,
         title: formData.title,
         status: formData.status,
@@ -86,8 +83,7 @@ export class TestCaseFormComponent {
         priority: formData.priority,
         createdAt: new Date(),
         updatedAt: new Date()
-        
-      }
+      };
 
       await this.testCaseService.addTestCase(newTestCase);
       this.successMessage.set('Test case created successfully!');
@@ -95,48 +91,48 @@ export class TestCaseFormComponent {
       this.testCaseForm.reset({
         title: '',
         testCaseId: '',
-        desciption: '',
+        description: '', // Fixed typo: was 'desciption'
         testType: '',
         priority: 'medium',
         status: 'draft'
       });
 
       setTimeout(() => {
-        this.router.navigate(['/test-case']);
+        this.router.navigate(['/test-cases']); // Fixed route: was '/test-case'
       }, 1500);
-    } catch (error){
-      this.error.set(error instanceof Error ? error.message: 'Failed to create test case');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create test case';
+      this.error.set(errorMessage);
+      console.error('Error creating test case:', error);
     } finally {
       this.isSubmitting.set(false);
     }
-
-    
-
   }
 
-
-  // onSave() {
-  //   const newTestCase: TestCase = {
-  //     id: 'TC' + Date.now(),
-  //     title: this.title(),
-  //     status: this.status()
-  //   };
-  //   this.testCaseService.addTestCase(newTestCase);
-  //   this.router.navigate(['/test-cases']);
-  // }
-
-  onBack() {
+  onBack(): void {
     this.router.navigate(['/test-cases']);
   }
 
-  onCancel() {
+  onCancel(): void {
+    if (this.testCaseForm.dirty && !confirm('You have unsaved changes. Are you sure you want to cancel?')) {
+      return;
+    }
     this.router.navigate(['/test-cases']);
   }
 
   private markAllFieldsAsTouched(): void {
     Object.keys(this.testCaseForm.controls).forEach(key => {
       this.testCaseForm.get(key)?.markAsTouched();
-    })
+    });
   }
 
+  getFieldError(fieldName: string): string | null {
+    const field = this.testCaseForm.get(fieldName);
+    if (field?.errors && field.touched) {
+      if (field.errors['required']) return `${fieldName} is required`;
+      if (field.errors['minlength']) return `${fieldName} must be at least ${field.errors['minlength'].requiredLength} characters`;
+      if (field.errors['pattern']) return `${fieldName} must follow the format TC-123`;
+    }
+    return null;
+  }
 }
