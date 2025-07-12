@@ -1,118 +1,125 @@
 <div class="dashboard-container">
     @if (user(); as user) {
-        <div class="dashboard-content">
-
-        <div class="welcome-header">
-            <div class="user-welcome">
-                <img [src]="user.photoURL || '/assets/default-avatar.png'" alt="Profile" class="user-avatar">
-                <div class="welcome-text">
-                    <h1>Welcome back, {{ user.displayName }}!</h1>
-                    <p class="user-role">{{ getRoleLabel(user.role) }}</p>
-                </div>
+        @if (!isUserActive()) {
+            <div class="deactivated-warning">
+                <h3>⚠️ Account Deactivated</h3>
+                <p>Your account has been deactivated. Please contact an administrator.</p>
             </div>
-            <div class="quick-stats">
-                <div class="stat-card">
-                    <span class="stat-number">{{ dayOfWeek() }}</span>
-                    <span class="stat-label">Today</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number">{{ taskCount() }}</span>
-                    <span class="stat-label">Tasks</span>
-                </div>
-            </div>
-        </div>
+        } @else {
+            <div class="dashboard-content">
 
-        <div class="quick-actions">
-            <h3>Quick Actions</h3>
-            <div class="actions-grid">
-
-                @if (user.role === 'admin') {
-                    <button routerLink="/admin/users" class="action-btn admin">
-                        <span class="action-icon">👥</span>
-                        <span>Manage Users</span>
-                    </button>
-                    <button routerLink="/admin/reports" class="action-btn admin">
-                        <span class="action-icon">📊</span>
-                        <span>View Reports</span>
-                    </button>
-                }
-
-                @if (user.role === 'project_manager') {
-                    <button routerLink="/projects" class="action-btn pm">
-                        <span class="action-icon">📋</span>
-                        <span>Projects</span>
-                    </button>
-                    <button routerLink="/assign-tasks" class="action-btn pm">
-                        <span class="action-icon">📝</span>
-                        <span>Assign Tasks</span>
-                    </button>
-                }
-
-                @if (user.role === 'developer') {
-                    <button routerLink="/my-tasks" class="action-btn dev">
-                        <span class="action-icon">⚡</span>
-                        <span>My Tasks</span>
-                    </button>
-                    <button routerLink="/code-review" class="action-btn dev">
-                        <span class="action-icon">🔍</span>
-                        <span>Code Review</span>
-                    </button>
-                }
-
-                @if (user.role === 'qa_tester') {
-                    <button routerLink="/test-cases" class="action-btn qa">
-                        <span class="action-icon">🧪</span>
-                        <span>Test Cases</span>
-                    </button>
-                    <button routerLink="/bug-verification" class="action-btn qa">
-                        <span class="action-icon">✅</span>
-                        <span>Verify Bugs</span>
-                    </button>
-                }
-
-                @if (user.role === 'reporter') {
-                    <button routerLink="/report-bug" class="action-btn reporter">
-                        <span class="action-icon">🐛</span>
-                        <span>Report Bug</span>
-                    </button>
-                    <button routerLink="/my-reports" class="action-btn reporter">
-                        <span class="action-icon">📄</span>
-                        <span>My Reports</span>
-                    </button>
-                }
-            </div>
-        </div>
-
-        <div class="recent-activity">
-            <h3>Recent Activity</h3>
-            <div class="activity-list">
-                @for (activity of recentActivities(); track activity.text) {
-                    <div class="activity-item">
-                        <span class="activity-icon">{{ activity.icon }}</span>
-                        <div class="activity-content">
-                            <p class="activity-text">{{ activity.text }}</p>
-                            <span class="activity-time">{{ activity.time }}</span>
-                        </div>
+            <div class="welcome-header">
+                <div class="user-welcome">
+                    <img [src]="user.photoURL || '/assets/default-avatar.png'" alt="Profile" class="user-avatar">
+                    <div class="welcome-text">
+                        <h1>Welcome back, {{ user.displayName }}!</h1>
+                        <p class="user-role">{{ getRoleLabel(user.role) }}</p>
                     </div>
-                }
-            </div>
-        </div>
-
-        <div class="info-panel">
-            <h3>{{ getRoleLabel(user.role) }} Information</h3>
-            <div class="info-content">
-                <p>{{ getRoleDescription(user.role) }}</p>
-                <div class="role-permissions">
-                    <h4>Your Permissions:</h4>
-                    <ul>
-                        @for (permission of rolePermissions(); track permission) {
-                            <li>{{ permission }}</li>
-                        }
-                    </ul>
+                </div>
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <span class="stat-number">{{ dayOfWeek() }}</span>
+                        <span class="stat-label">Today</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">{{ taskCount() }}</span>
+                        <span class="stat-label">Tasks</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        </div>
+
+            <div class="quick-actions">
+                <h3>Quick Actions</h3>
+                <div class="actions-grid">
+
+                    @if (user.role === 'admin') {
+                        <button routerLink="/admin/users" class="action-btn admin">
+                            <span class="action-icon">👥</span>
+                            <span>Manage Users</span>
+                        </button>
+                        <button routerLink="/admin/reports" class="action-btn admin">
+                            <span class="action-icon">📊</span>
+                            <span>View Reports</span>
+                        </button>
+                    }
+
+                    @if (user.role === 'project_manager') {
+                        <button routerLink="/projects" class="action-btn pm">
+                            <span class="action-icon">📋</span>
+                            <span>Projects</span>
+                        </button>
+                        <button routerLink="/assign-tasks" class="action-btn pm">
+                            <span class="action-icon">📝</span>
+                            <span>Assign Tasks</span>
+                        </button>
+                    }
+
+                    @if (user.role === 'developer') {
+                        <button routerLink="/my-tasks" class="action-btn dev">
+                            <span class="action-icon">⚡</span>
+                            <span>My Tasks</span>
+                        </button>
+                        <button routerLink="/code-review" class="action-btn dev">
+                            <span class="action-icon">🔍</span>
+                            <span>Code Review</span>
+                        </button>
+                    }
+
+                    @if (user.role === 'qa_tester') {
+                        <button routerLink="/test-cases" class="action-btn qa">
+                            <span class="action-icon">🧪</span>
+                            <span>Test Cases</span>
+                        </button>
+                        <button routerLink="/bug-verification" class="action-btn qa">
+                            <span class="action-icon">✅</span>
+                            <span>Verify Bugs</span>
+                        </button>
+                    }
+
+                    @if (user.role === 'reporter') {
+                        <button routerLink="/report-bug" class="action-btn reporter">
+                            <span class="action-icon">🐛</span>
+                            <span>Report Bug</span>
+                        </button>
+                        <button routerLink="/my-reports" class="action-btn reporter">
+                            <span class="action-icon">📄</span>
+                            <span>My Reports</span>
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <div class="recent-activity">
+                <h3>Recent Activity</h3>
+                <div class="activity-list">
+                    @for (activity of recentActivities(); track activity.text) {
+                        <div class="activity-item">
+                            <span class="activity-icon">{{ activity.icon }}</span>
+                            <div class="activity-content">
+                                <p class="activity-text">{{ activity.text }}</p>
+                                <span class="activity-time">{{ activity.time }}</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="info-panel">
+                <h3>{{ getRoleLabel(user.role) }} Information</h3>
+                <div class="info-content">
+                    <p>{{ getRoleDescription(user.role) }}</p>
+                    <div class="role-permissions">
+                        <h4>Your Permissions:</h4>
+                        <ul>
+                            @for (permission of rolePermissions(); track permission) {
+                                <li>{{ permission }}</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            </div>
+        }
     } @else {
         <app-login-placeholder />
     }

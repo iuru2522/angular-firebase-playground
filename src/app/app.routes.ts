@@ -17,6 +17,7 @@ import { TestCasesComponent } from './test-cases/test-cases.component';
 import { TestCaseFormComponent } from './test-case-form/test-case-form.component';
 import { RegisterComponent } from './register/register.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { AccountDeactivatedComponent } from './account-deactivated/account-deactivated.component';
 
 
 export const routes: Routes = [
@@ -25,6 +26,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
+  { path: 'account-deactivated', component: AccountDeactivatedComponent },
   { path: 'offline', component: OfflineFallbackComponent },
   {
     path: 'dashboard',

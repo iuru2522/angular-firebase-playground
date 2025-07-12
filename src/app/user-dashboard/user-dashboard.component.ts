@@ -35,6 +35,9 @@ export class UserDashboardComponent {
   readonly recentActivities = computed(() => this.getRecentActivities(this.currentUserRole()));
   readonly rolePermissions = computed(() => this.getRolePermissions(this.currentUserRole()));
 
+  // Add computed property for user status
+  readonly isUserActive = computed(() => this.user()?.isActive ?? false);
+
   constructor() {
     // Subscribe to auth state to ensure currentUser signal is updated
     this.authService.authState$.subscribe();

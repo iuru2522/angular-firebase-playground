@@ -61,15 +61,24 @@
                         <option [value]="role">{{roleLabels[role]}}</option>
                         }
                     </select>
-                    }@else{
+                    } @else {
                     <span class="no-edit">Cannot edit</span>
                     }
                 </td>
 
-                <td>
-                    <span class="status-badge" [class.active]="user.isActive">
-                        {{user.isActive ? 'Active' : 'Inactive'}}
-                    </span>
+                <td class="status-cell">
+                    <button
+                        [class]="getStatusButtonClass(user)"
+                        [disabled]="isUserLoading()(user.id)"
+                        (click)="toggleUserStatus(user)">
+                        
+                        @if (isUserLoading()(user.id)) {
+                            <span class="spinner"></span>
+                        } @else {
+                            {{user.isActive ? 'Active' : 'Inactive'}}
+                        }
+
+                    </button>
                 </td>
             </tr>
 
