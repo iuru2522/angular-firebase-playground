@@ -1,38 +1,43 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, inject, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Observable } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '../services/auth.service';
 import { User, UserRole, USER_ROLE_LABELS } from '../models';
 import { UserService } from '../services/user.service';
 import { LoginPlaceholderComponent } from '../login-placeholder/login-placeholder.component';
 
+interface ActivityItem {
+  icon: string;
+  text: string;
+  time: string;
+}
+
 @Component({
   selector: 'app-user-dashboard',
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.css'],
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterModule, LoginPlaceholderComponent]
 })
-export class UserDashboardComponent implements OnInit {
-  user$: Observable<User | null>;
-  UserRole = UserRole;
-  private authService = inject(AuthService);
-  private userService = inject(UserService);
-  private isUserAuthenticated = signal(false);
+export class UserDashboardComponent {
+  private readonly authService = inject(AuthService);
+  private readonly userService = inject(UserService);
+
+  // Convert observables to signals
+  readonly user = toSignal(this.userService.getCurrentUser());
+  readonly isAuthenticated = computed(() => !!this.user());
+  
+  // Computed properties for better performance
+  readonly currentUserRole = computed(() => this.user()?.role);
+  readonly dayOfWeek = computed(() => this.getDayOfWeek());
+  readonly taskCount = computed(() => this.getTaskCount(this.currentUserRole()));
+  readonly recentActivities = computed(() => this.getRecentActivities(this.currentUserRole()));
+  readonly rolePermissions = computed(() => this.getRolePermissions(this.currentUserRole()));
 
   constructor() {
-    this.user$ = this.userService.getCurrentUser();
     // Subscribe to auth state to ensure currentUser signal is updated
     this.authService.authState$.subscribe();
-  }
-
-  ngOnInit(): void {
-    // Removed broken authentication code
-  }
-
-  isAuthenticated() {
-    return this.isUserAuthenticated();
   }
 
   getRoleLabel(role: UserRole): string {
@@ -50,12 +55,13 @@ export class UserDashboardComponent implements OnInit {
     return descriptions[role] || '';
   }
 
-  getDayOfWeek(): string {
+  private getDayOfWeek(): string {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return days[new Date().getDay()];
   }
 
-  getTaskCount(role: UserRole): number {
+  private getTaskCount(role: UserRole | undefined): number {
+    if (!role) return 0;
     
     const taskCounts = {
       [UserRole.ADMIN]: 12,
@@ -67,8 +73,10 @@ export class UserDashboardComponent implements OnInit {
     return taskCounts[role] || 0;
   }
 
-  getRecentActivities(role: UserRole) {
-    const activities = {
+  private getRecentActivities(role: UserRole | undefined): ActivityItem[] {
+    if (!role) return [];
+    
+    const activities: Record<UserRole, ActivityItem[]> = {
       [UserRole.ADMIN]: [
         { icon: '👤', text: 'New user registered: john.doe@example.com', time: '2 hours ago' },
         { icon: '🔧', text: 'System maintenance completed', time: '1 day ago' },
@@ -98,8 +106,10 @@ export class UserDashboardComponent implements OnInit {
     return activities[role] || [];
   }
 
-  getRolePermissions(role: UserRole): string[] {
-    const permissions = {
+  private getRolePermissions(role: UserRole | undefined): string[] {
+    if (!role) return [];
+    
+    const permissions: Record<UserRole, string[]> = {
       [UserRole.ADMIN]: [
         'Manage all users and roles',
         'Access system settings',
