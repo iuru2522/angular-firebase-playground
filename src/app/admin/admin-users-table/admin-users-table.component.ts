@@ -1,4 +1,4 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -17,6 +17,8 @@ import { User, UserRole, USER_ROLE_LABELS } from '../../models';
 
 export class AdminUsersTableComponent {
     private readonly userService = inject(UserService);
+
+    private loadingUserIds = signal<Set<string>>(new Set());
 
     readonly users = toSignal(this.userService.getAllUsers(), { initialValue: [] });
     readonly currentUser = toSignal(this.userService.getCurrentUser());
@@ -72,6 +74,43 @@ export class AdminUsersTableComponent {
         const selectElement = event.target as HTMLSelectElement;
         const newRole = selectElement.value as UserRole;
         this.updateUserRole(user, newRole);
+    }
+
+    isUserLoading = computed(() => (userId: string) =>
+        this.loadingUserIds().has(userId))
+
+    async toggleUserStatus(user: User): Promise<void> {
+        const willDeactivate = user.isActive;
+
+        if (willDeactivate) {
+            const confirmed = confirm(
+                `Deactivate ${user.displayName}? They won't to able able to log in.`
+            );
+
+            if (!confirmed) return;
+        }
+
+        this.loadingUserIds.update(ids => new Set(ids.add(user.id)));
+
+        try {
+            await this.userService.toggleUserStatus(user.id, !user.isActive);
+        } catch (error) {
+            console.error(`Failed to toggle user status:`, error);
+        } finally {
+            this.loadingUserIds.update(ids => {
+                const newIds = new Set(ids);
+                newIds.delete(user.id);
+                return newIds;
+            })
+        }
+    }
+
+    getStatusButtonClass(user: User): string {
+        const baseClass = "status-toggle-btn"
+        const statusClass = user.isActive ? 'active' : 'inactive';
+        const loadingClass = this.isUserLoading()(user.id) ? 'loading' : '';
+
+        return `${baseClass} ${statusClass} ${loadingClass}`.trim();
     }
 }
 

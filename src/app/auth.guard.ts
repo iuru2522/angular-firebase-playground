@@ -9,17 +9,25 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
+
   private readonly userService = inject(UserService);
   private readonly router = inject(Router);
-    canActivate(): Observable<boolean> {
+
+  canActivate(): Observable<boolean> {
     return this.userService.getCurrentUser().pipe(
       map(user => {
-        if (user) {
-          return true;
-        } else {
+        if (!user) {
           this.router.navigate(['/']);
           return false;
         }
+
+        // Check if user is active
+        if (!user.isActive) {
+          this.router.navigate(['/account-deactivated']);
+          return false;
+        }
+
+        return true;
       })
     );
   }

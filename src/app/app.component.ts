@@ -53,6 +53,8 @@ export class AppComponent implements OnInit, OnDestroy {
       this.error.set(null);
       await this.authService.logout();
       this.user.set(null);
+      // Redirect to home after logout
+      this.router.navigate(['/']);
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Failed to logout');
       throw err;
@@ -92,6 +94,11 @@ export class AppComponent implements OnInit, OnDestroy {
           this.user.set(user);
           this.firebaseReady.set(true);
           this.showOfflineFallback.set(false);
+          
+          // Check if user is deactivated and redirect
+          if (user && !user.isActive) {
+            this.router.navigate(['/account-deactivated']);
+          }
         },
         error: (err: any) => {
           clearTimeout(timeoutId);
