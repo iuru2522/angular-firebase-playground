@@ -1,25 +1,28 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { User } from 'firebase/auth';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '../services/auth.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-require-auth',
-  standalone: true,
-  imports: [CommonModule],
   templateUrl: './require-auth.component.html',
-  styleUrl: './require-auth.component.css'
+  styleUrl: './require-auth.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule]
 })
-export class RequireAuthComponent implements OnInit {
+export class RequireAuthComponent {
   private readonly authService = inject(AuthService);
+  private readonly userService = inject(UserService);
   private readonly router = inject(Router);
-  user: User | null = null;
 
-  ngOnInit(): void {
-    this.authService.authState$.subscribe((user: any) => {
-      this.user = user;
-      if (!user) {
+  readonly user = toSignal(this.userService.getCurrentUser());
+
+  constructor() {
+    effect(() => {
+      const currentUser = this.user();
+      if (currentUser === null) {
         this.router.navigate(['/signin']);
       }
     });
