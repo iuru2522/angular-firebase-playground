@@ -1,22 +1,19 @@
-import { inject, Injectable, PLATFORM_ID, Injector, runInInjectionContext, signal } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID, effect, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { from, Observable, of } from 'rxjs';
 import { tap, switchMap } from 'rxjs/operators';
 import { getAuth, signInWithEmailAndPassword, signOut as firebaseSignOut, setPersistence, getRedirectResult, browserLocalPersistence, onAuthStateChanged, User, UserCredential, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { FirebaseInitService } from './firebase-init.service';
 import { AuthError, AuthErrorContext } from '../models/auth.types';
-
 import { createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile } from 'firebase/auth';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly firebase = inject(FirebaseInitService);
   private readonly platformId = inject(PLATFORM_ID);
-  private readonly injector = inject(Injector);
   private initialized = false;
 
-
-  currentUser = signal<User | null>(null);
+  readonly currentUser = signal<User | null>(null);
 
   public readonly authState$ = new Observable<User | null>(subscriber => {
     if (!isPlatformBrowser(this.platformId)) {
@@ -28,9 +25,14 @@ export class AuthService {
   }).pipe(
     tap(user => this.handleAuthStateChange(user))
   );
+
   constructor() {
     this.initializeAuth();
-    this.authState$.subscribe();
+    
+    // Use effect for reactive subscription instead of manual subscription
+    effect(() => {
+      this.authState$.subscribe();
+    });
   }
 
   private async initializeAuth(): Promise<void> {
