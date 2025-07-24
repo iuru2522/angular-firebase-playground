@@ -1,4 +1,4 @@
-import { Directive, Input, TemplateRef, ViewContainerRef, OnInit, OnDestroy } from '@angular/core';
+import { Directive, TemplateRef, ViewContainerRef, OnInit, OnDestroy, input, effect } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { UserService } from '../services/user.service';
 import { UserRole } from '../models';
@@ -9,31 +9,32 @@ import { UserRole } from '../models';
 })
 export class HasRoleDirective implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  private _hasRole: UserRole | UserRole[] = [];
   
-  @Input() set hasRole(roles: UserRole | UserRole[]) {
-    this._hasRole = roles;
-    this.updateView();
-  }
+  hasRole = input<UserRole | UserRole[]>([]);
 
   constructor(
     private templateRef: TemplateRef<any>,
     private viewContainer: ViewContainerRef,
     private userService: UserService
-  ) {}
+  ) {
+    effect(() => {
+      this.updateView();
+    });
+  }
 
   ngOnInit() {
     this.updateView();
   }
 
   private updateView() {
-    if (!this._hasRole) {
+    const roles = this.hasRole();
+    if (!roles || (Array.isArray(roles) && roles.length === 0)) {
       return;
     }
 
-    const roles = Array.isArray(this._hasRole) ? this._hasRole : [this._hasRole];
+    const roleArray = Array.isArray(roles) ? roles : [roles];
     
-    this.userService.hasAnyRole(roles).pipe(
+    this.userService.hasAnyRole(roleArray).pipe(
       takeUntil(this.destroy$)
     ).subscribe(hasRole => {
       this.viewContainer.clear();
