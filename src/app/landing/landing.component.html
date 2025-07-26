@@ -7,39 +7,47 @@
   </div>
 
   <div class="role-actions">
-    <div *ngIf="isAdmin()">
-      <h4>Admin Actions</h4>
-      <button routerLink="/admin/users" class="action-btn admin">Manage Users</button>
-      <button routerLink="/admin/reports" class="action-btn admin">View All Reports</button>
-    </div>
+    @if (isAdmin()) {
+      <div>
+        <h4>Admin Actions</h4>
+        <button routerLink="/admin/users" class="action-btn admin">Manage Users</button>
+        <button routerLink="/admin/reports" class="action-btn admin">View All Reports</button>
+      </div>
+    }
 
-    <div *ngIf="isProjectManager()">
-      <h4>Project Manager Actions</h4>
-      <button routerLink="/projects" class="action-btn pm">Manage Projects</button>
-      <button routerLink="/assign-tasks" class="action-btn pm">Assign Tasks</button>
-    </div>
+    @if (isProjectManager()) {
+      <div>
+        <h4>Project Manager Actions</h4>
+        <button routerLink="/projects" class="action-btn pm">Manage Projects</button>
+        <button routerLink="/assign-tasks" class="action-btn pm">Assign Tasks</button>
+      </div>
+    }
 
-    <div *ngIf="isDeveloper()">
-      <h4>Developer Actions</h4>
-      <button routerLink="/my-tasks" class="action-btn dev">My Tasks</button>
-      <button routerLink="/code-review" class="action-btn dev">Code Reviews</button>
-    </div>
+    @if (isDeveloper()) {
+      <div>
+        <h4>Developer Actions</h4>
+        <button routerLink="/my-tasks" class="action-btn dev">My Tasks</button>
+        <button routerLink="/code-review" class="action-btn dev">Code Reviews</button>
+      </div>
+    }
 
-    <div *ngIf="isQATester()">
-      <h4>QA Tester Actions</h4>
-      <button routerLink="/test-cases" class="action-btn qa">Test Cases</button>
-      <button routerLink="/bug-verification" class="action-btn qa">Verify Bugs</button>
-      <button routerLink="/file-bug" class="action-btn qa">Add new bug</button>
-      <button routerLink="/bug-list" class="action-btn qa">Bug list</button>
+    @if (isQATester()) {
+      <div>
+        <h4>QA Tester Actions</h4>
+        <button routerLink="/test-cases" class="action-btn qa">Test Cases</button>
+        <button routerLink="/bug-verification" class="action-btn qa">Verify Bugs</button>
+        <button routerLink="/file-bug" class="action-btn qa">Add new bug</button>
+        <button routerLink="/bug-list" class="action-btn qa">Bug list</button>
+      </div>
+    }
 
-
-    </div>
-
-    <div *ngIf="isReporter()">
-      <h4>Reporter Actions</h4>
-      <button routerLink="/report-bug" class="action-btn reporter">Report New Bug</button>
-      <button routerLink="/my-reports" class="action-btn reporter">My Reports</button>
-    </div>
+    @if (isReporter()) {
+      <div>
+        <h4>Reporter Actions</h4>
+        <button routerLink="/report-bug" class="action-btn reporter">Report New Bug</button>
+        <button routerLink="/my-reports" class="action-btn reporter">My Reports</button>
+      </div>
+    }
     <div class="testing-links" style="margin-top: 30px; padding: 20px; background: #f0f0f0; border-radius: 8px;">
       <h4>🧪 Testing Links (Remove later)</h4>
       <button routerLink="/admin/users" class="action-btn admin">Admin Users Page</button>

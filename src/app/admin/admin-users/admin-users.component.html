@@ -3,22 +3,26 @@
   <p class="description">Manage user roles and permissions</p>
   
   <div class="users-list">
-    <div *ngIf="currentUser() as currentUser" class="current-user-card">
-      <h3>Current User</h3>
-      <div class="user-card">
-        <div class="user-info">
-          <img [src]="currentUser.photoURL || '/assets/default-avatar.png'" 
-               alt="Profile" class="avatar">
-          <div class="user-details">
-            <h4>{{ currentUser.displayName }}</h4>
-            <p class="email">{{ currentUser.email }}</p>
-            <span class="role-badge role-{{ currentUser.role }}">
-              {{ getRoleLabel(currentUser.role) }}
-            </span>
+    @if (currentUser(); as currentUser) {
+      <div class="current-user-card">
+        <h3>Current User</h3>
+        <div class="user-card">
+          <div class="user-info">
+            <img [src]="currentUser.photoURL || '/assets/default-avatar.png'" 
+                 alt="Profile" class="avatar">
+            <div class="user-details">
+              <h4>{{ currentUser.displayName }}</h4>
+              <p class="email">{{ currentUser.email }}</p>
+              <span class="role-badge role-{{ currentUser.role }}">
+                {{ getRoleLabel(currentUser.role) }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>    <div class="admin-actions">
+    }
+    
+    <div class="admin-actions">
       <h3>Admin Actions</h3>
       
       @if (actionMessage()) {
@@ -53,10 +57,12 @@
     <div class="role-overview">
       <h3>Role Overview</h3>
       <div class="roles-grid">
-        <div *ngFor="let role of userRoles" class="role-card">
-          <span class="role-badge role-{{ role }}">{{ getRoleLabel(role) }}</span>
-          <p class="role-desc">{{ getRoleDescription(role) }}</p>
-        </div>
+        @for (role of userRoles; track role) {
+          <div class="role-card">
+            <span class="role-badge role-{{ role }}">{{ getRoleLabel(role) }}</span>
+            <p class="role-desc">{{ getRoleDescription(role) }}</p>
+          </div>
+        }
       </div>
     </div>
   </div>
