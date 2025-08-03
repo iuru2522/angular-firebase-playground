@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal, computed, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { TestCaseService } from '../services/test-case.service';
 import { TestCase } from '../models';
 
@@ -13,15 +13,16 @@ import { TestCase } from '../models';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestCaseFormComponent {
-  private router = inject(Router);
-  private testCaseService = inject(TestCaseService);
-  private fb = inject(FormBuilder);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly testCaseService = inject(TestCaseService);
+  private readonly fb = inject(FormBuilder);
 
   readonly isSubmitting = signal(false);
   readonly error = signal<string | null>(null);
   readonly successMessage = signal<string | null>(null);
 
-  testCaseForm: FormGroup;
+  testCaseForm!: FormGroup;
 
   testTypeOptions = [
     { value: 'unit', label: 'Unit' },
@@ -50,6 +51,10 @@ export class TestCaseFormComponent {
   ];
 
   constructor() {
+    this.initializeForm();
+  }
+
+  private initializeForm(): void {
     this.testCaseForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       testCaseId: ['', [Validators.required, Validators.pattern(/^TC-\d+$/)]],
