@@ -42,8 +42,5 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.7.2",
     "webpack-bundle-analyzer": "^4.10.2"
-  },
-  "overrides": {
-    "firebase": "10.12.0"
   }
 }
