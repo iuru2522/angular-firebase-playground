@@ -9,6 +9,9 @@ import { OfflineFallbackComponent } from './offline-fallback/offline-fallback.co
 import { effect, Signal, computed } from '@angular/core';
 import { User as AppUser } from './models/user.interface';
 import { UserService } from './services/user.service';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +19,10 @@ import { UserService } from './services/user.service';
   imports: [
     CommonModule,
     RouterModule,
-    OfflineFallbackComponent
+    OfflineFallbackComponent,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']

@@ -1,10 +1,18 @@
-<nav class="main-nav">  <ul>
-    <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a></li>
+<mat-toolbar color="primary" class="main-toolbar">
+  <div class="nav-links">
+    <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <mat-icon>home</mat-icon>
+      Home
+    </a>
     @if (isAuthenticated()) {
-      <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
+      <a mat-button routerLink="/dashboard" routerLinkActive="active">
+        <mat-icon>dashboard</mat-icon>
+        Dashboard
+      </a>
     }
-  </ul>
-  
+  </div>
+
+  <span class="toolbar-spacer"></span>
 
   <div class="nav-auth-status">
     @if (isLoading()) {
@@ -14,15 +22,25 @@
     } @else if (isAuthenticated()) {
       <div class="user-info">
         <span>Welcome, {{ user()?.displayName || user()?.email }}</span>
-        <button (click)="logout()" class="logout-btn">Logout</button>
-      </div>    } @else {
+        <button mat-raised-button color="warn" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Logout
+        </button>
+      </div>
+    } @else {
       <div class="auth-buttons">
-        <button (click)="signIn()" class="login-btn signin-btn">Sign In</button>
-        <button (click)="signUp()" class="login-btn signup-btn">Sign Up</button>
+        <button mat-raised-button color="accent" (click)="signIn()">
+          <mat-icon>login</mat-icon>
+          Sign In
+        </button>
+        <button mat-raised-button (click)="signUp()">
+          <mat-icon>person_add</mat-icon>
+          Sign Up
+        </button>
       </div>
     }
   </div>
-</nav>
+</mat-toolbar>
 
 @if (showOfflineFallback()) {
   <app-offline-fallback />
