@@ -49,6 +49,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'bug-edit/:id',
+    component: FileBugComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'admin/users',
     component: AdminUsersComponent,
     canActivate: [AuthGuard, RoleGuard],

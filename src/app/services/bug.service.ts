@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { FirebaseInitService } from './firebase-init.service';
 import { UserService } from './user.service';
-import { collection, orderBy, query, Timestamp, addDoc, getDocs } from 'firebase/firestore';
+import { collection, orderBy, query, Timestamp, addDoc, getDocs, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { take } from 'rxjs/operators';
 
 export interface Bug {
@@ -96,5 +96,37 @@ export class BugService {
 
         this.bugsSubject.next(bugs);
         this.bugsSignal.set(bugs);
+    }
+
+    async getBugById(bugId: string): Promise<Bug | null> {
+        const bugDoc = doc(this.firebase.firestore, 'bugs', bugId);
+        const snapshot = await getDoc(bugDoc);
+
+        if (!snapshot.exists()) {
+            return null;
+        }
+
+        const data = snapshot.data();
+        return {
+            id: snapshot.id,
+            ...data,
+            createdAt: data['createdAt'].toDate(),
+            updatedAt: data['updatedAt'].toDate()
+        } as Bug;
+    }
+
+    async updateBug(bugId: string, bugData: {
+        title: string;
+        description: string;
+        severity: 'critical' | 'high' | 'medium' | 'low';
+    }): Promise<void> {
+        const bugDoc = doc(this.firebase.firestore, 'bugs', bugId);
+        await updateDoc(bugDoc, {
+            title: bugData.title,
+            description: bugData.description,
+            severity: bugData.severity,
+            updatedAt: Timestamp.now()
+        });
+        this.loadBugs();
     }
 }
