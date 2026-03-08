@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, Validator, Validators, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { BugService } from '../services/bug.service';
 
 
@@ -19,12 +19,15 @@ interface BugReportForm {
   styleUrl: './file-bug.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileBugComponent {
+export class FileBugComponent implements OnInit {
 
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private bugService = inject(BugService);
 
   isSubmitting = signal(false);
+  isEditMode = signal(false);
+  bugId = signal<string | null>(null);
 
   bugForm = new FormGroup<BugReportForm>({
     title: new FormControl('', {
@@ -41,6 +44,30 @@ export class FileBugComponent {
     })
   })
 
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.bugId.set(id);
+      this.isEditMode.set(true);
+      this.loadBugData(id);
+    }
+  }
+
+  private async loadBugData(bugId: string): Promise<void> {
+    try {
+      const bug = await this.bugService.getBugById(bugId);
+      if (bug) {
+        this.bugForm.patchValue({
+          title: bug.title,
+          description: bug.description,
+          severity: bug.severity
+        });
+      }
+    } catch (error) {
+      console.error('Error loading bug data:', error);
+    }
+  }
+
   async onSubmit(): Promise<void> {
     if (this.bugForm.valid && !this.isSubmitting()) {
       this.isSubmitting.set(true);
@@ -49,7 +76,14 @@ export class FileBugComponent {
       try {
 
         const bugReportData = this.bugForm.getRawValue();
-        await this.bugService.submitBug(bugReportData);
+
+        if (this.isEditMode() && this.bugId()) {
+          await this.bugService.updateBug(this.bugId()!, bugReportData);
+          alert('Bug report updated successfully!');
+        } else {
+          await this.bugService.submitBug(bugReportData);
+          alert('Bug report submitted successfully!');
+        }
 
         this.bugForm.reset({
           title: '',
@@ -57,7 +91,6 @@ export class FileBugComponent {
           severity: 'medium'
         })
 
-        alert('Bug report submitted successfully!');
         this.router.navigate(['/bug-list']);
 
 

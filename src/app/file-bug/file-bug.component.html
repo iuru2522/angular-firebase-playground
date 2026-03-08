@@ -1,5 +1,5 @@
 <div class="file-bug-container">
-    <h2>File a Bug Report</h2>
+    <h2>{{ isEditMode() ? 'Edit Bug Report' : 'File a Bug Report' }}</h2>
 
     <form [formGroup]="bugForm" (ngSubmit)="onSubmit()">
 
@@ -26,7 +26,11 @@
 
         <div class="form-actions">
             <button type="submit" [disabled]="bugForm.invalid || isSubmitting()">
-                {{ isSubmitting() ? 'Submitting...' : 'Submit Bug Report' }}
+                @if (isSubmitting()) {
+                    {{ isEditMode() ? 'Updating...' : 'Submitting...' }}
+                } @else {
+                    {{ isEditMode() ? 'Update Bug Report' : 'Submit Bug Report' }}
+                }
             </button>
             <button type="button" (click)="onCancel()">Cancel</button>
         </div>

@@ -69,8 +69,7 @@ export class BugListComponent {
     this.router.navigate(['/bug-details', bugId]);
   }
 
-  // editBug(bugId: string): void {
-  //   this.router.navigate(['/bug-edit',bugId]);
-  // }
-
+  editBug(bugId: string): void {
+    this.router.navigate(['/bug-edit', bugId]);
+  }
 }
