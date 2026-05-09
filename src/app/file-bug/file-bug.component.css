@@ -79,6 +79,8 @@ form {
 
 .form-actions {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 15px;
   justify-content: flex-end;
   margin-top: 30px;
@@ -86,45 +88,90 @@ form {
   border-top: 1px solid #30363d;
 }
 
-.form-actions button {
-  padding: 12px 24px;
-  border: none;
+.btn {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  min-width: 140px;
+  padding: 10px 20px;
   border-radius: 6px;
+  border: 1px solid transparent;
+  font-family: inherit;
   font-size: 14px;
   font-weight: 600;
+  line-height: 1.25;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition:
+    border-color 0.12s ease,
+    background-color 0.12s ease,
+    box-shadow 0.12s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.form-actions button[type='submit'] {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  min-width: 160px;
+.btn:focus-visible {
+  outline: 2px solid #388bfd;
+  outline-offset: 2px;
 }
 
-.form-actions button[type='submit']:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+.btn-primary {
+  color: #ffffff;
+  background-color: #238636;
+  border-color: rgba(240, 246, 252, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 2px rgba(25, 25, 25, 0.12);
 }
 
-.form-actions button[type='submit']:disabled {
+.btn-primary:hover:not(:disabled) {
+  background-color: #2ea043;
+  border-color: rgba(240, 246, 252, 0.12);
+}
+
+.btn-primary:disabled {
   background: rgba(218, 230, 240, 0.12);
+  border-color: #30363d;
+  color: rgba(230, 237, 243, 0.45);
   cursor: not-allowed;
-  transform: none;
   box-shadow: none;
 }
 
-.form-actions button[type='button'] {
-  background: rgba(218, 230, 240, 0.1);
-  color: #e6edf3;
-  border: 1px solid #30363d;
+.btn-primary.is-submitting {
+  position: relative;
+  color: transparent;
 }
 
-.form-actions button[type='button']:hover {
-  background: rgba(218, 230, 240, 0.16);
-  transform: translateY(-1px);
+.btn-primary.is-submitting::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid transparent;
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.btn-secondary {
+  background: rgba(218, 230, 240, 0.08);
+  color: #e6edf3;
+  border-color: #30363d;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(218, 230, 240, 0.14);
+  border-color: #8b949e;
+}
+
+.btn-secondary:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .form-group input.ng-invalid.ng-touched,
@@ -139,24 +186,6 @@ form {
 .form-group select.ng-valid.ng-touched {
   border-color: #238636;
   box-shadow: 0 0 0 3px rgba(35, 134, 54, 0.2);
-}
-
-.form-actions button[type='submit']:disabled {
-  position: relative;
-}
-
-.form-actions button[type='submit']:disabled::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 16px;
-  height: 16px;
-  margin: -8px 0 0 -8px;
-  border: 2px solid transparent;
-  border-top: 2px solid #ffffff;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
@@ -186,7 +215,7 @@ form {
     flex-direction: column;
   }
 
-  .form-actions button {
+  .form-actions .btn {
     width: 100%;
   }
 }
