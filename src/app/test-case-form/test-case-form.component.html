@@ -160,7 +160,8 @@
         type="submit" 
         class="btn btn-primary" 
         [disabled]="testCaseForm.invalid || isSubmitting()"
-        [attr.aria-busy]="isSubmitting()"
+        [class.is-submitting]="isSubmitting()"
+        [attr.aria-busy]="isSubmitting() ? true : null"
       >
         @if (isSubmitting()) {
           <span>Creating...</span>
