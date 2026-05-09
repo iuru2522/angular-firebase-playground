@@ -46,15 +46,6 @@ export class AppComponent implements OnInit, OnDestroy {
   readonly isGuestAuthShell = computed(
     () => !this.isAuthenticated() && this.guestAuthPaths.has(this.currentPath())
   );
-  readonly isRootLandingSignedIn = computed(
-    () => this.atRootPath(this.currentPath()) && this.isAuthenticated()
-  );
-  readonly toolbarMatColor = computed<'primary' | undefined>(() =>
-    this.isGuestAuthShell() || this.isRootLandingSignedIn() ? undefined : 'primary'
-  );
-  readonly toolbarDarkChrome = computed(
-    () => this.isGuestAuthShell() || this.isRootLandingSignedIn()
-  );
   readonly isLoading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
   readonly showOfflineFallback = signal<boolean>(false);
@@ -114,10 +105,6 @@ export class AppComponent implements OnInit, OnDestroy {
   private normalizeUrlPath(url: string): string {
     const path = url.split(/[?#]/)[0] ?? '';
     return path === '' ? '/' : path;
-  }
-
-  private atRootPath(path: string): boolean {
-    return path === '/' || path === '';
   }
 
   private initializeAuthState(): void {

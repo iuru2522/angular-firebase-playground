@@ -213,6 +213,10 @@
   text-decoration: none;
 }
 
+button.toolbar-cta {
+  font-family: inherit;
+}
+
 .toolbar-cta {
   display: inline-flex;
   align-items: center;
@@ -261,6 +265,20 @@
 .toolbar-cta--secondary:hover {
   background-color: rgba(218, 230, 240, 0.14);
   border-color: #8b949e;
+}
+
+.toolbar-cta--danger {
+  color: #ffb4ab;
+  background-color: rgba(248, 81, 73, 0.12);
+  border-color: rgba(248, 81, 73, 0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 1px rgba(25, 25, 25, 0.12);
+}
+
+.toolbar-cta--danger:hover {
+  background-color: rgba(248, 81, 73, 0.22);
+  border-color: rgba(248, 81, 73, 0.65);
 }
 
 .toolbar-cta:focus-visible {
