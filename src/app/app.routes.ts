@@ -9,7 +9,7 @@ import { OfflineFallbackComponent } from './offline-fallback/offline-fallback.co
 import { FileBugComponent } from './file-bug/file-bug.component';
 import { BugListComponent } from './bug-list/bug-list.component';
 import { BugDetailsComponent } from './bug-details/bug-details.component';
-import { AuthGuard } from './auth.guard';
+import { authGuard } from './auth.guard';
 import { RoleGuard } from './guards/role.guard';
 import { UserRole } from './models';
 import { AdminUsersTableComponent } from './admin/admin-users-table/admin-users-table.component';
@@ -31,38 +31,38 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: UserDashboardComponent,
-    canActivate: [AuthGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'file-bug',
     component: FileBugComponent,
-    canActivate: [AuthGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'bug-list',
     component: BugListComponent,
-    canActivate: [AuthGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'bug-details/:id',
     component: BugDetailsComponent,
-    canActivate: [AuthGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'bug-edit/:id',
     component: FileBugComponent,
-    canActivate: [AuthGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'admin/users',
     component: AdminUsersComponent,
-    canActivate: [AuthGuard, RoleGuard],
+    canActivate: [authGuard, RoleGuard],
     data: { roles: [UserRole.ADMIN] }
   },
   {
     path: 'admin/users-table',
     component: AdminUsersTableComponent,
-    canActivate: [AuthGuard, RoleGuard],
+    canActivate: [authGuard, RoleGuard],
     data: { roles: [UserRole.ADMIN] }
   },
   {
@@ -76,7 +76,7 @@ export const routes: Routes = [
   {
     path: 'require-auth',
     component: RequireAuthComponent,
-    canActivate: [AuthGuard]
+    canActivate: [authGuard]
   },
   { path: 'register', component: RegisterComponent },
   { path: '**', redirectTo: '' }

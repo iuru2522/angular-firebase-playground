@@ -1,9 +1,9 @@
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { from, Observable, of } from 'rxjs';
-import { switchMap, map, catchError } from 'rxjs/operators';
-import { getAuth, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc, updateDoc, DocumentReference, collection, getDocs, Firestore } from 'firebase/firestore';
+import { switchMap, map, catchError, shareReplay } from 'rxjs/operators';
+import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import { doc, getDoc, setDoc, updateDoc, DocumentReference, collection, getDocs } from 'firebase/firestore';
 
 import { FirebaseInitService } from './firebase-init.service';
 import { User as AppUser } from '../models/user.interface';
@@ -13,42 +13,46 @@ import { UserRole } from '../models/user-role.enum';
 export class UserService {
     private readonly firebase = inject(FirebaseInitService);
     private readonly platformId = inject(PLATFORM_ID);
-    // private readonly firestore = inject(Firestore);
+    private currentUserShared$: Observable<AppUser | null> | null = null;
 
     getCurrentUser(): Observable<AppUser | null> {
         if (!isPlatformBrowser(this.platformId)) return of(null);
-        return new Observable<FirebaseUser | null>(subscriber => {
-            return onAuthStateChanged(this.firebase.auth, user => subscriber.next(user));
-        }).pipe(
-            switchMap((authUser: FirebaseUser | null) => {
-                if (!authUser) return of(null);
-                return this.getUserDocument(authUser.uid).pipe(
-                    switchMap((userDoc: AppUser | null) => {
-                        if (userDoc) return of(userDoc);
-                        // If user doc doesn't exist, create it
-                        const now = new Date();
-                        const newUser: AppUser = {
-                            id: authUser.uid,
-                            email: authUser.email ?? '',
-                            displayName: authUser.displayName ?? '',
-                            role: UserRole.REPORTER,
-                            isActive: true,
-                            createdAt: now,
-                            updatedAt: now
-                        };
+        if (!this.currentUserShared$) {
+            this.currentUserShared$ = new Observable<FirebaseUser | null>(subscriber => {
+                return onAuthStateChanged(this.firebase.auth, user => subscriber.next(user));
+            }).pipe(
+                switchMap((authUser: FirebaseUser | null) => {
+                    if (!authUser) return of(null);
+                    return this.getUserDocument(authUser.uid).pipe(
+                        switchMap((userDoc: AppUser | null) => {
+                            if (userDoc) return of(userDoc);
+                            const now = new Date();
+                            const newUser: AppUser = {
+                                id: authUser.uid,
+                                email: authUser.email ?? '',
+                                displayName: authUser.displayName ?? '',
+                                role: UserRole.REPORTER,
+                                isActive: true,
+                                createdAt: now,
+                                updatedAt: now
+                            };
 
-                        // Only add photoURL if it exists
-                        if (authUser.photoURL) {
-                            newUser.photoURL = authUser.photoURL;
-                        }
-                        return this.createUserDocument(newUser).pipe(
-                            switchMap(() => this.getUserDocument(authUser.uid))
-                        );
-                    })
-                );
-            }),
-            map((userDoc: any) => userDoc ? this.mapToAppUser(userDoc) : null)
-        );
+                            if (authUser.photoURL) {
+                                newUser.photoURL = authUser.photoURL;
+                            }
+                            return this.createUserDocument(newUser).pipe(
+                                switchMap(() => this.getUserDocument(authUser.uid))
+                            );
+                        })
+                    );
+                }),
+                map((userDoc: AppUser | null) =>
+                  userDoc ? this.mapToAppUser(userDoc) : null
+                ),
+                shareReplay({ bufferSize: 1, refCount: false })
+            );
+        }
+        return this.currentUserShared$;
     }
 
     getUserDocument(uid: string): Observable<AppUser | null> {
