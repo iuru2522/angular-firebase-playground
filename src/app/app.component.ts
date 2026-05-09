@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy, inject, signal, PLATFORM_ID, Injector, runInInjectionContext } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { AuthService } from './services/auth.service';
 import { FirebaseDiagnosticService } from './services/firebase-diagnostic.service';
 import { OfflineFallbackComponent } from './offline-fallback/offline-fallback.component';
-import { effect, Signal, computed } from '@angular/core';
 import { User as AppUser } from './models/user.interface';
 import { UserService } from './services/user.service';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -29,29 +29,52 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class AppComponent implements OnInit, OnDestroy {
   readonly title = 'angular-firebase-playground';
+
   private readonly authService = inject(AuthService);
   private readonly diagnosticService = inject(FirebaseDiagnosticService);
+  private readonly userService = inject(UserService);
   private readonly platformId = inject(PLATFORM_ID);
-  private readonly injector = inject(Injector);
   private readonly router = inject(Router);
+
   private authSubscription?: Subscription;
+  private navSubscription?: Subscription;
+
   readonly user = signal<AppUser | null>(null);
   readonly isAuthenticated = computed(() => !!this.user());
+  readonly currentPath = signal(this.normalizeUrlPath(this.router.url));
+  private readonly guestAuthPaths = new Set(['/', '/signin', '/register', '/forgot-password']);
+  readonly isGuestAuthShell = computed(
+    () => !this.isAuthenticated() && this.guestAuthPaths.has(this.currentPath())
+  );
+  readonly isRootLandingSignedIn = computed(
+    () => this.atRootPath(this.currentPath()) && this.isAuthenticated()
+  );
+  readonly toolbarMatColor = computed<'primary' | undefined>(() =>
+    this.isGuestAuthShell() || this.isRootLandingSignedIn() ? undefined : 'primary'
+  );
+  readonly toolbarDarkChrome = computed(
+    () => this.isGuestAuthShell() || this.isRootLandingSignedIn()
+  );
   readonly isLoading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
-  readonly firebaseReady = signal<boolean>(false);
   readonly showOfflineFallback = signal<boolean>(false);
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.initializeAuthState();
       this.runDiagnostics();
+      this.navSubscription = this.router.events
+        .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+        .subscribe(() => this.currentPath.set(this.normalizeUrlPath(this.router.url)));
     }
   }
 
   ngOnDestroy(): void {
     this.cleanupAuthSubscription();
+    this.navSubscription?.unsubscribe();
+    this.navSubscription = undefined;
   }
+
   async logout(): Promise<void> {
     if (!isPlatformBrowser(this.platformId)) return;
     try {
@@ -59,7 +82,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this.error.set(null);
       await this.authService.logout();
       this.user.set(null);
-      // Redirect to home after logout
       this.router.navigate(['/']);
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Failed to logout');
@@ -67,7 +89,9 @@ export class AppComponent implements OnInit, OnDestroy {
     } finally {
       this.isLoading.set(false);
     }
-  }  async login() {
+  }
+
+  async login(): Promise<void> {
     try {
       this.isLoading.set(true);
       this.error.set(null);
@@ -87,33 +111,38 @@ export class AppComponent implements OnInit, OnDestroy {
     this.router.navigate(['/signin']);
   }
 
+  private normalizeUrlPath(url: string): string {
+    const path = url.split(/[?#]/)[0] ?? '';
+    return path === '' ? '/' : path;
+  }
+
+  private atRootPath(path: string): boolean {
+    return path === '/' || path === '';
+  }
+
   private initializeAuthState(): void {
     const timeoutId = setTimeout(() => {
       console.warn('Auth initialization taking too long, showing offline fallback...');
       this.showOfflineFallback.set(true);
     }, 15000);
 
-    this.authSubscription = runInInjectionContext(this.injector, () =>
-      inject(UserService).getCurrentUser().subscribe({
-        next: (user) => {
-          clearTimeout(timeoutId);
-          this.user.set(user);
-          this.firebaseReady.set(true);
-          this.showOfflineFallback.set(false);
-          
-          // Check if user is deactivated and redirect
-          if (user && !user.isActive) {
-            this.router.navigate(['/account-deactivated']);
-          }
-        },
-        error: (err: any) => {
-          clearTimeout(timeoutId);
-          console.error('Auth initialization error:', err);
-          this.error.set(err instanceof Error ? err.message : 'Authentication error');
-          this.showOfflineFallback.set(true);
+    this.authSubscription = this.userService.getCurrentUser().subscribe({
+      next: (user) => {
+        clearTimeout(timeoutId);
+        this.user.set(user);
+        this.showOfflineFallback.set(false);
+
+        if (user && !user.isActive) {
+          this.router.navigate(['/account-deactivated']);
         }
-      })
-    );
+      },
+      error: (err: unknown) => {
+        clearTimeout(timeoutId);
+        console.error('Auth initialization error:', err);
+        this.error.set(err instanceof Error ? err.message : 'Authentication error');
+        this.showOfflineFallback.set(true);
+      }
+    });
   }
 
   private cleanupAuthSubscription(): void {
@@ -128,7 +157,7 @@ export class AppComponent implements OnInit, OnDestroy {
       return;
     }
     try {
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 3000));
       await this.diagnosticService.diagnoseFirebase();
       await this.diagnosticService.checkFirestoreRules();
     } catch (error) {

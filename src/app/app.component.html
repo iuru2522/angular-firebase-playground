@@ -1,4 +1,8 @@
-<mat-toolbar color="primary" class="main-toolbar">
+<mat-toolbar
+  class="main-toolbar"
+  [class.main-toolbar--dark-chrome]="toolbarDarkChrome()"
+  [color]="toolbarMatColor()"
+>
   <div class="nav-links">
     <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       <mat-icon>home</mat-icon>
@@ -29,14 +33,25 @@
       </div>
     } @else {
       <div class="auth-buttons">
-        <button mat-raised-button color="accent" (click)="signIn()">
-          <mat-icon>login</mat-icon>
-          Sign In
-        </button>
-        <button mat-raised-button (click)="signUp()">
-          <mat-icon>person_add</mat-icon>
-          Sign Up
-        </button>
+        @if (isGuestAuthShell()) {
+          <a routerLink="/signin" class="toolbar-cta toolbar-cta--primary">
+            <mat-icon aria-hidden="true">login</mat-icon>
+            Sign In
+          </a>
+          <a routerLink="/register" class="toolbar-cta toolbar-cta--secondary">
+            <mat-icon aria-hidden="true">person_add</mat-icon>
+            Sign Up
+          </a>
+        } @else {
+          <button mat-raised-button color="accent" (click)="signIn()">
+            <mat-icon>login</mat-icon>
+            Sign In
+          </button>
+          <button mat-raised-button (click)="signUp()">
+            <mat-icon>person_add</mat-icon>
+            Sign Up
+          </button>
+        }
       </div>
     }
   </div>
@@ -47,14 +62,7 @@
 } @else {
   <div class="app-container">
     <main class="app-main">
-      @if (!firebaseReady()) {
-        <div class="loading-container">
-          <div class="spinner"></div>
-          <p>Initializing Firebase...</p>
-        </div>
-      } @else {
-        <router-outlet />
-      }
+      <router-outlet />
     </main>
   </div>
 }
