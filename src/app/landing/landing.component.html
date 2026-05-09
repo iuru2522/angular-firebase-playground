@@ -1,65 +1,126 @@
-<div class="landing-container">
+<div
+  class="landing-page gh-theme landing-page--fullbleed"
+  [class.landing-page--guest]="!user()"
+  [class.landing-page--signed-in]="!!user()"
+>
   @if (user(); as user) {
-  <div class="user-info">
-    <h3>Hello, {{ user.displayName }}!</h3>
-    <p class="role-badge role-{{ user.role }}">{{ getRoleLabel(user.role) }}</p>
-    <p class="role-description">{{ getRoleDescription(user.role) }}</p>
-  </div>
 
-  <div class="role-actions">
-    @if (isAdmin()) {
-      <div>
-        <h4>Admin Actions</h4>
-        <button routerLink="/admin/users" class="action-btn admin">Manage Users</button>
-        <button routerLink="/admin/reports" class="action-btn admin">View All Reports</button>
-      </div>
-    }
+  <section class="gh-signed-in" aria-labelledby="welcome-heading">
+    <header class="gh-panel gh-welcome-card">
+      <p class="gh-product-tag">Bug tracker</p>
+      <h2 id="welcome-heading" class="gh-welcome-card__hello">
+        Welcome back, {{ user.displayName || 'there' }}
+      </h2>
+      <span class="gh-label gh-role-pill gh-role-pill--{{ user.role }}">{{
+        getRoleLabel(user.role)
+      }}</span>
+      <p class="gh-welcome-card__desc">{{ getRoleDescription(user.role) }}</p>
+    </header>
 
-    @if (isProjectManager()) {
-      <div>
-        <h4>Project Manager Actions</h4>
-        <button routerLink="/projects" class="action-btn pm">Manage Projects</button>
-        <button routerLink="/assign-tasks" class="action-btn pm">Assign Tasks</button>
+    <div class="gh-role-grid">
+      @if (isAdmin()) {
+      <div class="gh-panel gh-role-panel">
+        <h3 class="gh-role-panel__title">Admin</h3>
+        <div class="gh-role-panel__actions">
+          <a routerLink="/admin/users" class="gh-btn">Users & roles</a>
+          <a routerLink="/admin/reports" class="gh-btn">All bug reports</a>
+        </div>
       </div>
-    }
+      }
 
-    @if (isDeveloper()) {
-      <div>
-        <h4>Developer Actions</h4>
-        <button routerLink="/my-tasks" class="action-btn dev">My Tasks</button>
-        <button routerLink="/code-review" class="action-btn dev">Code Reviews</button>
+      @if (isProjectManager()) {
+      <div class="gh-panel gh-role-panel">
+        <h3 class="gh-role-panel__title">Project manager</h3>
+        <div class="gh-role-panel__actions">
+          <a routerLink="/projects" class="gh-btn">Projects</a>
+          <a routerLink="/assign-tasks" class="gh-btn">Assign fixes</a>
+        </div>
       </div>
-    }
+      }
 
-    @if (isQATester()) {
-      <div>
-        <h4>QA Tester Actions</h4>
-        <button routerLink="/test-cases" class="action-btn qa">Test Cases</button>
-        <button routerLink="/bug-verification" class="action-btn qa">Verify Bugs</button>
-        <button routerLink="/file-bug" class="action-btn qa">Add new bug</button>
-        <button routerLink="/bug-list" class="action-btn qa">Bug list</button>
+      @if (isDeveloper()) {
+      <div class="gh-panel gh-role-panel">
+        <h3 class="gh-role-panel__title">Developer</h3>
+        <div class="gh-role-panel__actions">
+          <a routerLink="/my-tasks" class="gh-btn">My bugs</a>
+          <a routerLink="/code-review" class="gh-btn">Reviews</a>
+        </div>
       </div>
-    }
+      }
 
-    @if (isReporter()) {
-      <div>
-        <h4>Reporter Actions</h4>
-        <button routerLink="/report-bug" class="action-btn reporter">Report New Bug</button>
-        <button routerLink="/my-reports" class="action-btn reporter">My Reports</button>
+      @if (isQATester()) {
+      <div class="gh-panel gh-role-panel">
+        <h3 class="gh-role-panel__title">QA</h3>
+        <div class="gh-role-panel__actions">
+          <a routerLink="/test-cases" class="gh-btn">Test cases</a>
+          <a routerLink="/bug-verification" class="gh-btn">Verify fixes</a>
+          <a routerLink="/file-bug" class="gh-btn">File a bug</a>
+          <a routerLink="/bug-list" class="gh-btn">Bug list</a>
+        </div>
       </div>
-    }
-    <div class="testing-links" style="margin-top: 30px; padding: 20px; background: #f0f0f0; border-radius: 8px;">
-      <h4>🧪 Testing Links (Remove later)</h4>
-      <button routerLink="/admin/users" class="action-btn admin">Admin Users Page</button>
-      <button routerLink="/dashboard" class="action-btn dev">User Dashboard</button>
+      }
+
+      @if (isReporter()) {
+      <div class="gh-panel gh-role-panel">
+        <h3 class="gh-role-panel__title">Reporter</h3>
+        <div class="gh-role-panel__actions">
+          <a routerLink="/report-bug" class="gh-btn">New report</a>
+          <a routerLink="/my-reports" class="gh-btn">My reports</a>
+        </div>
+      </div>
+      }
+
+      <div class="gh-panel gh-dev-strip">
+        <h3 class="gh-role-panel__title gh-dev-strip__title">Dev shortcuts</h3>
+        <p class="gh-dev-strip__note">Scratch links while building the app UI.</p>
+        <div class="gh-role-panel__actions">
+          <a routerLink="/admin/users" class="gh-btn">Admin users</a>
+          <a routerLink="/dashboard" class="gh-btn gh-btn--primary">Dashboard</a>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
+
   } @else {
-  <div class="not-authenticated">
-    <div class="auth-prompt">
-      <p>Please access the dashboard to sign in</p>
-      <button routerLink="/dashboard" class="auth-btn">Go to Dashboard</button>
+
+  <section
+    class="gh-marketing-hero gh-marketing-hero--viewport"
+    aria-labelledby="marketing-hero-heading"
+  >
+    <div class="gh-marketing-hero__glow gh-marketing-hero__glow--1" aria-hidden="true"></div>
+    <div class="gh-marketing-hero__glow gh-marketing-hero__glow--2" aria-hidden="true"></div>
+    <div class="gh-marketing-hero__grid-bg" aria-hidden="true"></div>
+
+    <div class="gh-marketing-hero__shell">
+      <div class="gh-marketing-hero__inner">
+        <p class="gh-mono-label">Bug Tracker · Firebase & Angular playground</p>
+        <h1 id="marketing-hero-heading" class="gh-headline-xl">
+          From first report<br />
+          <span class="gh-headline-sub">to a verified fix—keep every defect accountable.</span>
+        </h1>
+        <p class="gh-lede">
+          Log defects, reproduce and assign work, exercise test cases, and close the loop when QA signs
+          off—wired to Firebase Auth so admins, reporters, QA, developers, and PMs only see what they
+          need.
+        </p>
+
+        <ul class="gh-hero-points">
+          <li><span class="gh-hero-points__bullet">●</span> Reporters capture bugs fast</li>
+          <li><span class="gh-hero-points__bullet">●</span> PMs route and assign owners</li>
+          <li><span class="gh-hero-points__bullet">●</span> QA verifies closures with evidence</li>
+        </ul>
+
+        <div class="gh-cta-row">
+          <a routerLink="/dashboard" class="gh-btn gh-btn--primary gh-btn--featured">
+            Open bug tracker
+          </a>
+        </div>
+        <p class="gh-microcopy">
+          Opens your dashboard—you’ll authenticate there by role before filing or triaging issues.
+        </p>
+      </div>
     </div>
-  </div>
+  </section>
+
   }
 </div>
