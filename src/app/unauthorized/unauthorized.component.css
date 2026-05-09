@@ -4,29 +4,32 @@
   align-items: center;
   min-height: 80vh;
   padding: 20px;
+  background-color: #010409;
 }
 
 .error-content {
   text-align: center;
   max-width: 500px;
   padding: 40px;
-  background: white;
+  background: #161b22;
+  border: 1px solid #30363d;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.35);
 }
 
 .error-content h1 {
   font-size: 3rem;
   margin: 0 0 10px 0;
+  color: #e6edf3;
 }
 
 .error-content h2 {
-  color: #e74c3c;
+  color: #f85149;
   margin: 0 0 20px 0;
 }
 
 .error-content p {
-  color: #7f8c8d;
+  color: #8b949e;
   margin: 10px 0;
   line-height: 1.6;
 }
@@ -49,4 +52,4 @@
 .back-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 16px rgba(108, 92, 231, 0.3);
-} 
+}

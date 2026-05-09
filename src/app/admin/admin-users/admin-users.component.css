@@ -2,24 +2,27 @@
   max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
+  background: #010409;
+  min-height: 100vh;
 }
 
 .admin-users-container h2 {
-  color: #2c3e50;
+  color: #e6edf3;
   margin-bottom: 10px;
 }
 
 .description {
-  color: #7f8c8d;
+  color: #8b949e;
   margin-bottom: 30px;
 }
 
 .current-user-card {
-  background: white;
+  background: #161b22;
+  border: 1px solid #30363d;
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 30px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
 }
 
 .user-card {
@@ -41,12 +44,12 @@
 
 .user-details h4 {
   margin: 0 0 5px 0;
-  color: #2c3e50;
+  color: #e6edf3;
 }
 
 .email {
   margin: 0 0 10px 0;
-  color: #7f8c8d;
+  color: #8b949e;
 }
 
 .role-badge {
@@ -58,37 +61,38 @@
   text-transform: uppercase;
 }
 
-.role-admin { 
-  background: #ff6b6b; 
-  color: white; 
+.role-admin {
+  background: #ff6b6b;
+  color: white;
 }
 
-.role-project_manager { 
-  background: #4ecdc4; 
-  color: white; 
+.role-project_manager {
+  background: #4ecdc4;
+  color: #0d1117;
 }
 
-.role-developer { 
-  background: #45b7d1; 
-  color: white; 
+.role-developer {
+  background: #45b7d1;
+  color: #0d1117;
 }
 
-.role-qa_tester { 
-  background: #96ceb4; 
-  color: white; 
+.role-qa_tester {
+  background: #3d9970;
+  color: white;
 }
 
-.role-reporter { 
-  background: #ffeaa7; 
-  color: #2d3436; 
+.role-reporter {
+  background: #d29922;
+  color: #0d1117;
 }
 
 .admin-actions {
-  background: white;
+  background: #161b22;
+  border: 1px solid #30363d;
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 30px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
 }
 
 .action-grid {
@@ -125,10 +129,16 @@
 }
 
 .role-overview {
-  background: white;
+  background: #161b22;
+  border: 1px solid #30363d;
   border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+
+.role-overview > h3 {
+  color: #e6edf3;
+  margin: 0 0 12px 0;
 }
 
 .roles-grid {
@@ -140,13 +150,14 @@
 
 .role-card {
   padding: 15px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #30363d;
   border-radius: 6px;
+  background: rgba(13, 17, 23, 0.6);
 }
 
 .role-desc {
   margin: 10px 0 0 0;
-  color: #7f8c8d;
+  color: #8b949e;
   font-size: 14px;
 }
 
@@ -159,18 +170,24 @@
 }
 
 .action-feedback.success {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  background-color: rgba(35, 134, 54, 0.15);
+  color: #3fb950;
+  border: 1px solid rgba(63, 185, 80, 0.35);
 }
 
 .action-feedback.error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+  background-color: rgba(248, 81, 73, 0.12);
+  color: #ff7b72;
+  border: 1px solid rgba(248, 81, 73, 0.35);
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

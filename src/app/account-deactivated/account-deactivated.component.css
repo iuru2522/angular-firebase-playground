@@ -3,15 +3,16 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: #010409;
   padding: 20px;
 }
 
 .deactivated-content {
-  background: white;
+  background: #161b22;
+  border: 1px solid #30363d;
   border-radius: 12px;
   padding: 40px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
   text-align: center;
   max-width: 500px;
   width: 100%;
@@ -27,7 +28,7 @@
 }
 
 .deactivated-content h1 {
-  color: #e74c3c;
+  color: #f85149;
   margin: 0 0 20px 0;
   font-size: 2rem;
 }
@@ -37,13 +38,14 @@
 }
 
 .message p {
-  color: #7f8c8d;
+  color: #8b949e;
   line-height: 1.6;
   margin: 10px 0;
 }
 
 .contact-info {
-  background: #f8f9fa;
+  background: rgba(13, 17, 23, 0.9);
+  border: 1px solid #30363d;
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 30px;
@@ -51,7 +53,7 @@
 }
 
 .contact-info h3 {
-  color: #2c3e50;
+  color: #e6edf3;
   margin: 0 0 15px 0;
   text-align: center;
 }
@@ -64,7 +66,7 @@
 
 .contact-info li {
   padding: 8px 0;
-  color: #7f8c8d;
+  color: #8b949e;
   font-size: 14px;
 }
 
@@ -82,14 +84,14 @@
 
 .logout-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.35);
 }
 
 @media (max-width: 768px) {
   .deactivated-content {
     padding: 30px 20px;
   }
-  
+
   .deactivated-content h1 {
     font-size: 1.5rem;
   }

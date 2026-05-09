@@ -3,26 +3,27 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #f8f9fa;
+  background: #010409;
   padding: 2rem;
 }
 
 .offline-content {
-  background: white;
+  background: #161b22;
+  border: 1px solid #30363d;
   padding: 3rem;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.35);
   text-align: center;
   max-width: 500px;
 }
 
 h2 {
-  color: #dc3545;
+  color: #f85149;
   margin-bottom: 1rem;
 }
 
 p {
-  color: #666;
+  color: #8b949e;
   margin-bottom: 1rem;
   line-height: 1.6;
 }
@@ -36,7 +37,7 @@ p {
 }
 
 .retry-btn {
-  background: #007bff;
+  background: #0969da;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -47,12 +48,13 @@ p {
 }
 
 .retry-btn:hover {
-  background: #0056b3;
+  background: #055fb3;
 }
 
 .home-link {
-  background: #6c757d;
-  color: white;
+  background: rgba(218, 230, 240, 0.1);
+  color: #e6edf3;
+  border: 1px solid #30363d;
   text-decoration: none;
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
@@ -61,7 +63,7 @@ p {
 }
 
 .home-link:hover {
-  background: #545b62;
+  background: rgba(218, 230, 240, 0.16);
 }
 
 .error-details {
@@ -71,7 +73,7 @@ p {
 
 .error-details summary {
   cursor: pointer;
-  color: #007bff;
+  color: #58a6ff;
   font-weight: 500;
 }
 
@@ -82,5 +84,5 @@ p {
 
 .error-details li {
   margin-bottom: 0.25rem;
-  color: #666;
-} 
+  color: #8b949e;
+}
