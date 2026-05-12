@@ -27,7 +27,7 @@
     "firebase": "12.13.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "wrangler": "^4.90.0",
+    "wrangler": "^4.90.1",
     "zone.js": "~0.16.2"
   },
   "devDependencies": {
@@ -37,7 +37,7 @@
     "@angular/material": "^21.2.10",
     "@types/express": "^5.0.6",
     "@types/jasmine": "~6.0.0",
-    "@types/node": "^25.6.2",
+    "@types/node": "^25.7.0",
     "jasmine-core": "~6.2.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
