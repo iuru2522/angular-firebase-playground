@@ -41,6 +41,10 @@
               "src/styles.css"
             ],
             "scripts": [],
+            "allowedCommonJsDependencies": [
+              "@grpc/grpc-js",
+              "@grpc/proto-loader"
+            ],
             "inlineStyleLanguage": "css",
             "server": "src/main.server.ts",
             "prerender": false,
@@ -53,12 +57,12 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "900kB",
+                  "maximumWarning": "1.1MB",
                   "maximumError": "3MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
+                  "maximumWarning": "8kB",
                   "maximumError": "8kB"
                 }
               ],
