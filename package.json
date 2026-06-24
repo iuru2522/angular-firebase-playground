@@ -30,7 +30,7 @@
     "firebase": "12.15.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "wrangler": "^4.103.0",
+    "wrangler": "^4.104.0",
     "zone.js": "~0.16.2"
   },
   "devDependencies": {
