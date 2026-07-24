@@ -7,17 +7,31 @@
   --gh-signed-page-bg: #010409;
   --gh-surface-default: #161b22;
   --gh-surface-muted: rgba(22, 27, 34, 0.65);
+  --gh-surface-overlay: rgba(13, 17, 23, 0.9);
+  --gh-row-hover: rgba(33, 38, 45, 0.9);
   --gh-border-default: #30363d;
   --gh-fg-default: #e6edf3;
   --gh-fg-muted: #8b949e;
+  --gh-fg-subtle: #c9d1d9;
+  --gh-fg-placeholder: #6e7681;
   --gh-accent: #238636;
   --gh-accent-emphasis: #2ea043;
   --gh-accent-fg: #ffffff;
+  --gh-success: #3fb950;
+  --gh-success-muted: rgba(46, 160, 67, 0.12);
+  --gh-success-border: rgba(46, 160, 67, 0.35);
   --gh-focus: #388bfd;
+  --gh-link: #58a6ff;
+  --gh-link-hover: #79c0ff;
   --gh-btn-bg: rgba(218, 230, 240, 0.06);
   --gh-btn-bg-hover: rgba(218, 230, 240, 0.11);
   --gh-danger: #da3633;
   --gh-danger-emphasis: #f85149;
+  --gh-danger-fg: #ff7b72;
+  --gh-danger-muted: rgba(248, 81, 73, 0.12);
+  --gh-danger-border: rgba(248, 81, 73, 0.35);
+  --gh-shadow: rgba(0, 0, 0, 0.35);
+  --gh-on-emphasis: #1f2328;
 }
 
 [data-theme='light'] {
@@ -28,15 +42,29 @@
   --gh-signed-page-bg: #f6f8fa;
   --gh-surface-default: #ffffff;
   --gh-surface-muted: rgba(246, 248, 250, 0.8);
+  --gh-surface-overlay: rgba(246, 248, 250, 0.95);
+  --gh-row-hover: rgba(234, 238, 242, 0.9);
   --gh-border-default: #d0d7de;
   --gh-fg-default: #1f2328;
   --gh-fg-muted: #656d76;
+  --gh-fg-subtle: #424a53;
+  --gh-fg-placeholder: #6e7781;
   --gh-accent: #1a7f37;
   --gh-accent-emphasis: #2da44e;
   --gh-accent-fg: #ffffff;
+  --gh-success: #1a7f37;
+  --gh-success-muted: rgba(26, 127, 55, 0.12);
+  --gh-success-border: rgba(26, 127, 55, 0.35);
   --gh-focus: #0969da;
+  --gh-link: #0969da;
+  --gh-link-hover: #0550ae;
   --gh-btn-bg: rgba(31, 35, 40, 0.04);
   --gh-btn-bg-hover: rgba(31, 35, 40, 0.08);
   --gh-danger: #cf222e;
   --gh-danger-emphasis: #a40e26;
+  --gh-danger-fg: #cf222e;
+  --gh-danger-muted: rgba(207, 34, 46, 0.1);
+  --gh-danger-border: rgba(207, 34, 46, 0.35);
+  --gh-shadow: rgba(31, 35, 40, 0.12);
+  --gh-on-emphasis: #1f2328;
 }

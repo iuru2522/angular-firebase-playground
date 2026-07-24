@@ -2,7 +2,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background: #010409;
+  background: var(--gh-canvas-inset);
   min-height: 100vh;
 }
 
@@ -11,15 +11,15 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  background: #161b22;
-  border: 1px solid #30363d;
+  background: var(--gh-surface-default);
+  border: 1px solid var(--gh-border-default);
   padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 2px 8px var(--gh-shadow);
 }
 
 .header h2 {
-  color: #e6edf3;
+  color: var(--gh-fg-default);
   margin: 0;
   font-size: 2rem;
   font-weight: 700;
@@ -33,21 +33,21 @@
 
 .search-box {
   padding: 10px 16px;
-  border: 1px solid #30363d;
+  border: 1px solid var(--gh-border-default);
   border-radius: 6px;
   font-size: 14px;
   min-width: 250px;
   transition:
     border-color 0.3s ease,
     box-shadow 0.3s ease;
-  background: #0d1117;
-  color: #e6edf3;
+  background: var(--gh-canvas-default);
+  color: var(--gh-fg-default);
 }
 
 .search-box:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+  border-color: var(--gh-focus);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--gh-focus) 20%, transparent);
 }
 
 .controls select.filter-select {
@@ -56,7 +56,7 @@
   -moz-appearance: none;
   margin: 0;
   padding: 10px 36px 10px 16px;
-  border: 1px solid #30363d;
+  border: 1px solid var(--gh-border-default);
   border-style: solid;
   border-radius: 6px;
   font-size: 14px;
@@ -65,17 +65,15 @@
   min-height: 42px;
   min-width: 180px;
   box-sizing: border-box;
-  color-scheme: dark;
-  color: #e6edf3;
+  color: var(--gh-fg-default);
   cursor: pointer;
   transition:
     border-color 0.3s ease,
     box-shadow 0.3s ease;
-  /* Single background stacks arrow over fill — avoids losing dark fill on some engines */
   background:
     url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='%238b949e' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>")
       no-repeat right 12px center / 12px,
-    #0d1117;
+    var(--gh-canvas-default);
 }
 
 .controls select.filter-select::-ms-expand {
@@ -83,26 +81,26 @@
 }
 
 .controls select.filter-select:hover {
-  border-color: #8b949e;
+  border-color: var(--gh-fg-muted);
 }
 
 .controls select.filter-select:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+  border-color: var(--gh-focus);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--gh-focus) 20%, transparent);
 }
 
 .controls select.filter-select option {
-  background-color: #161b22;
-  color: #e6edf3;
+  background-color: var(--gh-surface-default);
+  color: var(--gh-fg-default);
 }
 
 .content {
-  background: #161b22;
-  border: 1px solid #30363d;
+  background: var(--gh-surface-default);
+  border: 1px solid var(--gh-border-default);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 2px 8px var(--gh-shadow);
 }
 
 .bug-table {
@@ -111,23 +109,23 @@
 }
 
 .bug-table th {
-  background: rgba(13, 17, 23, 0.95);
+  background: var(--gh-surface-overlay);
   padding: 15px;
   text-align: left;
   font-weight: 600;
-  color: #e6edf3;
-  border-bottom: 2px solid #30363d;
+  color: var(--gh-fg-default);
+  border-bottom: 2px solid var(--gh-border-default);
 }
 
 .bug-table td {
   padding: 15px;
-  border-bottom: 1px solid #30363d;
+  border-bottom: 1px solid var(--gh-border-default);
   vertical-align: middle;
-  color: #e6edf3;
+  color: var(--gh-fg-default);
 }
 
 .bug-table tr:hover {
-  background: rgba(33, 38, 45, 0.9);
+  background: var(--gh-row-hover);
   transition: background-color 0.4s ease;
 }
 
@@ -140,7 +138,7 @@
     'Courier New',
     monospace;
   font-weight: 600;
-  color: #a5b4fc;
+  color: var(--gh-link);
 }
 
 .severity-badge {
@@ -153,7 +151,7 @@
 }
 
 .severity-critical {
-  background: #dc3545;
+  background: var(--gh-danger);
   color: white;
 }
 
@@ -164,11 +162,11 @@
 
 .severity-medium {
   background: #d29922;
-  color: #0d1117;
+  color: var(--gh-on-emphasis);
 }
 
 .severity-low {
-  background: #238636;
+  background: var(--gh-accent);
   color: white;
 }
 
@@ -198,18 +196,18 @@
 }
 
 .btn-edit {
-  background: #238636;
+  background: var(--gh-accent);
   color: white;
 }
 
 .btn-edit:hover {
-  background: #1a7f37;
+  background: var(--gh-accent);
 }
 
 .empty-state {
   text-align: center;
   padding: 60px 20px;
-  color: #8b949e;
+  color: var(--gh-fg-muted);
 }
 
 .empty-state-icon {
@@ -219,7 +217,7 @@
 }
 
 .empty-state h3 {
-  color: #e6edf3;
+  color: var(--gh-fg-default);
   margin: 0 0 10px 0;
 }
 
@@ -230,14 +228,14 @@
 .loading-state {
   text-align: center;
   padding: 40px;
-  color: #8b949e;
+  color: var(--gh-fg-muted);
 }
 
 .spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid rgba(255, 255, 255, 0.08);
-  border-top: 4px solid #667eea;
+  border: 4px solid var(--gh-btn-bg);
+  border-top: 4px solid var(--gh-focus);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 20px;

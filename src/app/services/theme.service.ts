@@ -45,7 +45,6 @@ export class ThemeService {
     this.syncResolvedTheme();
   }
 
-  /** Toggle between light and dark (leaves system only when no explicit preference was stored). */
   toggleLightDark(): void {
     const next: ResolvedTheme = this.resolvedTheme() === 'dark' ? 'light' : 'dark';
     this.setPreference(next);
