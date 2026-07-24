@@ -34,8 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly diagnosticService = inject(FirebaseDiagnosticService);
   private readonly userService = inject(UserService);
-  /** Ensures theme preference is applied on bootstrap (toggle UI comes later). */
-  private readonly themeService = inject(ThemeService);
+  readonly themeService = inject(ThemeService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly router = inject(Router);
 
@@ -103,6 +102,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   signIn(): void {
     this.router.navigate(['/signin']);
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleLightDark();
   }
 
   private normalizeUrlPath(url: string): string {
