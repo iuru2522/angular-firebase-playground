@@ -7,14 +7,26 @@
 
   <section class="gh-signed-in" aria-labelledby="welcome-heading">
     <header class="gh-panel gh-welcome-card">
-      <p class="gh-product-tag">Bug tracker</p>
-      <h2 id="welcome-heading" class="gh-welcome-card__hello">
-        Welcome back, {{ user.displayName || 'there' }}
-      </h2>
-      <span class="gh-label gh-role-pill gh-role-pill--{{ user.role }}">{{
-        getRoleLabel(user.role)
-      }}</span>
-      <p class="gh-welcome-card__desc">{{ getRoleDescription(user.role) }}</p>
+      <div class="gh-welcome-card__body">
+        <p class="gh-product-tag">Bug tracker</p>
+        <h2 id="welcome-heading" class="gh-welcome-card__hello">
+          Welcome back, {{ user.displayName || 'there' }}
+        </h2>
+        <span class="gh-label gh-role-pill gh-role-pill--{{ user.role }}">{{
+          getRoleLabel(user.role)
+        }}</span>
+        <p class="gh-welcome-card__desc">{{ getRoleDescription(user.role) }}</p>
+      </div>
+      <div class="gh-quick-stats">
+        <div class="gh-stat-card">
+          <span class="gh-stat-card__number">{{ dayOfWeek() }}</span>
+          <span class="gh-stat-card__label">Today</span>
+        </div>
+        <div class="gh-stat-card">
+          <span class="gh-stat-card__number">{{ taskCount() }}</span>
+          <span class="gh-stat-card__label">Tasks</span>
+        </div>
+      </div>
     </header>
 
     <div class="gh-role-grid">
@@ -75,7 +87,19 @@
         <p class="gh-dev-strip__note">Scratch links while building the app UI.</p>
         <div class="gh-role-panel__actions">
           <a routerLink="/admin/users" class="gh-btn">Admin users</a>
-          <a routerLink="/dashboard" class="gh-btn gh-btn--primary">Dashboard</a>
+        </div>
+      </div>
+
+      <div class="gh-panel gh-role-info">
+        <h3 class="gh-role-panel__title">{{ getRoleLabel(user.role) }} Information</h3>
+        <p class="gh-role-info__desc">{{ getRoleInfoDescription(user.role) }}</p>
+        <div class="gh-role-info__permissions">
+          <h4 class="gh-role-info__permissions-title">Your Permissions:</h4>
+          <ul class="gh-role-info__list">
+            @for (permission of getRolePermissions(user.role); track permission) {
+              <li>{{ permission }}</li>
+            }
+          </ul>
         </div>
       </div>
     </div>
@@ -83,42 +107,16 @@
 
   } @else {
 
-  <section
-    class="gh-marketing-hero gh-marketing-hero--viewport"
-    aria-labelledby="marketing-hero-heading"
-  >
-    <div class="gh-marketing-hero__glow gh-marketing-hero__glow--1" aria-hidden="true"></div>
-    <div class="gh-marketing-hero__glow gh-marketing-hero__glow--2" aria-hidden="true"></div>
-    <div class="gh-marketing-hero__grid-bg" aria-hidden="true"></div>
-
-    <div class="gh-marketing-hero__shell">
-      <div class="gh-marketing-hero__inner">
-        <p class="gh-mono-label">Bug Tracker · Firebase & Angular playground</p>
-        <h1 id="marketing-hero-heading" class="gh-headline-xl">
-          From first report<br />
-          <span class="gh-headline-sub">to a verified fix—keep every defect accountable.</span>
-        </h1>
-        <p class="gh-lede">
-          Log defects, reproduce and assign work, exercise test cases, and close the loop when QA signs
-          off—wired to Firebase Auth so admins, reporters, QA, developers, and PMs only see what they
-          need.
-        </p>
-
-        <ul class="gh-hero-points">
-          <li><span class="gh-hero-points__bullet">●</span> Reporters capture bugs fast</li>
-          <li><span class="gh-hero-points__bullet">●</span> PMs route and assign owners</li>
-          <li><span class="gh-hero-points__bullet">●</span> QA verifies closures with evidence</li>
-        </ul>
-
-        <div class="gh-cta-row">
-          <a routerLink="/dashboard" class="gh-btn gh-btn--primary gh-btn--featured">
-            Open bug tracker
-          </a>
-        </div>
-        <p class="gh-microcopy">
-          Opens your dashboard—you’ll authenticate there by role before filing or triaging issues.
-        </p>
-      </div>
+  <section class="gh-marketing-hero gh-marketing-hero--viewport" aria-label="Guest landing">
+    <div class="gh-welcome-panel">
+      <h1 class="gh-welcome-panel__title">Welcome to BugTracker</h1>
+      <ul class="gh-topic-list">
+        <li class="gh-topic-pill">TypeScript</li>
+        <li class="gh-topic-pill">Angular</li>
+        <li class="gh-topic-pill">Firebase</li>
+        <li class="gh-topic-pill">Vercel</li>
+        <li class="gh-topic-pill">Modern CSS</li>
+      </ul>
     </div>
   </section>
 

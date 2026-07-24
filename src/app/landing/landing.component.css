@@ -64,13 +64,7 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  background: radial-gradient(
-      ellipse 110% 80% at 10% -10%,
-      rgba(35, 134, 54, 0.12),
-      transparent 55%
-    ),
-    radial-gradient(ellipse 80% 50% at 90% 0%, rgba(88, 166, 255, 0.08), transparent 50%),
-    var(--gh-canvas-inset);
+  background: var(--gh-canvas-inset);
 }
 
 .landing-page--signed-in.landing-page--fullbleed {
@@ -118,85 +112,58 @@
 }
 
 .gh-marketing-hero {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem;
   background-color: var(--gh-canvas-default);
 }
 
-.gh-marketing-hero--viewport {
-  flex: 1;
-  width: 100%;
-  border: none;
-  border-radius: 0;
-  min-height: 0;
-}
-
-.gh-marketing-hero--viewport .gh-marketing-hero__shell {
-  position: relative;
-  z-index: 1;
-  min-height: 100%;
+.gh-welcome-panel {
   display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: clamp(1.25rem, 5vh, 2.75rem) clamp(24px, 6vw, 88px)
-    clamp(1.75rem, 6vh, 3rem);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(32px, 6vw, 56px) clamp(28px, 8vw, 72px);
+  background-color: var(--gh-surface-default);
+  border: 1px solid var(--gh-border-default);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
-.gh-marketing-hero__glow {
-  position: absolute;
-  filter: blur(72px);
-  opacity: 0.35;
-  border-radius: 50%;
-  z-index: 0;
+.gh-welcome-panel__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 2rem + 1vw, 2.25rem);
+  font-weight: 600;
+  text-align: center;
+  color: var(--gh-fg-default);
 }
 
-.gh-marketing-hero__glow--1 {
-  width: 420px;
-  height: 420px;
-  top: -220px;
-  right: -80px;
-  background: radial-gradient(circle at 40% 40%, rgba(35, 134, 54, 0.45), transparent 65%);
+.gh-topic-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
 }
 
-.gh-marketing-hero__glow--2 {
-  width: 360px;
-  height: 360px;
-  bottom: -140px;
-  left: -100px;
-  background: radial-gradient(circle at 60% 50%, rgba(88, 166, 255, 0.25), transparent 70%);
-}
-
-.gh-marketing-hero__grid-bg {
-  position: absolute;
-  inset: 0;
-  opacity: 0.22;
-  z-index: 0;
-  background-image:
-    linear-gradient(var(--gh-border-default) 1px, transparent 1px),
-    linear-gradient(90deg, var(--gh-border-default) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
-.gh-marketing-hero__inner {
-  position: relative;
-  z-index: 1;
-  max-width: min(72ch, 100%);
-}
-
-.gh-mono-label {
-  margin: 0 0 20px;
-  font-family:
-    ui-monospace,
-    'SF Mono',
-    'SFMono-Regular',
-    Menlo,
-    Consolas,
-    monospace;
+.gh-topic-pill {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 12px;
+  border-radius: 999px;
   font-size: 12px;
   font-weight: 500;
-  color: var(--gh-fg-muted);
-  letter-spacing: 0.02em;
+  line-height: 1;
+  color: #a5d6ff;
+  background-color: rgba(56, 139, 253, 0.15);
 }
 
 .gh-product-tag {
@@ -207,62 +174,6 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--gh-fg-muted);
-}
-
-.gh-headline-xl {
-  margin: 0 0 20px;
-  font-size: clamp(2rem, 2.6rem + 1.2vw, 3rem);
-  font-weight: 400;
-  line-height: 1.08;
-  letter-spacing: -0.03em;
-  color: var(--gh-fg-default);
-}
-
-.gh-headline-sub {
-  color: var(--gh-fg-muted);
-  font-weight: 400;
-}
-
-.gh-lede {
-  margin: 0 0 28px;
-  font-size: clamp(15px, 1rem + 0.25vw, 18px);
-  line-height: 1.58;
-  color: var(--gh-fg-muted);
-  max-width: 54ch;
-}
-
-.gh-cta-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 16px;
-  margin-bottom: 16px;
-}
-
-.gh-microcopy {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--gh-fg-muted);
-}
-
-.gh-hero-points {
-  margin: 0 0 28px;
-  padding: 0;
-  list-style: none;
-  color: var(--gh-fg-muted);
-  font-size: 13px;
-  line-height: 1.65;
-}
-
-.gh-hero-points li + li {
-  margin-top: 6px;
-}
-
-.gh-hero-points__bullet {
-  display: inline-block;
-  margin-right: 8px;
-  color: rgba(63, 185, 80, 0.9);
 }
 
 .gh-btn {
@@ -312,13 +223,6 @@
   border-color: transparent;
 }
 
-.gh-btn--featured {
-  min-height: 48px;
-  padding-inline: 22px;
-  font-size: 16px;
-  line-height: 24px;
-}
-
 .gh-signed-in .gh-role-grid {
   display: grid;
   gap: 16px;
@@ -330,13 +234,23 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .gh-dev-strip {
+  .gh-dev-strip,
+  .gh-role-info {
     grid-column: span 2;
   }
 }
 
 .gh-welcome-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
   padding: 24px;
+}
+
+.gh-welcome-card__body {
+  min-width: 0;
+  flex: 1;
 }
 
 .gh-welcome-card__hello {
@@ -355,6 +269,36 @@
   color: var(--gh-fg-muted);
   font-size: 14px;
   line-height: 1.55;
+}
+
+.gh-quick-stats {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.gh-stat-card {
+  text-align: center;
+  padding: 16px 18px;
+  min-width: 88px;
+  background-color: var(--gh-surface-muted);
+  border: 1px solid var(--gh-border-default);
+  border-radius: 6px;
+}
+
+.gh-stat-card__number {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--gh-fg-default);
+}
+
+.gh-stat-card__label {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--gh-fg-muted);
 }
 
 .gh-role-pill {
@@ -433,14 +377,54 @@
   color: var(--gh-fg-muted);
 }
 
+.gh-role-info {
+  padding: 16px;
+}
+
+.gh-role-info__desc {
+  margin: 0 0 16px;
+  color: var(--gh-fg-muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.gh-role-info__permissions-title {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--gh-fg-default);
+}
+
+.gh-role-info__list {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--gh-fg-muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.gh-role-info__list li + li {
+  margin-top: 4px;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .gh-marketing-hero .gh-marketing-hero__grid-bg,
   .gh-btn {
     transition: none;
   }
 }
 
 @media (max-width: 768px) {
+  .gh-welcome-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gh-quick-stats {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
   .gh-role-panel__actions {
     flex-direction: column;
   }

@@ -57,7 +57,7 @@ export class RegisterComponent {
         this.successMessage.set('Registration successful! Redirecting...');
 
         setTimeout(() => {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/']);
         }, 1500);
 
       } catch (error: any) {
@@ -73,7 +73,7 @@ export class RegisterComponent {
     this.isSubmitting.set(true);
     this.error.set(null);
     await this.authService.loginWithGoogle();
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/']);
   } catch (error: any) {
     console.error('Google sign-in failed:', error);
     this.error.set(this.getErrorMessage(error));

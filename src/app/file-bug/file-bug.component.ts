@@ -108,7 +108,7 @@ export class FileBugComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/']);
   }
 
 }

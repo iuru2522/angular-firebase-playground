@@ -1,13 +1,9 @@
 <mat-toolbar class="main-toolbar main-toolbar--dark-chrome">
   <div class="nav-links">
-    <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <mat-icon>home</mat-icon>
-      Home
-    </a>
     @if (isAuthenticated()) {
-      <a mat-button routerLink="/dashboard" routerLinkActive="active">
-        <mat-icon>dashboard</mat-icon>
-        Dashboard
+      <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <mat-icon>home</mat-icon>
+        Home
       </a>
     }
   </div>

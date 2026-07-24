@@ -19,7 +19,7 @@ export class LoginComponent {
     effect(() => {
       this.authService.authState$.subscribe((user: any) => {
         if (user) {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/']);
         }
       });
     });

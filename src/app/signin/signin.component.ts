@@ -52,7 +52,7 @@ export class SigninComponent {
         this.successMessage.set('Sign in successful! Redirecting...');
 
         setTimeout(() => {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/']);
         }, 1500);
 
       } catch (error: any) {
@@ -70,7 +70,7 @@ export class SigninComponent {
       this.error.set(null);
 
       await this.authService.loginWithGoogle();
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/']);
 
     } catch (error: any) {
       console.error('Google sign-in failed:', error);

@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { LandingComponent } from './landing/landing.component';
 import { SigninComponent } from './signin/signin.component';
-import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { RequireAuthComponent } from './require-auth/require-auth.component';
@@ -28,11 +27,6 @@ export const routes: Routes = [
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: 'account-deactivated', component: AccountDeactivatedComponent },
   { path: 'offline', component: OfflineFallbackComponent },
-  {
-    path: 'dashboard',
-    component: UserDashboardComponent,
-    canActivate: [authGuard]
-  },
   {
     path: 'file-bug',
     component: FileBugComponent,
