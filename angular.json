@@ -38,6 +38,7 @@
               }
             ],            "styles": [
               "src/material-theme.scss",
+              "src/styles/theme-tokens.css",
               "src/styles.css"
             ],
             "scripts": [],
@@ -105,6 +106,8 @@
                 "output": "/"
               }
             ],            "styles": [
+              "src/material-theme.scss",
+              "src/styles/theme-tokens.css",
               "src/styles.css"
             ],
             "scripts": []
