@@ -14,6 +14,7 @@ import { UserRole } from './models';
 import { AdminUsersTableComponent } from './admin/admin-users-table/admin-users-table.component';
 import { TestCasesComponent } from './test-cases/test-cases.component';
 import { TestCaseFormComponent } from './test-case-form/test-case-form.component';
+import { Settings } from './settings/settings';
 import { RegisterComponent } from './register/register.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { AccountDeactivatedComponent } from './account-deactivated/account-deactivated.component';
@@ -59,6 +60,7 @@ export const routes: Routes = [
     canActivate: [authGuard, RoleGuard],
     data: { roles: [UserRole.ADMIN] }
   },
+  { path: 'settings', component: Settings, canActivate: [authGuard] },
   {
     path: 'test-cases',
     component: TestCasesComponent
