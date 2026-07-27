@@ -1,7 +1,7 @@
-<div class="file-bug-container">
-    <h2>{{ isEditMode() ? 'Edit Bug Report' : 'File a Bug Report' }}</h2>
+<div class="page-container page-container--form">
+    <h2 class="page-title">{{ isEditMode() ? 'Edit Bug Report' : 'File a Bug Report' }}</h2>
 
-    <form [formGroup]="bugForm" (ngSubmit)="onSubmit()">
+    <form class="page-card" [formGroup]="bugForm" (ngSubmit)="onSubmit()">
 
 
         <div class="form-group">

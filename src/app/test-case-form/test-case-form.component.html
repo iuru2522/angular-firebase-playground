@@ -1,7 +1,7 @@
-<div class="form-container">
-  <div class="header">
+<div class="page-container page-container--form">
+  <div class="page-header page-header--simple form-intro">
     <h2 class="form-title">Add New Test Case</h2>
-    <p class="form-subtitle">Create a comprehensive test case with detailed information.</p>
+    <p class="form-subtitle page-subtitle">Create a comprehensive test case with detailed information.</p>
   </div>
 
   @if (successMessage()) {
@@ -16,7 +16,7 @@
     </div>
   }
 
-  <form [formGroup]="testCaseForm" (ngSubmit)="onSave()" class="test-case-form">
+  <form [formGroup]="testCaseForm" (ngSubmit)="onSave()" class="page-card test-case-form">
     <div class="form-section">
       <h3 class="section-title">Basic Information</h3>
 

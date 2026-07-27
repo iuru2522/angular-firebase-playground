@@ -1,25 +1,9 @@
-.bug-details-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  background: var(--gh-canvas-inset);
-  min-height: 100vh;
-}
-
 .bug-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 20px;
   flex-wrap: wrap;
-}
-
-.bug-details-card {
-  background: var(--gh-surface-default);
-  border: 1px solid var(--gh-border-default);
-  border-radius: var(--radius-md);
-  padding: 30px;
-  box-shadow: var(--shadow-sm);
 }
 
 .bug-title-section {
@@ -30,7 +14,7 @@
 .bug-title {
   color: var(--gh-fg-default);
   margin: 0 0 10px 0;
-  font-size: 2rem;
+  font-size: var(--font-size-xl);
   font-weight: 600;
 }
 
@@ -38,7 +22,7 @@
   font-family: 'Courier New', monospace;
   font-weight: 600;
   color: var(--gh-link);
-  font-size: 1rem;
+  font-size: var(--font-size-md);
 }
 
 .bug-meta {

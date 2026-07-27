@@ -1,18 +1,18 @@
-<div class="offline-container">
-  <div class="offline-content">
-    <h2>⚠️ Service Temporarily Unavailable</h2>
+<div class="status-page">
+  <div class="status-card">
+    <h2>Service Temporarily Unavailable</h2>
     <p>We're experiencing connectivity issues with our authentication service.</p>
     <p>Please try again in a few moments or check your internet connection.</p>
-    
-    <div class="actions">
-      <button (click)="retry()" class="retry-btn">
-        🔄 Retry Connection
+
+    <div class="status-actions">
+      <button (click)="retry()" class="status-btn">
+        Retry Connection
       </button>
-      <a routerLink="/" class="home-link">
-        🏠 Go to Home
+      <a routerLink="/" class="status-btn status-btn--muted">
+        Go to Home
       </a>
     </div>
-    
+
     <div class="error-details">
       <details>
         <summary>Technical Details</summary>
@@ -25,4 +25,4 @@
       </details>
     </div>
   </div>
-</div> 
+</div>

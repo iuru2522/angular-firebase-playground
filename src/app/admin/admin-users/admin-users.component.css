@@ -1,28 +1,25 @@
-.admin-users-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 20px;
-  background: var(--gh-canvas-inset);
-  min-height: 100vh;
-}
-
-.admin-users-container h2 {
+.page-container--narrow > h2 {
   color: var(--gh-fg-default);
   margin-bottom: 10px;
 }
 
 .description {
-  color: var(--gh-fg-muted);
   margin-bottom: 30px;
 }
 
-.current-user-card {
+.current-user-card,
+.admin-actions,
+.role-overview {
   background: var(--gh-surface-default);
   border: 1px solid var(--gh-border-default);
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 30px;
-  box-shadow: 0 2px 4px var(--gh-shadow);
+  box-shadow: var(--shadow-sm);
+}
+
+.role-overview {
+  margin-bottom: 0;
 }
 
 .user-card {
@@ -52,15 +49,6 @@
   color: var(--gh-fg-muted);
 }
 
-.admin-actions {
-  background: var(--gh-surface-default);
-  border: 1px solid var(--gh-border-default);
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 4px var(--gh-shadow);
-}
-
 .action-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -85,21 +73,13 @@
 
 .action-card h4 {
   margin: 0 0 8px 0;
-  font-size: 16px;
+  font-size: var(--font-size-md);
 }
 
 .action-card p {
   margin: 0;
   opacity: 0.9;
-  font-size: 14px;
-}
-
-.role-overview {
-  background: var(--gh-surface-default);
-  border: 1px solid var(--gh-border-default);
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 4px var(--gh-shadow);
+  font-size: var(--font-size-sm);
 }
 
 .role-overview > h3 {
@@ -117,19 +97,19 @@
 .role-card {
   padding: 15px;
   border: 1px solid var(--gh-border-default);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: var(--gh-surface-overlay);
 }
 
 .role-desc {
   margin: 10px 0 0 0;
   color: var(--gh-fg-muted);
-  font-size: 14px;
+  font-size: var(--font-size-sm);
 }
 
 .action-feedback {
   padding: 12px 16px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   margin-bottom: 15px;
   font-weight: 500;
   animation: fadeIn 0.3s ease-in;

@@ -1,38 +1,34 @@
-<div class="signin-container">
-  <div class="signin-card">
-    <div class="signin-header">
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
       <h1>Welcome Back</h1>
       <p>Sign in to your account</p>
     </div>
 
-    <!-- Error and Success Messages -->
     @if (error()) {
-      <div class="error-message">
+      <div class="alert alert-error">
         <span>{{ error() }}</span>
       </div>
     }
 
     @if (successMessage()) {
-      <div class="success-message">
+      <div class="alert alert-success">
         <span>{{ successMessage() }}</span>
       </div>
     }
 
-    <!-- Sign In Form -->
-    <form [formGroup]="signinForm" (ngSubmit)="onSubmit()" class="signin-form">
-      
-      <!-- Email Field -->
+    <form [formGroup]="signinForm" (ngSubmit)="onSubmit()" class="auth-form">
       <div class="form-group">
         <label for="email">Email Address</label>
-        <input 
-          type="email" 
-          id="email" 
+        <input
+          type="email"
+          id="email"
           formControlName="email"
           [class.invalid]="signinForm.get('email')?.invalid && signinForm.get('email')?.touched"
           placeholder="Enter your email"
           autocomplete="email"
         >
-        
+
         @if (signinForm.get('email')?.invalid && signinForm.get('email')?.touched) {
           <div class="field-error">
             @if (signinForm.get('email')?.errors?.['required']) {
@@ -45,18 +41,17 @@
         }
       </div>
 
-      <!-- Password Field -->
       <div class="form-group">
         <label for="password">Password</label>
-        <input 
-          type="password" 
-          id="password" 
+        <input
+          type="password"
+          id="password"
           formControlName="password"
           [class.invalid]="signinForm.get('password')?.invalid && signinForm.get('password')?.touched"
           placeholder="Enter your password"
           autocomplete="current-password"
         >
-        
+
         @if (signinForm.get('password')?.invalid && signinForm.get('password')?.touched) {
           <div class="field-error">
             @if (signinForm.get('password')?.errors?.['required']) {
@@ -69,9 +64,8 @@
         }
       </div>
 
-      <!-- Submit Button -->
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         class="submit-btn"
         [disabled]="signinForm.invalid || isSubmitting()"
       >
@@ -83,14 +77,12 @@
       </button>
     </form>
 
-    <!-- Divider -->
     <div class="divider">
       <span>or</span>
     </div>
 
-    <!-- Google Sign In -->
-    <button 
-      type="button" 
+    <button
+      type="button"
       class="google-btn"
       (click)="onGoogleSignIn()"
       [disabled]="isSubmitting()"
@@ -104,8 +96,7 @@
       Continue with Google
     </button>
 
-    <!-- Footer -->
-    <div class="signin-footer">
+    <div class="auth-footer">
       <p>Don't have an account? <a routerLink="/register">Sign up here</a></p>
       <p><a routerLink="/forgot-password">Forgot your password?</a></p>
     </div>

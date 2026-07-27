@@ -1,35 +1,18 @@
-.form-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background: var(--gh-canvas-inset);
-  min-height: 100vh;
-}
-
-.header {
+.form-intro {
   text-align: center;
-  margin-bottom: 30px;
 }
 
 .form-title {
   color: var(--gh-fg-default);
   margin: 0 0 10px 0;
-  font-size: 2rem;
+  font-size: var(--font-size-xl);
   font-weight: 600;
 }
 
 .form-subtitle {
   color: var(--gh-fg-muted);
   margin: 0;
-  font-size: 1rem;
-}
-
-.test-case-form {
-  background: var(--gh-surface-default);
-  border: 1px solid var(--gh-border-default);
-  padding: 30px;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  font-size: var(--font-size-md);
 }
 
 .form-section {
@@ -61,14 +44,6 @@
 }
 
 @media (max-width: 768px) {
-  .form-container {
-    padding: 15px;
-  }
-
-  .test-case-form {
-    padding: 20px;
-  }
-
   .form-title {
     font-size: 1.5rem;
   }

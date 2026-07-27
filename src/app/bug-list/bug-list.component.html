@@ -1,5 +1,5 @@
-<div class="bug-list-container">
-    <div class="header">
+<div class="page-container">
+    <div class="page-header">
         <h2>Bug Reports</h2>
         <div class="controls">
             <input type="text" class="search-box" placeholder="Search bugs..." [value]="searchTerm()"
@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <div class="content">
+    <div class="page-card page-card--flush">
 
         @if(isLoading()){
         <div class="loading-state">
