@@ -1,0 +1,144 @@
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group label,
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--gh-fg-default);
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+}
+
+.form-label.required::after {
+  content: ' *';
+  color: var(--gh-danger-emphasis);
+}
+
+.form-label[aria-required='true']::after {
+  content: ' (required)';
+  color: var(--gh-danger-emphasis);
+  font-size: var(--font-size-xs);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select,
+.form-control {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--gh-border-default);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  background: var(--gh-canvas-default);
+  color: var(--gh-fg-default);
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus,
+.form-control:focus,
+.form-control:focus-visible {
+  outline: none;
+  border-color: var(--gh-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gh-focus) 18%, transparent);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder,
+.form-control::placeholder {
+  color: var(--gh-fg-muted);
+}
+
+.form-group textarea,
+.textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: inherit;
+}
+
+.form-group select,
+.select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='%238b949e' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  appearance: none;
+}
+
+.form-group input.ng-invalid.ng-touched,
+.form-group textarea.ng-invalid.ng-touched,
+.form-group select.ng-invalid.ng-touched,
+.form-control.ng-invalid.ng-touched,
+.form-control.error {
+  border-color: var(--gh-danger-emphasis);
+  box-shadow: 0 0 0 3px var(--gh-danger-muted);
+}
+
+.form-group input.ng-valid.ng-touched,
+.form-group textarea.ng-valid.ng-touched,
+.form-group select.ng-valid.ng-touched,
+.form-control.ng-valid.ng-touched {
+  border-color: var(--gh-accent);
+  box-shadow: 0 0 0 3px var(--gh-success-muted);
+}
+
+.form-control.error:focus,
+.form-control.ng-invalid.ng-touched:focus,
+.form-control.ng-valid.ng-touched:focus {
+  border-color: var(--gh-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gh-focus) 18%, transparent);
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+  justify-content: flex-end;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--gh-border-default);
+}
+
+.alert {
+  padding: 15px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.alert-success,
+.success-message {
+  background: var(--gh-success-muted);
+  color: var(--gh-success);
+  border: 1px solid var(--gh-success-border);
+  text-align: center;
+}
+
+.alert-error {
+  background: var(--gh-danger-muted);
+  color: var(--gh-danger-fg);
+  border: 1px solid var(--gh-danger-border);
+  text-align: center;
+}
+
+.success-message {
+  padding: 15px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.error-message {
+  color: var(--gh-danger-fg);
+  font-size: 13px;
+  margin-top: 5px;
+  display: block;
+}

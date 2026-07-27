@@ -1,28 +1,28 @@
-<div class="deactivated-container">
-  <div class="deactivated-content">
+<div class="status-page">
+  <div class="status-card">
     <div class="deactivated-icon">
       <span class="icon">⚠️</span>
     </div>
-    
-    <h1>Account Deactivated</h1>
-    
+
+    <h1 class="status-card__danger-title">Account Deactivated</h1>
+
     <div class="message">
       <p>Your account has been deactivated by an administrator.</p>
       <p>You no longer have access to the system.</p>
     </div>
-    
+
     <div class="contact-info">
       <h3>Need Help?</h3>
       <p>If you believe this is an error, please contact your administrator:</p>
       <ul>
-        <li>📧 Email: admin&#64;company.com</li>
-        <li>📞 Phone: (555) 123-4567</li>
-        <li>💬 Support: support&#64;company.com</li>
+        <li>Email: admin&#64;company.com</li>
+        <li>Phone: (555) 123-4567</li>
+        <li>Support: support&#64;company.com</li>
       </ul>
     </div>
-    
-    <div class="actions">
-      <button (click)="logout()" class="logout-btn">
+
+    <div class="status-actions">
+      <button (click)="logout()" class="status-btn status-btn--danger">
         Sign Out
       </button>
     </div>

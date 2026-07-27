@@ -1,0 +1,80 @@
+.severity-badge,
+.status-badge,
+.priority,
+.status,
+.role-badge {
+  padding: 6px 12px;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.severity-critical,
+.priority-critical,
+.status-open,
+.status-blocked {
+  background: var(--color-severity-critical);
+  color: var(--gh-accent-fg);
+}
+
+.severity-high,
+.priority-high {
+  background: var(--color-severity-high);
+  color: var(--gh-accent-fg);
+}
+
+.severity-medium,
+.status-in-progress,
+.status-pending {
+  background: var(--color-severity-medium);
+  color: var(--gh-on-emphasis);
+}
+
+.severity-low,
+.priority-low,
+.status-resolved,
+.status-active {
+  background: var(--gh-accent);
+  color: var(--gh-accent-fg);
+}
+
+.status-closed,
+.status-draft {
+  background: var(--gh-btn-bg-hover);
+  color: var(--gh-fg-default);
+}
+
+.status-completed {
+  background: var(--color-info);
+  color: var(--gh-accent-fg);
+}
+
+.role-admin {
+  background: var(--gh-danger);
+  color: var(--gh-accent-fg);
+}
+
+.role-pm,
+.role-project_manager {
+  background: var(--color-role-pm);
+  color: var(--gh-accent-fg);
+}
+
+.role-dev,
+.role-developer {
+  background: var(--gh-accent);
+  color: var(--gh-accent-fg);
+}
+
+.role-qa,
+.role-qa_tester {
+  background: var(--color-role-qa);
+  color: var(--gh-on-emphasis);
+}
+
+.role-reporter {
+  background: var(--color-role-reporter);
+  color: var(--gh-accent-fg);
+}

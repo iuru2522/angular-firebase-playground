@@ -1,54 +1,18 @@
-.form-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background: var(--gh-canvas-inset);
-  min-height: 100vh;
-}
-
-.header {
+.form-intro {
   text-align: center;
-  margin-bottom: 30px;
 }
 
 .form-title {
   color: var(--gh-fg-default);
   margin: 0 0 10px 0;
-  font-size: 2rem;
+  font-size: var(--font-size-xl);
   font-weight: 600;
 }
 
 .form-subtitle {
   color: var(--gh-fg-muted);
   margin: 0;
-  font-size: 1rem;
-}
-
-.alert {
-  padding: 15px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  font-weight: 500;
-}
-
-.alert-success {
-  background: var(--gh-success-muted);
-  color: var(--gh-success);
-  border: 1px solid var(--gh-success-border);
-}
-
-.alert-error {
-  background: var(--gh-danger-muted);
-  color: var(--gh-danger-fg);
-  border: 1px solid var(--gh-danger-border);
-}
-
-.test-case-form {
-  background: var(--gh-surface-default);
-  border: 1px solid var(--gh-border-default);
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px var(--gh-shadow);
+  font-size: var(--font-size-md);
 }
 
 .form-section {
@@ -71,218 +35,23 @@
   margin-bottom: 20px;
 }
 
-.form-group {
-  margin-bottom: 25px;
-}
-
-.form-label {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--gh-fg-default);
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.form-label.required::after {
-  content: ' *';
-  color: var(--gh-danger-emphasis);
-}
-
-.form-control {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid var(--gh-border-default);
-  border-radius: 6px;
-  font-size: 14px;
-  transition:
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-  background: var(--gh-canvas-default);
-  color: var(--gh-fg-default);
-  box-sizing: border-box;
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: var(--gh-focus) !important;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gh-focus) 18%, transparent) !important;
-}
-
-.form-control::placeholder {
-  color: var(--gh-fg-muted);
-}
-
-.form-control.error {
-  border-color: var(--gh-danger-emphasis);
-  box-shadow: 0 0 0 3px var(--gh-danger-muted);
-}
-
-.form-control.error:focus {
-  border-color: var(--gh-focus) !important;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gh-focus) 18%, transparent) !important;
+.form-actions {
+  padding: 20px;
 }
 
 .textarea {
-  resize: vertical;
   min-height: 100px;
-  font-family: inherit;
-}
-
-.select {
-  cursor: pointer;
-  background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='%238b949e' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 12px;
-  appearance: none;
-}
-
-.error-message {
-  color: var(--gh-danger-fg);
-  font-size: 13px;
-  margin-top: 5px;
-  display: block;
-}
-
-.form-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 15px;
-  justify-content: flex-end;
-  margin-top: 30px;
-  padding: 20px;
-  border-top: 1px solid var(--gh-border-default);
-}
-
-.btn {
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  min-height: 44px;
-  min-width: 140px;
-  padding: 10px 20px;
-  border-radius: 6px;
-  border: 1px solid transparent;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.25;
-  cursor: pointer;
-  transition:
-    border-color 0.12s ease,
-    background-color 0.12s ease,
-    box-shadow 0.12s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.btn:focus-visible {
-  outline: 2px solid var(--gh-focus);
-  outline-offset: 2px;
-}
-
-.btn-primary {
-  color: var(--gh-accent-fg);
-  background-color: var(--gh-accent);
-  border-color: rgba(240, 246, 252, 0.12);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 2px rgba(25, 25, 25, 0.12);
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: var(--gh-accent-emphasis);
-  border-color: rgba(240, 246, 252, 0.12);
-}
-
-.btn-primary:disabled {
-  background: var(--gh-btn-bg-hover);
-  border-color: var(--gh-border-default);
-  color: color-mix(in srgb, var(--gh-fg-default) 45%, transparent);
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.btn-secondary {
-  background: var(--gh-btn-bg);
-  color: var(--gh-fg-default);
-  border-color: var(--gh-border-default);
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background: var(--gh-btn-bg-hover);
-  border-color: var(--gh-fg-muted);
-}
-
-.btn-secondary:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.form-control.ng-valid.ng-touched {
-  border-color: var(--gh-accent);
-  box-shadow: 0 0 0 3px rgba(35, 134, 54, 0.18);
-}
-
-.form-control.ng-invalid.ng-touched {
-  border-color: var(--gh-danger-emphasis);
-  box-shadow: 0 0 0 3px var(--gh-danger-muted);
-}
-
-.form-control.ng-invalid.ng-touched:focus {
-  border-color: var(--gh-focus) !important;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gh-focus) 18%, transparent) !important;
-}
-
-.form-control.ng-valid.ng-touched:focus {
-  border-color: var(--gh-focus) !important;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gh-focus) 18%, transparent) !important;
-}
-
-.btn-primary.is-submitting {
-  position: relative;
-  color: transparent;
-}
-
-.btn-primary.is-submitting::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 16px;
-  height: 16px;
-  margin: -8px 0 0 -8px;
-  border: 2px solid transparent;
-  border-top: 2px solid var(--gh-accent-fg);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }
 
 @media (max-width: 768px) {
-  .form-container {
-    padding: 15px;
-  }
-  .test-case-form {
-    padding: 20px;
-  }
   .form-title {
     font-size: 1.5rem;
   }
+
   .form-row {
     grid-template-columns: 1fr;
   }
+
   .form-actions {
     flex-direction: column;
   }
@@ -290,18 +59,6 @@
   .btn {
     width: 100%;
   }
-}
-
-.form-control:focus-visible {
-  outline: none;
-  border-color: var(--gh-focus) !important;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gh-focus) 18%, transparent) !important;
-}
-
-.form-label[aria-required='true']::after {
-  content: ' (required)';
-  color: var(--gh-danger-emphasis);
-  font-size: 12px;
 }
 
 @media (min-width: 992px) {

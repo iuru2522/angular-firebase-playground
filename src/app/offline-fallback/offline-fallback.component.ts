@@ -6,8 +6,7 @@ import { RouterModule } from '@angular/router';
   selector: 'app-offline-fallback',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './offline-fallback.component.html',
-  styleUrls: ['./offline-fallback.component.css']
+  templateUrl: './offline-fallback.component.html'
 })
 export class OfflineFallbackComponent {
   retry(): void {

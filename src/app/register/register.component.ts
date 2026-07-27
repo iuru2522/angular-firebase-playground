@@ -14,7 +14,6 @@ interface RegisterForm {
   selector: 'app-register',
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegisterComponent {

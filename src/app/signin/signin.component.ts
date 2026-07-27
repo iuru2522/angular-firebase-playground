@@ -14,7 +14,6 @@ interface SignInForm {
   selector: 'app-signin',
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './signin.component.html',
-  styleUrl: './signin.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SigninComponent {

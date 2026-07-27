@@ -1,4 +1,4 @@
-.signin-container {
+.auth-container {
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -8,96 +8,114 @@
   background: var(--gh-canvas-inset);
 }
 
-.signin-card {
+.auth-card {
   background: var(--gh-surface-default);
   border: 1px solid var(--gh-border-default);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   padding: clamp(28px, 5vw, 40px);
   width: 100%;
-  max-width: 450px;
-  box-shadow: 0 8px 24px var(--gh-shadow);
+  max-width: var(--auth-max-width);
+  box-shadow: var(--shadow-md);
 }
 
-.signin-header {
+.auth-header {
   text-align: center;
   margin-bottom: 28px;
 }
 
-.signin-header h1 {
+.auth-header h1,
+.auth-card > h2 {
   color: var(--gh-fg-default);
   margin: 0 0 10px 0;
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 600;
+  text-align: center;
 }
 
-.signin-header p {
+.auth-header p,
+.auth-subtitle {
   color: var(--gh-fg-muted);
   margin: 0;
-  font-size: 1rem;
+  font-size: var(--font-size-md);
+  text-align: center;
+  line-height: 1.55;
 }
 
-.signin-form {
+.auth-subtitle {
+  margin-bottom: 28px;
+}
+
+.auth-form {
   margin-bottom: 24px;
 }
 
-.form-group {
+.auth-card .form-group {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
 }
 
-.form-group label {
+.auth-card .form-group label {
   margin-bottom: 8px;
   color: var(--gh-fg-subtle);
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
 }
 
-.form-group input {
+.auth-card .form-group input,
+.auth-card .form-control {
+  width: 100%;
   padding: 12px 16px;
   border: 1px solid var(--gh-border-default);
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
   background: var(--gh-canvas-default);
   color: var(--gh-fg-default);
+  box-sizing: border-box;
 }
 
-.form-group input:focus {
+.auth-card .form-group input:focus,
+.auth-card .form-control:focus {
   outline: none;
   border-color: var(--gh-link);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--gh-link) 15%, transparent);
 }
 
-.form-group input::placeholder {
+.auth-card .form-group input::placeholder,
+.auth-card .form-control::placeholder {
   color: var(--gh-fg-placeholder);
 }
 
-.form-group input.invalid {
+.auth-card .form-group input.invalid,
+.auth-card .form-control.invalid {
   border-color: var(--gh-danger-emphasis);
   box-shadow: 0 0 0 3px var(--gh-danger-muted);
 }
 
-.error-message {
-  background: var(--gh-danger-muted);
-  color: var(--gh-danger-fg);
-  border: 1px solid var(--gh-danger-border);
-  padding: 14px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  font-weight: 500;
+.auth-card .form-group input.ng-valid.ng-touched,
+.auth-card .form-control.ng-valid.ng-touched {
+  border-color: var(--gh-success);
+  box-shadow: 0 0 0 3px var(--gh-success-muted);
 }
 
-.success-message {
-  background: var(--gh-success-muted);
-  color: var(--gh-success);
-  border: 1px solid var(--gh-success-border);
+.auth-card .form-group input.ng-invalid.ng-touched,
+.auth-card .form-control.ng-invalid.ng-touched {
+  border-color: var(--gh-danger-emphasis);
+  box-shadow: 0 0 0 3px var(--gh-danger-muted);
+}
+
+.auth-card .form-group input.ng-invalid.ng-touched:focus,
+.auth-card .form-control.ng-invalid.ng-touched:focus {
+  border-color: var(--gh-link);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gh-link) 15%, transparent);
+}
+
+.auth-card .alert {
   padding: 14px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  font-weight: 500;
+  text-align: left;
 }
 
 .field-error {
@@ -111,12 +129,23 @@
   margin-bottom: 2px;
 }
 
-.submit-btn {
+.auth-card .form-actions {
+  margin-top: 22px;
+  padding-top: 0;
+  border-top: none;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.auth-card .submit-btn,
+.auth-card .btn.btn-primary {
   width: 100%;
+  min-width: unset;
+  min-height: unset;
   border: none;
   padding: 12px 24px;
-  border-radius: 6px;
-  font-size: 16px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-md);
   font-weight: 600;
   cursor: pointer;
   transition:
@@ -125,31 +154,39 @@
     box-shadow 0.2s ease;
   letter-spacing: 0.02em;
   margin-bottom: 16px;
+  text-transform: none;
   background: var(--gh-accent);
   color: var(--gh-accent-fg);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--gh-accent-fg) 6%, transparent);
 }
 
-.submit-btn:hover:not(:disabled) {
+.auth-card .submit-btn:hover:not(:disabled),
+.auth-card .btn.btn-primary:hover:not(:disabled) {
   background: var(--gh-accent-emphasis);
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(35, 134, 54, 0.35);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--gh-accent) 35%, transparent);
 }
 
-.submit-btn:disabled {
+.auth-card .submit-btn:disabled,
+.auth-card .btn.btn-primary:disabled,
+.auth-card .btn:disabled {
   background: var(--gh-border-default);
   color: var(--gh-fg-muted);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+  opacity: 1;
 }
 
-.google-btn {
+.auth-card .google-btn,
+.auth-card .btn-google {
   width: 100%;
+  min-width: unset;
+  min-height: unset;
   border: 1px solid var(--gh-border-default);
   padding: 12px 24px;
-  border-radius: 6px;
-  font-size: 16px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-md);
   font-weight: 600;
   cursor: pointer;
   transition:
@@ -161,14 +198,20 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  margin-bottom: 10px;
+  box-shadow: none;
 }
 
-.google-btn:hover:not(:disabled) {
+.auth-card .google-btn:hover:not(:disabled),
+.auth-card .btn-google:hover:not(:disabled) {
   background: var(--gh-btn-bg-hover);
   border-color: var(--gh-fg-muted);
 }
 
-.google-btn:disabled {
+.auth-card .google-btn:disabled,
+.auth-card .btn-google:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
@@ -190,7 +233,7 @@
 .divider span {
   padding: 0 15px;
   color: var(--gh-fg-muted);
-  font-size: 14px;
+  font-size: var(--font-size-sm);
 }
 
 .google-icon {
@@ -199,53 +242,48 @@
   flex-shrink: 0;
 }
 
-.signin-footer {
+.auth-footer,
+.login-link {
   text-align: center;
   margin-top: 26px;
 }
 
-.signin-footer p {
+.login-link {
+  margin-top: 20px;
   color: var(--gh-fg-muted);
-  margin: 10px 0;
-  font-size: 14px;
 }
 
-.signin-footer a {
+.auth-footer p,
+.login-link {
+  color: var(--gh-fg-muted);
+  margin: 10px 0;
+  font-size: var(--font-size-sm);
+}
+
+.auth-footer a,
+.login-link a {
   color: var(--gh-link);
   text-decoration: none;
   font-weight: 600;
 }
 
-.signin-footer a:hover {
+.auth-footer a:hover,
+.login-link a:hover {
   color: var(--gh-link-hover);
   text-decoration: underline;
 }
 
-.form-group input.ng-valid.ng-touched {
-  border-color: var(--gh-success);
-  box-shadow: 0 0 0 3px var(--gh-success-muted);
-}
-
-.form-group input.ng-invalid.ng-touched {
-  border-color: var(--gh-danger-emphasis);
-  box-shadow: 0 0 0 3px var(--gh-danger-muted);
-}
-
-.form-group input.ng-invalid.ng-touched:focus {
-  border-color: var(--gh-link) !important;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gh-link) 15%, transparent) !important;
-}
-
 @media (max-width: 768px) {
-  .signin-container {
+  .auth-container {
     padding: 14px;
   }
 
-  .signin-card {
+  .auth-card {
     padding: 24px 18px;
   }
 
-  .signin-header h1 {
+  .auth-header h1,
+  .auth-card > h2 {
     font-size: 1.45rem;
   }
 }
