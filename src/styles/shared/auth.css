@@ -157,7 +157,7 @@
   text-transform: none;
   background: var(--gh-accent);
   color: var(--gh-accent-fg);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--gh-accent-fg) 6%, transparent);
 }
 
 .auth-card .submit-btn:hover:not(:disabled),

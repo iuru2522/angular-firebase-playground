@@ -6,7 +6,6 @@ import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-account-deactivated',
   templateUrl: './account-deactivated.component.html',
-  styleUrls: ['./account-deactivated.component.css'],
   imports: [CommonModule, RouterModule]
 })
 export class AccountDeactivatedComponent {

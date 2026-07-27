@@ -7,7 +7,6 @@ import { GoogleSsoDirective } from '../google-sso.directive';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
   standalone: true,
   imports: [CommonModule, GoogleSsoDirective]
 })
