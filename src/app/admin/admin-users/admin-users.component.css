@@ -52,40 +52,6 @@
   color: var(--gh-fg-muted);
 }
 
-.role-badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.role-admin {
-  background: #ff6b6b;
-  color: white;
-}
-
-.role-project_manager {
-  background: #4ecdc4;
-  color: var(--gh-on-emphasis);
-}
-
-.role-developer {
-  background: #45b7d1;
-  color: var(--gh-on-emphasis);
-}
-
-.role-qa_tester {
-  background: #3d9970;
-  color: white;
-}
-
-.role-reporter {
-  background: #d29922;
-  color: var(--gh-on-emphasis);
-}
-
 .admin-actions {
   background: var(--gh-surface-default);
   border: 1px solid var(--gh-border-default);
@@ -104,7 +70,7 @@
 
 .action-card {
   background: var(--gh-focus);
-  color: white;
+  color: var(--gh-accent-fg);
   border: none;
   border-radius: 8px;
   padding: 20px;

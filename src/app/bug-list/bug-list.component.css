@@ -14,8 +14,8 @@
   background: var(--gh-surface-default);
   border: 1px solid var(--gh-border-default);
   padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px var(--gh-shadow);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .header h2 {
@@ -34,8 +34,8 @@
 .search-box {
   padding: 10px 16px;
   border: 1px solid var(--gh-border-default);
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
   min-width: 250px;
   transition:
     border-color 0.3s ease,
@@ -58,8 +58,8 @@
   padding: 10px 36px 10px 16px;
   border: 1px solid var(--gh-border-default);
   border-style: solid;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
   font-family: inherit;
   line-height: 1.25;
   min-height: 42px;
@@ -98,9 +98,9 @@
 .content {
   background: var(--gh-surface-default);
   border: 1px solid var(--gh-border-default);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: 0 2px 8px var(--gh-shadow);
+  box-shadow: var(--shadow-sm);
 }
 
 .bug-table {
@@ -141,67 +141,9 @@
   color: var(--gh-link);
 }
 
-.severity-badge {
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.severity-critical {
-  background: var(--gh-danger);
-  color: white;
-}
-
-.severity-high {
-  background: #fd7e14;
-  color: white;
-}
-
-.severity-medium {
-  background: #d29922;
-  color: var(--gh-on-emphasis);
-}
-
-.severity-low {
-  background: var(--gh-accent);
-  color: white;
-}
-
 .action-buttons {
   display: flex;
   gap: 8px;
-}
-
-.btn-small {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-}
-
-.btn-view {
-  background: #17a2b8;
-  color: white;
-}
-
-.btn-view:hover {
-  background: #138496;
-}
-
-.btn-edit {
-  background: var(--gh-accent);
-  color: white;
-}
-
-.btn-edit:hover {
-  background: var(--gh-accent);
 }
 
 .empty-state {
@@ -241,16 +183,6 @@
   margin: 0 auto 20px;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 @media (max-width: 768px) {
   .bug-list-container {
     padding: 15px;
@@ -277,7 +209,7 @@
   }
 
   .bug-table {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
 
   .bug-table th,

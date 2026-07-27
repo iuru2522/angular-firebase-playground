@@ -35,25 +35,6 @@
   background: var(--gh-btn-bg-hover);
 }
 
-.alert {
-  padding: 15px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  font-weight: 500;
-}
-
-.alert-error {
-  background: var(--gh-danger-muted);
-  color: var(--gh-danger-fg);
-  border: 1px solid var(--gh-danger-border);
-}
-
-.alert-success {
-  background: var(--gh-success-muted);
-  color: var(--gh-success);
-  border: 1px solid var(--gh-success-border);
-}
-
 .table-wrapper {
   background: var(--gh-surface-default);
   border: 1px solid var(--gh-border-default);
@@ -114,44 +95,11 @@
 
 .current-user-badge {
   background: var(--gh-focus);
-  color: white;
+  color: var(--gh-accent-fg);
   padding: 2px 8px;
   border-radius: 12px;
   font-size: 12px;
   font-weight: 600;
-}
-
-.role-badge {
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.role-admin {
-  background: var(--gh-danger);
-  color: white;
-}
-
-.role-pm {
-  background: #17a2b8;
-  color: white;
-}
-
-.role-dev {
-  background: var(--gh-accent);
-  color: white;
-}
-
-.role-qa {
-  background: #d29922;
-  color: var(--gh-on-emphasis);
-}
-
-.role-reporter {
-  background: #6f42c1;
-  color: white;
 }
 
 .role-select {
@@ -173,19 +121,6 @@
   font-style: italic;
 }
 
-.status-badge {
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-  background: var(--gh-danger);
-  color: white;
-}
-
-.status-badge.active {
-  background: var(--gh-accent);
-}
-
 .empty-state {
   text-align: center;
   color: var(--gh-fg-muted);
@@ -205,17 +140,17 @@
 
 .status-toggle-btn.active {
   background: var(--gh-accent);
-  color: white;
+  color: var(--gh-accent-fg);
 }
 
 .status-toggle-btn.inactive {
   background: var(--gh-danger);
-  color: white;
+  color: var(--gh-accent-fg);
 }
 
 .status-toggle-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-sm);
 }
 
 .status-toggle-btn:disabled {
@@ -227,16 +162,7 @@
   width: 16px;
   height: 16px;
   border: 2px solid transparent;
-  border-top: 2px solid white;
+  border-top: 2px solid var(--gh-accent-fg);
   border-radius: 50%;
   animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }
