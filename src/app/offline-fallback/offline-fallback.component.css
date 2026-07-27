@@ -3,27 +3,27 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #010409;
+  background: var(--gh-canvas-inset);
   padding: 2rem;
 }
 
 .offline-content {
-  background: #161b22;
-  border: 1px solid #30363d;
+  background: var(--gh-surface-default);
+  border: 1px solid var(--gh-border-default);
   padding: 3rem;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 6px var(--gh-shadow);
   text-align: center;
   max-width: 500px;
 }
 
 h2 {
-  color: #f85149;
+  color: var(--gh-danger-emphasis);
   margin-bottom: 1rem;
 }
 
 p {
-  color: #8b949e;
+  color: var(--gh-fg-muted);
   margin-bottom: 1rem;
   line-height: 1.6;
 }
@@ -37,7 +37,7 @@ p {
 }
 
 .retry-btn {
-  background: #0969da;
+  background: var(--gh-focus);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -48,13 +48,13 @@ p {
 }
 
 .retry-btn:hover {
-  background: #055fb3;
+  background: var(--gh-link-hover);
 }
 
 .home-link {
-  background: rgba(218, 230, 240, 0.1);
-  color: #e6edf3;
-  border: 1px solid #30363d;
+  background: var(--gh-btn-bg-hover);
+  color: var(--gh-fg-default);
+  border: 1px solid var(--gh-border-default);
   text-decoration: none;
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
@@ -63,7 +63,7 @@ p {
 }
 
 .home-link:hover {
-  background: rgba(218, 230, 240, 0.16);
+  background: var(--gh-btn-bg-hover);
 }
 
 .error-details {
@@ -73,7 +73,7 @@ p {
 
 .error-details summary {
   cursor: pointer;
-  color: #58a6ff;
+  color: var(--gh-link);
   font-weight: 500;
 }
 
@@ -84,5 +84,5 @@ p {
 
 .error-details li {
   margin-bottom: 0.25rem;
-  color: #8b949e;
+  color: var(--gh-fg-muted);
 }

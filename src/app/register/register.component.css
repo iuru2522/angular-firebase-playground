@@ -5,21 +5,21 @@
   min-height: 100%;
   box-sizing: border-box;
   padding: clamp(16px, 4vw, 36px);
-  background: #010409;
+  background: var(--gh-canvas-inset);
 }
 
 .register-card {
-  background: #161b22;
-  border: 1px solid #30363d;
+  background: var(--gh-surface-default);
+  border: 1px solid var(--gh-border-default);
   border-radius: 12px;
   padding: clamp(28px, 5vw, 40px);
   width: 100%;
   max-width: 450px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 24px var(--gh-shadow);
 }
 
 .register-card h2 {
-  color: #e6edf3;
+  color: var(--gh-fg-default);
   margin: 0 0 10px 0;
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 600;
@@ -27,7 +27,7 @@
 }
 
 .register-subtitle {
-  color: #8b949e;
+  color: var(--gh-fg-muted);
   margin: 0 0 28px 0;
   font-size: 1rem;
   text-align: center;
@@ -41,40 +41,40 @@
 
 .form-group label {
   margin-bottom: 8px;
-  color: #c9d1d9;
+  color: var(--gh-fg-subtle);
   font-weight: 600;
   font-size: 14px;
 }
 
 .form-control {
   padding: 12px 16px;
-  border: 1px solid #30363d;
+  border: 1px solid var(--gh-border-default);
   border-radius: 6px;
   font-size: 14px;
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
-  background: #0d1117;
-  color: #e6edf3;
+  background: var(--gh-canvas-default);
+  color: var(--gh-fg-default);
 }
 
 .form-control:focus {
   outline: none;
-  border-color: #58a6ff;
-  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+  border-color: var(--gh-link);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gh-link) 15%, transparent);
 }
 
 .form-control::placeholder {
-  color: #6e7681;
+  color: var(--gh-fg-placeholder);
 }
 
 .form-control.invalid {
-  border-color: #f85149;
-  box-shadow: 0 0 0 3px rgba(248, 81, 73, 0.12);
+  border-color: var(--gh-danger-emphasis);
+  box-shadow: 0 0 0 3px var(--gh-danger-muted);
 }
 
 .error-message {
-  color: #ff7b72;
+  color: var(--gh-danger-fg);
   font-size: 13px;
   margin-top: 6px;
 }
@@ -99,31 +99,31 @@
 }
 
 .btn-primary {
-  background: #238636;
-  color: #ffffff;
+  background: var(--gh-accent);
+  color: var(--gh-accent-fg);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #2ea043;
+  background: var(--gh-accent-emphasis);
   transform: translateY(-1px);
   box-shadow: 0 4px 14px rgba(35, 134, 54, 0.35);
 }
 
 .btn-google {
-  background: rgba(218, 230, 240, 0.08);
-  color: #e6edf3;
-  border: 1px solid #30363d;
+  background: var(--gh-btn-bg);
+  color: var(--gh-fg-default);
+  border: 1px solid var(--gh-border-default);
 }
 
 .btn-google:hover:not(:disabled) {
-  background: rgba(218, 230, 240, 0.12);
-  border-color: #8b949e;
+  background: var(--gh-btn-bg-hover);
+  border-color: var(--gh-fg-muted);
 }
 
 .btn:disabled {
-  background: #30363d;
-  color: #8b949e;
+  background: var(--gh-border-default);
+  color: var(--gh-fg-muted);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
@@ -140,29 +140,29 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: #30363d;
+  background: var(--gh-border-default);
 }
 
 .divider span {
   padding: 0 15px;
-  color: #8b949e;
+  color: var(--gh-fg-muted);
   font-size: 14px;
 }
 
 .login-link {
   text-align: center;
   margin-top: 20px;
-  color: #8b949e;
+  color: var(--gh-fg-muted);
 }
 
 .login-link a {
-  color: #58a6ff;
+  color: var(--gh-link);
   text-decoration: none;
   font-weight: 600;
 }
 
 .login-link a:hover {
-  color: #79c0ff;
+  color: var(--gh-link-hover);
   text-decoration: underline;
 }
 
@@ -174,30 +174,30 @@
 }
 
 .alert-success {
-  background: rgba(46, 160, 67, 0.12);
-  color: #3fb950;
-  border: 1px solid rgba(46, 160, 67, 0.35);
+  background: var(--gh-success-muted);
+  color: var(--gh-success);
+  border: 1px solid var(--gh-success-border);
 }
 
 .alert-error {
-  background: rgba(248, 81, 73, 0.12);
-  color: #ff7b72;
-  border: 1px solid rgba(248, 81, 73, 0.35);
+  background: var(--gh-danger-muted);
+  color: var(--gh-danger-fg);
+  border: 1px solid var(--gh-danger-border);
 }
 
 .form-control.ng-valid.ng-touched {
-  border-color: #3fb950;
-  box-shadow: 0 0 0 3px rgba(63, 185, 80, 0.12);
+  border-color: var(--gh-success);
+  box-shadow: 0 0 0 3px var(--gh-success-muted);
 }
 
 .form-control.ng-invalid.ng-touched {
-  border-color: #f85149;
-  box-shadow: 0 0 0 3px rgba(248, 81, 73, 0.12);
+  border-color: var(--gh-danger-emphasis);
+  box-shadow: 0 0 0 3px var(--gh-danger-muted);
 }
 
 .form-control.ng-invalid.ng-touched:focus {
-  border-color: #58a6ff !important;
-  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15) !important;
+  border-color: var(--gh-link) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gh-link) 15%, transparent) !important;
 }
 
 @media (max-width: 768px) {

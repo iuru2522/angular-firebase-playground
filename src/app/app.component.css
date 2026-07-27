@@ -4,8 +4,8 @@
   min-height: 100vh;
   min-height: 100dvh;
   box-sizing: border-box;
-  background-color: #010409;
-  color: #e6edf3;
+  background-color: var(--gh-canvas-inset);
+  color: var(--gh-fg-default);
 }
 
 .app-container {
@@ -13,12 +13,12 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  background-color: #010409;
+  background-color: var(--gh-canvas-inset);
 }
 
 .app-header {
-  background: #161b22;
-  border-bottom: 1px solid #30363d;
+  background: var(--gh-surface-default);
+  border-bottom: 1px solid var(--gh-border-default);
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
@@ -27,7 +27,7 @@
 
 .app-header h1 {
   margin: 0;
-  color: #e6edf3;
+  color: var(--gh-fg-default);
 }
 
 .auth-status {
@@ -37,12 +37,12 @@
 }
 
 .loading {
-  color: #007bff;
+  color: var(--gh-focus);
   font-style: italic;
 }
 
 .error {
-  color: #dc3545;
+  color: var(--gh-danger);
   font-weight: 500;
 }
 
@@ -53,8 +53,8 @@
 }
 
 .logout-btn {
-  background: #e53935;
-  color: #fff;
+  background: var(--gh-danger);
+  color: var(--gh-accent-fg);
   border: none;
   border-radius: 4px;
   padding: 6px 14px;
@@ -64,13 +64,12 @@
 }
 
 .logout-btn:hover {
-  background: #b71c1c;
+  background: var(--gh-danger-emphasis);
 }
 
-/* Login button styles - Google blue color */
 .login-btn {
-  background-color: #4285f4;
-  color: white;
+  background-color: var(--gh-focus);
+  color: var(--gh-accent-fg);
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
@@ -81,11 +80,11 @@
 }
 
 .login-btn:hover {
-  background-color: #3367d6;
+  filter: brightness(0.92);
 }
 
 .login-btn:disabled {
-  background-color: #ccc;
+  background-color: var(--gh-border-default);
   cursor: not-allowed;
 }
 
@@ -95,7 +94,7 @@
   display: flex;
   flex-direction: column;
   padding: 2rem;
-  background-color: #010409;
+  background-color: var(--gh-canvas-inset);
 }
 
 .loading-container {
@@ -110,8 +109,8 @@
 .spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #007bff;
+  border: 4px solid var(--gh-border-default);
+  border-top: 4px solid var(--gh-focus);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -122,7 +121,7 @@
 }
 
 .loading-container p {
-  color: #666;
+  color: var(--gh-fg-muted);
   font-size: 1.1rem;
   margin: 0;
 }
@@ -136,34 +135,35 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-}
-
-.main-toolbar.mat-toolbar.main-toolbar--dark-chrome {
-  background-color: rgba(22, 27, 34, 0.92);
-  color: #e6edf3;
-  border-bottom: 1px solid #30363d;
+  background-color: color-mix(in srgb, var(--gh-surface-default) 92%, transparent);
+  color: var(--gh-fg-default);
+  border-bottom: 1px solid var(--gh-border-default);
   backdrop-filter: blur(10px);
 }
 
-.main-toolbar--dark-chrome .loading {
-  color: #8b949e;
+.main-toolbar .loading {
+  color: var(--gh-fg-muted);
 }
 
-.main-toolbar--dark-chrome .user-info span {
-  color: rgba(230, 237, 243, 0.92);
+.main-toolbar .user-info span {
+  color: color-mix(in srgb, var(--gh-fg-default) 92%, transparent);
 }
 
-.main-toolbar--dark-chrome ::ng-deep .nav-links .mat-mdc-button {
-  color: rgba(230, 237, 243, 0.95);
+.main-toolbar ::ng-deep .nav-links .mat-mdc-button {
+  color: color-mix(in srgb, var(--gh-fg-default) 95%, transparent);
 }
 
-.main-toolbar--dark-chrome ::ng-deep .nav-links .mat-mdc-button .mat-icon {
+.main-toolbar ::ng-deep .nav-links .mat-mdc-button .mat-icon {
   color: inherit;
 }
 
-.main-toolbar--dark-chrome ::ng-deep .nav-links a.active {
-  background-color: rgba(255, 255, 255, 0.12);
+.main-toolbar ::ng-deep .nav-links a.active {
+  background-color: var(--gh-btn-bg-hover);
   border-radius: 6px;
+}
+
+.theme-toggle {
+  color: var(--gh-fg-default);
 }
 
 .nav-links {
@@ -179,7 +179,7 @@
 }
 
 .nav-links a.active {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: var(--gh-btn-bg-hover);
   border-radius: 4px;
 }
 
@@ -190,7 +190,7 @@
 .nav-auth-status {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .user-info {
@@ -244,43 +244,43 @@ button.toolbar-cta {
 }
 
 .toolbar-cta--primary {
-  color: #ffffff;
-  background-color: #238636;
-  border-color: rgba(240, 246, 252, 0.12);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  color: var(--gh-accent-fg);
+  background-color: var(--gh-accent);
+  border-color: color-mix(in srgb, var(--gh-fg-default) 12%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 10%, transparent);
 }
 
 .toolbar-cta--primary:hover {
-  background-color: #2ea043;
+  background-color: var(--gh-accent-emphasis);
 }
 
 .toolbar-cta--secondary {
-  color: #e6edf3;
-  background-color: rgba(218, 230, 240, 0.08);
-  border-color: #30363d;
+  color: var(--gh-fg-default);
+  background-color: var(--gh-btn-bg);
+  border-color: var(--gh-border-default);
 }
 
 .toolbar-cta--secondary:hover {
-  background-color: rgba(218, 230, 240, 0.14);
-  border-color: #8b949e;
+  background-color: var(--gh-btn-bg-hover);
+  border-color: var(--gh-fg-muted);
 }
 
 .toolbar-cta--danger {
-  color: #ffb4ab;
-  background-color: rgba(248, 81, 73, 0.12);
-  border-color: rgba(248, 81, 73, 0.45);
+  color: var(--gh-danger-emphasis);
+  background-color: color-mix(in srgb, var(--gh-danger) 12%, transparent);
+  border-color: color-mix(in srgb, var(--gh-danger) 45%, transparent);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 1px rgba(25, 25, 25, 0.12);
+    inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
+    0 1px color-mix(in srgb, #000000 12%, transparent);
 }
 
 .toolbar-cta--danger:hover {
-  background-color: rgba(248, 81, 73, 0.22);
-  border-color: rgba(248, 81, 73, 0.65);
+  background-color: color-mix(in srgb, var(--gh-danger) 22%, transparent);
+  border-color: color-mix(in srgb, var(--gh-danger) 65%, transparent);
 }
 
 .toolbar-cta:focus-visible {
-  outline: 2px solid #388bfd;
+  outline: 2px solid var(--gh-focus);
   outline-offset: 2px;
 }
 
@@ -290,12 +290,7 @@ button.toolbar-cta {
   gap: 0.5rem;
 }
 
-.loading {
-  color: #ffd54f;
-  font-style: italic;
-}
-
-.error {
-  color: #ff5252;
+.main-toolbar .error {
+  color: var(--gh-danger-emphasis);
   font-weight: 500;
 }

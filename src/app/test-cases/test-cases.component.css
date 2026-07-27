@@ -2,7 +2,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background: #010409;
+  background: var(--gh-canvas-inset);
   min-height: 100vh;
 }
 
@@ -11,15 +11,15 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  background: #161b22;
-  border: 1px solid #30363d;
+  background: var(--gh-surface-default);
+  border: 1px solid var(--gh-border-default);
   padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 2px 8px var(--gh-shadow);
 }
 
 .header h2 {
-  color: #e6edf3;
+  color: var(--gh-fg-default);
   margin: 0;
   font-size: 2rem;
   font-weight: 700;
@@ -46,13 +46,13 @@
 }
 
 .btn:focus-visible {
-  outline: 2px solid #388bfd;
+  outline: 2px solid var(--gh-focus);
   outline-offset: 2px;
 }
 
 .btn-primary {
-  color: #ffffff;
-  background-color: #238636;
+  color: var(--gh-accent-fg);
+  background-color: var(--gh-accent);
   border-color: rgba(240, 246, 252, 0.12);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
@@ -60,16 +60,16 @@
 }
 
 .btn-primary:hover {
-  background-color: #2ea043;
+  background-color: var(--gh-accent-emphasis);
   border-color: rgba(240, 246, 252, 0.12);
 }
 
 .table-container {
-  background: #161b22;
-  border: 1px solid #30363d;
+  background: var(--gh-surface-default);
+  border: 1px solid var(--gh-border-default);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 2px 8px var(--gh-shadow);
 }
 
 .test-cases-table {
@@ -78,23 +78,23 @@
 }
 
 .test-cases-table th {
-  background: rgba(13, 17, 23, 0.95);
+  background: var(--gh-surface-overlay);
   padding: 15px;
   text-align: left;
   font-weight: 600;
-  color: #e6edf3;
-  border-bottom: 2px solid #30363d;
+  color: var(--gh-fg-default);
+  border-bottom: 2px solid var(--gh-border-default);
 }
 
 .test-cases-table td {
   padding: 15px;
-  border-bottom: 1px solid #30363d;
+  border-bottom: 1px solid var(--gh-border-default);
   vertical-align: middle;
-  color: #e6edf3;
+  color: var(--gh-fg-default);
 }
 
 .test-cases-table tr:hover {
-  background: rgba(33, 38, 45, 0.9);
+  background: var(--gh-row-hover);
   transition: background-color 0.3s ease;
 }
 
@@ -105,18 +105,18 @@
 .test-case-id {
   font-family: 'Courier New', monospace;
   font-weight: 600;
-  color: #a5b4fc;
+  color: var(--gh-link);
   font-size: 14px;
 }
 
 .title {
   font-weight: 600;
-  color: #e6edf3;
+  color: var(--gh-fg-default);
   max-width: 200px;
 }
 
 .description {
-  color: #8b949e;
+  color: var(--gh-fg-muted);
   font-size: 14px;
   max-width: 250px;
   line-height: 1.4;
@@ -124,7 +124,7 @@
 
 .test-type {
   font-weight: 500;
-  color: #c9d1d9;
+  color: var(--gh-fg-subtle);
   text-transform: capitalize;
 }
 
@@ -138,7 +138,7 @@
 }
 
 .priority-critical {
-  background: #dc3545;
+  background: var(--gh-danger);
   color: white;
 }
 
@@ -148,7 +148,7 @@
 }
 
 .priority-low {
-  background: #238636;
+  background: var(--gh-accent);
   color: white;
 }
 
@@ -162,22 +162,22 @@
 }
 
 .status-draft {
-  background: rgba(218, 230, 240, 0.12);
-  color: #e6edf3;
+  background: var(--gh-btn-bg-hover);
+  color: var(--gh-fg-default);
 }
 
 .status-active {
-  background: #238636;
+  background: var(--gh-accent);
   color: white;
 }
 
 .status-pending {
   background: #d29922;
-  color: #0d1117;
+  color: var(--gh-on-emphasis);
 }
 
 .status-blocked {
-  background: #dc3545;
+  background: var(--gh-danger);
   color: white;
 }
 
@@ -187,7 +187,7 @@
 }
 
 .date {
-  color: #8b949e;
+  color: var(--gh-fg-muted);
   font-size: 14px;
   white-space: nowrap;
 }
@@ -206,19 +206,19 @@
 
 .btn-outline {
   background: transparent;
-  border: 1px solid #30363d;
-  color: #c9d1d9;
+  border: 1px solid var(--gh-border-default);
+  color: var(--gh-fg-subtle);
 }
 
 .btn-outline:hover {
-  background: rgba(218, 230, 240, 0.08);
-  border-color: #8b949e;
+  background: var(--gh-btn-bg);
+  border-color: var(--gh-fg-muted);
 }
 
 .btn-danger {
-  background: #dc3545;
+  background: var(--gh-danger);
   color: white;
-  border: 1px solid #dc3545;
+  border: 1px solid var(--gh-danger);
 }
 
 .btn-danger:hover {
@@ -229,17 +229,17 @@
 .empty-state {
   text-align: center;
   padding: 60px 20px;
-  color: #8b949e;
-  background: #161b22;
-  border: 1px solid #30363d;
+  color: var(--gh-fg-muted);
+  background: var(--gh-surface-default);
+  border: 1px solid var(--gh-border-default);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 2px 8px var(--gh-shadow);
 }
 
 .empty-state p {
   font-size: 18px;
   margin: 0;
-  color: #e6edf3;
+  color: var(--gh-fg-default);
 }
 
 @media (max-width: 768px) {

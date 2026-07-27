@@ -1,4 +1,4 @@
-<mat-toolbar class="main-toolbar main-toolbar--dark-chrome">
+<mat-toolbar class="main-toolbar">
   <div class="nav-links">
     @if (isAuthenticated()) {
       <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
@@ -11,6 +11,23 @@
   <span class="toolbar-spacer"></span>
 
   <div class="nav-auth-status">
+    <button
+      type="button"
+      mat-icon-button
+      class="theme-toggle"
+      (click)="toggleTheme()"
+      [attr.aria-label]="
+        themeService.resolvedTheme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+      "
+      [attr.title]="
+        themeService.resolvedTheme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+      "
+    >
+      <mat-icon aria-hidden="true">
+        {{ themeService.resolvedTheme() === 'dark' ? 'light_mode' : 'dark_mode' }}
+      </mat-icon>
+    </button>
+
     @if (isLoading()) {
       <span class="loading">Loading...</span>
     } @else if (error()) {

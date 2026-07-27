@@ -3,16 +3,16 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #010409;
+  background: var(--gh-canvas-inset);
   padding: 20px;
 }
 
 .deactivated-content {
-  background: #161b22;
-  border: 1px solid #30363d;
+  background: var(--gh-surface-default);
+  border: 1px solid var(--gh-border-default);
   border-radius: 12px;
   padding: 40px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 32px var(--gh-shadow);
   text-align: center;
   max-width: 500px;
   width: 100%;
@@ -28,7 +28,7 @@
 }
 
 .deactivated-content h1 {
-  color: #f85149;
+  color: var(--gh-danger-emphasis);
   margin: 0 0 20px 0;
   font-size: 2rem;
 }
@@ -38,14 +38,14 @@
 }
 
 .message p {
-  color: #8b949e;
+  color: var(--gh-fg-muted);
   line-height: 1.6;
   margin: 10px 0;
 }
 
 .contact-info {
-  background: rgba(13, 17, 23, 0.9);
-  border: 1px solid #30363d;
+  background: var(--gh-surface-overlay);
+  border: 1px solid var(--gh-border-default);
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 30px;
@@ -53,7 +53,7 @@
 }
 
 .contact-info h3 {
-  color: #e6edf3;
+  color: var(--gh-fg-default);
   margin: 0 0 15px 0;
   text-align: center;
 }
@@ -66,12 +66,12 @@
 
 .contact-info li {
   padding: 8px 0;
-  color: #8b949e;
+  color: var(--gh-fg-muted);
   font-size: 14px;
 }
 
 .logout-btn {
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  background: var(--gh-danger);
   color: white;
   border: none;
   padding: 12px 30px;
@@ -84,7 +84,7 @@
 
 .logout-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.35);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--gh-danger) 35%, transparent);
 }
 
 @media (max-width: 768px) {

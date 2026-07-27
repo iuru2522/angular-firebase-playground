@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { AuthService } from './services/auth.service';
 import { FirebaseDiagnosticService } from './services/firebase-diagnostic.service';
+import { ThemeService } from './services/theme.service';
 import { OfflineFallbackComponent } from './offline-fallback/offline-fallback.component';
 import { User as AppUser } from './models/user.interface';
 import { UserService } from './services/user.service';
@@ -33,6 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly diagnosticService = inject(FirebaseDiagnosticService);
   private readonly userService = inject(UserService);
+  readonly themeService = inject(ThemeService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly router = inject(Router);
 
@@ -100,6 +102,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   signIn(): void {
     this.router.navigate(['/signin']);
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleLightDark();
   }
 
   private normalizeUrlPath(url: string): string {

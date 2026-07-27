@@ -7,19 +7,6 @@
 }
 
 .gh-theme {
-  --gh-canvas-default: #0d1117;
-  --gh-canvas-inset: #010409;
-  --gh-surface-default: #161b22;
-  --gh-surface-muted: rgba(22, 27, 34, 0.65);
-  --gh-border-default: #30363d;
-  --gh-fg-default: #e6edf3;
-  --gh-fg-muted: #8b949e;
-  --gh-accent: #238636;
-  --gh-accent-emphasis: #2ea043;
-  --gh-focus: #388bfd;
-  --gh-btn-bg: rgba(218, 230, 240, 0.06);
-  --gh-btn-bg-hover: rgba(218, 230, 240, 0.11);
-  --gh-accent-fg: #ffffff;
   font-family:
     ui-sans-serif,
     -apple-system,
@@ -81,21 +68,6 @@
   width: 100%;
 }
 
-.landing-page--signed-in.landing-page--fullbleed.gh-theme {
-  --gh-signed-page-bg: #010409;
-  --gh-surface-default: #161b22;
-  --gh-surface-muted: rgba(22, 27, 34, 0.75);
-  --gh-border-default: #30363d;
-  --gh-fg-default: #e6edf3;
-  --gh-fg-muted: #8b949e;
-  --gh-accent: #238636;
-  --gh-accent-emphasis: #2ea043;
-  --gh-focus: #388bfd;
-  --gh-btn-bg: rgba(218, 230, 240, 0.06);
-  --gh-btn-bg-hover: rgba(218, 230, 240, 0.11);
-  --gh-accent-fg: #ffffff;
-}
-
 .gh-signed-in .gh-role-grid > * + * {
   margin-top: 0;
 }
@@ -131,7 +103,7 @@
   background-color: var(--gh-surface-default);
   border: 1px solid var(--gh-border-default);
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 24px var(--gh-shadow);
 }
 
 .gh-welcome-panel__title {
@@ -162,7 +134,7 @@
   font-size: 12px;
   font-weight: 500;
   line-height: 1;
-  color: #a5d6ff;
+  color: var(--gh-link-hover);
   background-color: rgba(56, 139, 253, 0.15);
 }
 
@@ -314,7 +286,7 @@
 }
 
 .gh-role-pill--admin {
-  border-color: #f85149;
+  border-color: var(--gh-danger-emphasis);
   background-color: rgba(248, 81, 73, 0.1);
 }
 
@@ -324,7 +296,7 @@
 }
 
 .gh-role-pill--developer {
-  border-color: #58a6ff;
+  border-color: var(--gh-link);
   background-color: rgba(88, 166, 255, 0.12);
 }
 
@@ -334,7 +306,7 @@
 }
 
 .gh-role-pill--reporter {
-  border-color: #79c0ff;
+  border-color: var(--gh-link-hover);
   background-color: rgba(121, 192, 255, 0.1);
 }
 
