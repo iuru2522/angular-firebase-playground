@@ -1,77 +1,105 @@
-<mat-toolbar class="main-toolbar">
-  <div class="nav-links">
-    @if (isAuthenticated()) {
-      <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        <mat-icon>home</mat-icon>
-        Home
-      </a>
-    }
-  </div>
+@if (isAuthenticated()) {
+  <aside class="app-sidebar" aria-label="Main navigation">
+    <div class="app-sidebar__brand">
+      <div class="app-sidebar__brand-icon" aria-hidden="true">
+        <mat-icon>bug_report</mat-icon>
+      </div>
+      <div>
+        <h1 class="app-sidebar__brand-title">BugTracker</h1>
+        <p class="app-sidebar__brand-subtitle">Dev Ops Workspace</p>
+      </div>
+    </div>
 
-  <span class="toolbar-spacer"></span>
-
-  <div class="nav-auth-status">
-    <button
-      type="button"
-      mat-icon-button
-      class="theme-toggle"
-      (click)="toggleTheme()"
-      [attr.aria-label]="
-        themeService.resolvedTheme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
-      "
-      [attr.title]="
-        themeService.resolvedTheme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
-      "
-    >
-      <mat-icon aria-hidden="true">
-        {{ themeService.resolvedTheme() === 'dark' ? 'light_mode' : 'dark_mode' }}
-      </mat-icon>
+    <button type="button" class="app-sidebar__create-btn">
+      <mat-icon aria-hidden="true">add</mat-icon>
+      <span>Create Issue</span>
     </button>
 
-    @if (isLoading()) {
-      <span class="loading">Loading...</span>
-    } @else if (error()) {
-      <span class="error">Error: {{ error() }}</span>
-    } @else if (isAuthenticated()) {
-      <div class="user-info">
-        <span>Welcome, {{ user()?.displayName || user()?.email }}</span>
-        <button type="button" class="toolbar-cta toolbar-cta--danger" (click)="logout()">
-          <mat-icon aria-hidden="true">logout</mat-icon>
-          Logout
-        </button>
-      </div>
-    } @else {
-      <div class="auth-buttons">
-        @if (isGuestAuthShell()) {
-          <a routerLink="/signin" class="toolbar-cta toolbar-cta--primary">
-            <mat-icon aria-hidden="true">login</mat-icon>
-            Sign In
-          </a>
-          <a routerLink="/register" class="toolbar-cta toolbar-cta--secondary">
-            <mat-icon aria-hidden="true">person_add</mat-icon>
-            Sign Up
-          </a>
-        } @else {
-          <button mat-raised-button color="accent" (click)="signIn()">
-            <mat-icon>login</mat-icon>
-            Sign In
-          </button>
-          <button mat-raised-button (click)="signUp()">
-            <mat-icon>person_add</mat-icon>
-            Sign Up
-          </button>
-        }
-      </div>
-    }
-  </div>
-</mat-toolbar>
-
-@if (showOfflineFallback()) {
-  <app-offline-fallback />
-} @else {
-  <div class="app-container">
-    <main class="app-main">
-      <router-outlet />
-    </main>
-  </div>
+    <nav class="app-sidebar__nav">
+      <a
+        routerLink="/"
+        routerLinkActive="app-sidebar__link--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="app-sidebar__link"
+      >
+        <mat-icon aria-hidden="true">dashboard</mat-icon>
+        <span>Home</span>
+      </a>
+      <a routerLink="/settings" routerLinkActive="app-sidebar__link--active" class="app-sidebar__link">
+        <mat-icon aria-hidden="true">settings</mat-icon>
+        <span>Settings</span>
+      </a>
+    </nav>
+  </aside>
 }
+
+<div class="app-shell" [class.app-shell--with-sidebar]="isAuthenticated()">
+  <mat-toolbar class="main-toolbar">
+    <span class="toolbar-spacer"></span>
+
+    <div class="nav-auth-status">
+      <button
+        type="button"
+        mat-icon-button
+        class="theme-toggle"
+        (click)="toggleTheme()"
+        [attr.aria-label]="
+          themeService.resolvedTheme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+        "
+        [attr.title]="
+          themeService.resolvedTheme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+        "
+      >
+        <mat-icon aria-hidden="true">
+          {{ themeService.resolvedTheme() === 'dark' ? 'light_mode' : 'dark_mode' }}
+        </mat-icon>
+      </button>
+
+      @if (isLoading()) {
+        <span class="loading">Loading...</span>
+      } @else if (error()) {
+        <span class="error">Error: {{ error() }}</span>
+      } @else if (isAuthenticated()) {
+        <div class="user-info">
+          <span>Welcome, {{ user()?.displayName || user()?.email }}</span>
+          <button type="button" class="toolbar-cta toolbar-cta--danger" (click)="logout()">
+            <mat-icon aria-hidden="true">logout</mat-icon>
+            Logout
+          </button>
+        </div>
+      } @else {
+        <div class="auth-buttons">
+          @if (isGuestAuthShell()) {
+            <a routerLink="/signin" class="toolbar-cta toolbar-cta--primary">
+              <mat-icon aria-hidden="true">login</mat-icon>
+              Sign In
+            </a>
+            <a routerLink="/register" class="toolbar-cta toolbar-cta--secondary">
+              <mat-icon aria-hidden="true">person_add</mat-icon>
+              Sign Up
+            </a>
+          } @else {
+            <button mat-raised-button color="accent" (click)="signIn()">
+              <mat-icon>login</mat-icon>
+              Sign In
+            </button>
+            <button mat-raised-button (click)="signUp()">
+              <mat-icon>person_add</mat-icon>
+              Sign Up
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </mat-toolbar>
+
+  @if (showOfflineFallback()) {
+    <app-offline-fallback />
+  } @else {
+    <div class="app-container">
+      <main class="app-main">
+        <router-outlet />
+      </main>
+    </div>
+  }
+</div>

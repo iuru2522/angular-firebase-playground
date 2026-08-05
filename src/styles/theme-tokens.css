@@ -32,6 +32,17 @@
   --gh-danger-border: rgba(248, 81, 73, 0.35);
   --gh-shadow: rgba(0, 0, 0, 0.35);
   --gh-on-emphasis: #1f2328;
+
+  /* Surface system palette — dark aligns with app theme */
+  --bt-surface: var(--gh-canvas-inset);
+  --bt-on-surface: var(--gh-fg-default);
+  --bt-on-surface-variant: var(--gh-fg-muted);
+  --bt-outline-variant: var(--gh-border-default);
+  --bt-primary: var(--gh-fg-default);
+  --bt-on-primary: var(--gh-canvas-inset);
+  --bt-secondary-container: var(--gh-surface-default);
+  --bt-on-secondary-container: var(--gh-fg-default);
+  --bt-surface-container-high: var(--gh-btn-bg-hover);
 }
 
 [data-theme='light'] {
@@ -67,6 +78,17 @@
   --gh-danger-border: rgba(207, 34, 46, 0.35);
   --gh-shadow: rgba(31, 35, 40, 0.12);
   --gh-on-emphasis: #1f2328;
+
+  /* Surface system palette */
+  --bt-surface: var(--gh-surface-default);
+  --bt-on-surface: var(--gh-fg-default);
+  --bt-on-surface-variant: var(--gh-fg-muted);
+  --bt-outline-variant: var(--gh-border-default);
+  --bt-primary: var(--gh-fg-default);
+  --bt-on-primary: var(--gh-accent-fg);
+  --bt-secondary-container: var(--gh-btn-bg-hover);
+  --bt-on-secondary-container: var(--gh-fg-default);
+  --bt-surface-container-high: var(--gh-btn-bg-hover);
 }
 
 :root {
@@ -102,6 +124,8 @@
   --form-max-width: 50rem;
   --auth-max-width: 28.125rem;
   --status-card-max-width: 31.25rem;
+
+  --bt-sidebar-width: 240px;
 
   --color-severity-critical: var(--gh-danger);
   --color-severity-high: #fd7e14;
