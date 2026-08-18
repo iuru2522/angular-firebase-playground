@@ -9,8 +9,22 @@
     "test": "ng test",
     "serve:ssr:angular-firebase-playground": "node dist/angular-firebase-playground/server/server.mjs"
   },
+  "packageManager": "pnpm@10.34.5",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@firebase/util",
+      "@parcel/watcher",
+      "esbuild",
+      "lmdb",
+      "msgpackr-extract",
+      "protobufjs",
+      "sharp",
+      "workerd"
+    ]
+  },
   "engines": {
-    "node": ">=22.22.3 <23 || >=24.15.0 <25 || >=26.0.0"
+    "node": ">=22.22.3 <23 || >=24.15.0 <25 || >=26.0.0",
+    "pnpm": ">=10"
   },
   "private": true,
   "dependencies": {

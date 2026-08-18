@@ -2,6 +2,15 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.3.
 
+## Prerequisites
+
+Use the Node.js version in [`.nvmrc`](.nvmrc). This repo uses [pnpm](https://pnpm.io/) via [Corepack](https://nodejs.org/api/corepack.html):
+
+```bash
+corepack enable
+pnpm install
+```
+
 ## Development server
 
 To start a local development server, run:
