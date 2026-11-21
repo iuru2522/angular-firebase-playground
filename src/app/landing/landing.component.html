@@ -107,18 +107,33 @@
 
   } @else {
 
-  <section class="gh-marketing-hero gh-marketing-hero--viewport" aria-label="Guest landing">
-    <div class="gh-welcome-panel">
-      <h1 class="gh-welcome-panel__title">Welcome to BugTracker</h1>
-      <ul class="gh-topic-list">
-        <li class="gh-topic-pill">TypeScript</li>
-        <li class="gh-topic-pill">Angular</li>
-        <li class="gh-topic-pill">Firebase</li>
-        <li class="gh-topic-pill">Vercel</li>
-        <li class="gh-topic-pill">Modern CSS</li>
+  <section class="access-welcome" aria-labelledby="guest-welcome-heading">
+    <div class="access-welcome__intro">
+      <h1 id="guest-welcome-heading">Welcome to BugTracker</h1>
+      <p>A workspace for reporting bugs, managing test cases, and tracking fixes.</p>
+      <div class="access-actions">
+        <a mat-flat-button routerLink="/register">Get Started</a>
+        <a mat-stroked-button routerLink="/signin">Sign In</a>
+        <a mat-button href="https://github.com/iuru2522/angular-firebase-playground" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+    <section class="access-preview" aria-labelledby="project-preview-heading">
+      <div class="access-preview__header">
+        <h2 id="project-preview-heading">Project Preview</h2>
+        <span class="access-preview__badge">Demo · sample data</span>
+      </div>
+      <ul>
+        <li><span>BUG-001</span><strong>Fix authentication redirect</strong><span class="access-preview__badge">In Progress</span></li>
+        <li><span>BUG-002</span><strong>Improve mobile layout</strong><span class="access-preview__badge">Open</span></li>
+        <li><span>BUG-003</span><strong>Update form validation</strong><span class="access-preview__badge">Resolved</span></li>
+      </ul>
+    </section>
+    <div class="access-welcome__stack">
+      <h2>Built with</h2>
+      <ul>
+        <li>Angular</li><li>TypeScript</li><li>Firebase</li><li>Modern CSS</li><li>Vercel</li>
       </ul>
     </div>
   </section>
-
   }
 </div>

@@ -1,132 +1,49 @@
-<div class="auth-container">
-  <div class="auth-card">
-    <h2>Create Account</h2>
-    <p class="auth-subtitle">Join our platform to get started</p>
+<section class="access-card access-card--form" aria-labelledby="access-heading">
+  <h1 id="access-heading">Create Account</h1>
+  <p>Set up your BugTracker account.</p>
+  <form class="access-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()" [attr.aria-busy]="isSubmitting()">
+    @if (error(); as message) {
+      <p class="access-error" role="alert">{{ message }}</p>
+    }
+    <mat-form-field appearance="outline">
+      <mat-label>Full Name</mat-label>
+      <input matInput type="text" formControlName="displayName" autocomplete="name">
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      @if (successMessage()) {
-        <div class="alert alert-success">
-          {{ successMessage() }}
-        </div>
-      }
+      <mat-error>Enter at least 2 characters.</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Email Address</mat-label>
+      <input matInput type="email" formControlName="email" autocomplete="email">
 
-      @if (error()) {
-        <div class="alert alert-error">
-          {{ error() }}
-        </div>
-      }
+      <mat-error>Enter a valid email address.</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input matInput [type]="showPassword() ? 'text' : 'password'" formControlName="password" autocomplete="new-password">
 
-      <div class="form-group">
-        <label for="displayName">Full Name</label>
-        <input
-          type="text"
-          id="displayName"
-          formControlName="displayName"
-          class="form-control"
-          [class.invalid]="registerForm.get('displayName')?.invalid && registerForm.get('displayName')?.touched"
-          placeholder="Enter your full name"
-        >
+      <button mat-icon-button matSuffix type="button" (click)="$event.stopPropagation(); showPassword.update(toggleVisibility)"
+        [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
+        <mat-icon aria-hidden="true">{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error>Use at least 6 characters.</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Confirm Password</mat-label>
+      <input matInput [type]="showConfirmation() ? 'text' : 'password'" formControlName="confirmPassword" autocomplete="new-password" [errorStateMatcher]="confirmationErrors">
 
-        @if (registerForm.get('displayName')?.invalid && registerForm.get('displayName')?.touched) {
-          <div class="field-error">
-            @if (registerForm.get('displayName')?.hasError('required')) {
-              <span>Full name is required</span>
-            }
-            @if (registerForm.get('displayName')?.hasError('minlength')) {
-              <span>Full name must be at least 2 characters</span>
-            }
-          </div>
-        }
-      </div>
-
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input
-          type="text"
-          id="email"
-          formControlName="email"
-          class="form-control"
-          [class.invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
-          placeholder="Enter your email"
-        >
-
-        @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
-          <div class="field-error">
-            @if (registerForm.get('email')?.hasError('required')) {
-              <span>Email is required</span>
-            }
-            @if (registerForm.get('email')?.hasError('email')) {
-              <span>Please enter a valid email address</span>
-            }
-          </div>
-        }
-      </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          formControlName="password"
-          class="form-control"
-          [class.invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
-          placeholder="Enter your password"
-        >
-
-        @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
-          <div class="field-error">
-            @if (registerForm.get('password')?.hasError('required')) {
-              <span>Password is required</span>
-            }
-            @if (registerForm.get('password')?.hasError('minlength')) {
-              <span>Password must be at least 6 characters</span>
-            }
-          </div>
-        }
-      </div>
-
-      <div class="form-group">
-        <label for="confirmPassword">Confirm Password</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          formControlName="confirmPassword"
-          class="form-control"
-          [class.invalid]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched"
-          placeholder="Confirm your password"
-        >
-
-        @if (registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched) {
-          <div class="field-error">
-            @if (registerForm.get('confirmPassword')?.hasError('required')) {
-              <span>Please confirm your password</span>
-            }
-          </div>
-        }
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary" [disabled]="!registerForm.valid || isSubmitting()">
-          @if (isSubmitting()) {
-            <span>Creating Account...</span>
-          } @else {
-            <span>Create Account</span>
-          }
-        </button>
-
-        <div class="divider">
-          <span>or</span>
-        </div>
-
-        <button type="button" class="btn btn-google" (click)="onGoogleSignIn()" [disabled]="isSubmitting()">
-          <span>Sign up with Google</span>
-        </button>
-
-        <p class="login-link">
-          Already have an account?
-          <a routerLink="/signin">Sign in here</a>
-        </p>
-      </div>
-    </form>
+      <button mat-icon-button matSuffix type="button" (click)="$event.stopPropagation(); showConfirmation.update(toggleVisibility)"
+        [attr.aria-label]="showConfirmation() ? 'Hide confirm password' : 'Show confirm password'">
+        <mat-icon aria-hidden="true">{{ showConfirmation() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error>{{ registerForm.controls.confirmPassword.hasError('required') ? 'Confirm your password.' : 'Passwords don’t match.' }}</mat-error>
+    </mat-form-field>
+    <button mat-flat-button type="submit" [disabled]="isSubmitting() || !!successMessage()">{{ isSubmitting() ? 'Creating account…' : 'Create Account' }}</button>
+    <button mat-stroked-button type="button" (click)="onGoogleSignIn()" [disabled]="isSubmitting() || !!successMessage()">Sign up with Google</button>
+  </form>
+  <div class="access-links">
+    <p>Already have an account? <a routerLink="/signin">Sign in here</a></p>
   </div>
-</div>
+  @if (successMessage(); as message) {
+    <p role="status">{{ message }}</p>
+  }
+</section>

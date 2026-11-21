@@ -1,23 +1,28 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { Subject } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 import { SigninComponent } from './signin.component';
 
 describe('SigninComponent', () => {
-  let component: SigninComponent;
-  let fixture: ComponentFixture<SigninComponent>;
+  it('shows a pending state and announces invalid credentials', async () => {
+    const login = new Subject<never>();
+    TestBed.configureTestingModule({
+      imports: [SigninComponent],
+      providers: [provideRouter([]), { provide: AuthService, useValue: { login: () => login } }],
+    });
+    const fixture = TestBed.createComponent(SigninComponent);
+    const component = fixture.componentInstance;
+    component.signinForm.setValue({ email: 'alex@example.com', password: 'invalid-password' });
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [SigninComponent]
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(SigninComponent);
-    component = fixture.componentInstance;
+    const request = component.onSubmit();
+    expect(component.isSubmitting()).toBeTrue();
+    login.error({ code: 'auth/invalid-credential' });
+    await request;
     fixture.detectChanges();
-  });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component.isSubmitting()).toBeFalse();
+    expect(fixture.nativeElement.querySelector('[role="alert"]').textContent)
+      .toContain('Email or password is incorrect');
   });
 });

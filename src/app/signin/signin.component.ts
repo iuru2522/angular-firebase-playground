@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
@@ -12,7 +15,7 @@ interface SignInForm {
 
 @Component({
   selector: 'app-signin',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [ReactiveFormsModule, RouterModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule],
   templateUrl: './signin.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -20,6 +23,8 @@ export class SigninComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
+  readonly showPassword = signal(false);
+  readonly toggleVisibility = (visible: boolean) => !visible;
   readonly isSubmitting = signal(false);
   readonly error = signal<string | null>(null);
   readonly successMessage = signal<string | null>(null);
@@ -36,7 +41,11 @@ export class SigninComponent {
   });
 
   async onSubmit(): Promise<void> {
-    if (this.signinForm.valid && !this.isSubmitting()) {
+    if (this.signinForm.invalid) {
+      this.signinForm.markAllAsTouched();
+      return;
+    }
+    if (!this.isSubmitting() && !this.successMessage()) {
       const { email, password } = this.signinForm.getRawValue();
 
       this.isSubmitting.set(true);
@@ -44,7 +53,7 @@ export class SigninComponent {
       this.successMessage.set(null);
 
       try {
-        const userCredential = await firstValueFrom(
+        await firstValueFrom(
           this.authService.login(email, password)
         );
 
@@ -54,7 +63,7 @@ export class SigninComponent {
           this.router.navigate(['/']);
         }, 1500);
 
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('Sign in failed:', error);
         this.error.set(this.getErrorMessage(error));
       } finally {
@@ -64,6 +73,7 @@ export class SigninComponent {
   }
 
   async onGoogleSignIn(): Promise<void> {
+    if (this.isSubmitting() || this.successMessage()) return;
     try {
       this.isSubmitting.set(true);
       this.error.set(null);
@@ -71,7 +81,7 @@ export class SigninComponent {
       await this.authService.loginWithGoogle();
       this.router.navigate(['/']);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Google sign-in failed:', error);
       this.error.set(this.getErrorMessage(error));
     } finally {
@@ -79,12 +89,13 @@ export class SigninComponent {
     }
   }
 
-  private getErrorMessage(error: any): string {
-    switch (error.code) {
+  private getErrorMessage(error: unknown): string {
+    const code = typeof error === 'object' && error !== null && 'code' in error ? error.code : undefined;
+    switch (code) {
       case 'auth/user-not-found':
-        return 'No account found with this email address.';
       case 'auth/wrong-password':
-        return 'Incorrect password. Please try again.';
+      case 'auth/invalid-credential':
+        return 'Email or password is incorrect. Check your details and try again.';
       case 'auth/invalid-email':
         return 'Please enter a valid email address.';
       case 'auth/user-disabled':
@@ -92,7 +103,7 @@ export class SigninComponent {
       case 'auth/too-many-requests':
         return 'Too many failed attempts. Please try again later.';
       default:
-        return error.message || 'Sign in failed. Please try again.';
+        return 'Sign in failed. Please try again.';
     }
   }
 }
