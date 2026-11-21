@@ -1,139 +1,34 @@
-<div
-  class="landing-page gh-theme landing-page--fullbleed"
-  [class.landing-page--guest]="!user()"
-  [class.landing-page--signed-in]="!!user()"
->
-  @if (user(); as user) {
-
-  <section class="gh-signed-in" aria-labelledby="welcome-heading">
-    <header class="gh-panel gh-welcome-card">
-      <div class="gh-welcome-card__body">
-        <p class="gh-product-tag">Bug tracker</p>
-        <h2 id="welcome-heading" class="gh-welcome-card__hello">
-          Welcome back, {{ user.displayName || 'there' }}
-        </h2>
-        <span class="gh-label gh-role-pill gh-role-pill--{{ user.role }}">{{
-          getRoleLabel(user.role)
-        }}</span>
-        <p class="gh-welcome-card__desc">{{ getRoleDescription(user.role) }}</p>
-      </div>
-      <div class="gh-quick-stats">
-        <div class="gh-stat-card">
-          <span class="gh-stat-card__number">{{ dayOfWeek() }}</span>
-          <span class="gh-stat-card__label">Today</span>
-        </div>
-        <div class="gh-stat-card">
-          <span class="gh-stat-card__number">{{ taskCount() }}</span>
-          <span class="gh-stat-card__label">Tasks</span>
+@if (user(); as account) {
+  <app-workspace [user]="account" />
+} @else {
+  <div class="landing-page gh-theme landing-page--fullbleed landing-page--guest">
+    <section class="access-welcome" aria-labelledby="guest-welcome-heading">
+      <div class="access-welcome__intro">
+        <h1 id="guest-welcome-heading">Welcome to BugTracker</h1>
+        <p>A workspace for reporting bugs, managing test cases, and tracking fixes.</p>
+        <div class="access-actions">
+          <a mat-flat-button routerLink="/register">Get Started</a>
+          <a mat-stroked-button routerLink="/signin">Sign In</a>
+          <a mat-button href="https://github.com/iuru2522/angular-firebase-playground" target="_blank" rel="noopener">GitHub</a>
         </div>
       </div>
-    </header>
-
-    <div class="gh-role-grid">
-      @if (isAdmin()) {
-      <div class="gh-panel gh-role-panel">
-        <h3 class="gh-role-panel__title">Admin</h3>
-        <div class="gh-role-panel__actions">
-          <a routerLink="/admin/users" class="gh-btn">Users & roles</a>
-          <a routerLink="/admin/reports" class="gh-btn">All bug reports</a>
+      <section class="access-preview" aria-labelledby="project-preview-heading">
+        <div class="access-preview__header">
+          <h2 id="project-preview-heading">Project Preview</h2>
+          <span class="access-preview__badge">Demo · sample data</span>
         </div>
+        <ul>
+          <li><span>BUG-001</span><strong>Fix authentication redirect</strong><span class="access-preview__badge">In Progress</span></li>
+          <li><span>BUG-002</span><strong>Improve mobile layout</strong><span class="access-preview__badge">Open</span></li>
+          <li><span>BUG-003</span><strong>Update form validation</strong><span class="access-preview__badge">Resolved</span></li>
+        </ul>
+      </section>
+      <div class="access-welcome__stack">
+        <h2>Built with</h2>
+        <ul>
+          <li>Angular</li><li>TypeScript</li><li>Firebase</li><li>Modern CSS</li><li>Vercel</li>
+        </ul>
       </div>
-      }
-
-      @if (isProjectManager()) {
-      <div class="gh-panel gh-role-panel">
-        <h3 class="gh-role-panel__title">Project manager</h3>
-        <div class="gh-role-panel__actions">
-          <a routerLink="/projects" class="gh-btn">Projects</a>
-          <a routerLink="/assign-tasks" class="gh-btn">Assign fixes</a>
-        </div>
-      </div>
-      }
-
-      @if (isDeveloper()) {
-      <div class="gh-panel gh-role-panel">
-        <h3 class="gh-role-panel__title">Developer</h3>
-        <div class="gh-role-panel__actions">
-          <a routerLink="/my-tasks" class="gh-btn">My bugs</a>
-          <a routerLink="/code-review" class="gh-btn">Reviews</a>
-        </div>
-      </div>
-      }
-
-      @if (isQATester()) {
-      <div class="gh-panel gh-role-panel">
-        <h3 class="gh-role-panel__title">QA</h3>
-        <div class="gh-role-panel__actions">
-          <a routerLink="/test-cases" class="gh-btn">Test cases</a>
-          <a routerLink="/bug-verification" class="gh-btn">Verify fixes</a>
-          <a routerLink="/file-bug" class="gh-btn">File a bug</a>
-          <a routerLink="/bug-list" class="gh-btn">Bug list</a>
-        </div>
-      </div>
-      }
-
-      @if (isReporter()) {
-      <div class="gh-panel gh-role-panel">
-        <h3 class="gh-role-panel__title">Reporter</h3>
-        <div class="gh-role-panel__actions">
-          <a routerLink="/report-bug" class="gh-btn">New report</a>
-          <a routerLink="/my-reports" class="gh-btn">My reports</a>
-        </div>
-      </div>
-      }
-
-      <div class="gh-panel gh-dev-strip">
-        <h3 class="gh-role-panel__title gh-dev-strip__title">Dev shortcuts</h3>
-        <p class="gh-dev-strip__note">Scratch links while building the app UI.</p>
-        <div class="gh-role-panel__actions">
-          <a routerLink="/admin/users" class="gh-btn">Admin users</a>
-        </div>
-      </div>
-
-      <div class="gh-panel gh-role-info">
-        <h3 class="gh-role-panel__title">{{ getRoleLabel(user.role) }} Information</h3>
-        <p class="gh-role-info__desc">{{ getRoleInfoDescription(user.role) }}</p>
-        <div class="gh-role-info__permissions">
-          <h4 class="gh-role-info__permissions-title">Your Permissions:</h4>
-          <ul class="gh-role-info__list">
-            @for (permission of getRolePermissions(user.role); track permission) {
-              <li>{{ permission }}</li>
-            }
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  } @else {
-
-  <section class="access-welcome" aria-labelledby="guest-welcome-heading">
-    <div class="access-welcome__intro">
-      <h1 id="guest-welcome-heading">Welcome to BugTracker</h1>
-      <p>A workspace for reporting bugs, managing test cases, and tracking fixes.</p>
-      <div class="access-actions">
-        <a mat-flat-button routerLink="/register">Get Started</a>
-        <a mat-stroked-button routerLink="/signin">Sign In</a>
-        <a mat-button href="https://github.com/iuru2522/angular-firebase-playground" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </div>
-    <section class="access-preview" aria-labelledby="project-preview-heading">
-      <div class="access-preview__header">
-        <h2 id="project-preview-heading">Project Preview</h2>
-        <span class="access-preview__badge">Demo · sample data</span>
-      </div>
-      <ul>
-        <li><span>BUG-001</span><strong>Fix authentication redirect</strong><span class="access-preview__badge">In Progress</span></li>
-        <li><span>BUG-002</span><strong>Improve mobile layout</strong><span class="access-preview__badge">Open</span></li>
-        <li><span>BUG-003</span><strong>Update form validation</strong><span class="access-preview__badge">Resolved</span></li>
-      </ul>
     </section>
-    <div class="access-welcome__stack">
-      <h2>Built with</h2>
-      <ul>
-        <li>Angular</li><li>TypeScript</li><li>Firebase</li><li>Modern CSS</li><li>Vercel</li>
-      </ul>
-    </div>
-  </section>
-  }
-</div>
+  </div>
+}

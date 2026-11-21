@@ -1,18 +1,16 @@
 import { Component, inject, ChangeDetectionStrategy, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { AuthService } from '../services/auth.service';
+import { WorkspaceComponent } from '../workspace/workspace.component';
 import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-require-auth',
   templateUrl: './require-auth.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule]
+  imports: [WorkspaceComponent]
 })
 export class RequireAuthComponent {
-  private readonly authService = inject(AuthService);
   private readonly userService = inject(UserService);
   private readonly router = inject(Router);
 
