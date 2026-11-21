@@ -2,14 +2,67 @@
 
 html {
   height: 100%;
+
+  // Material 3 Teal LT and Teal DT from the BugTracker design kit.
   @include mat.theme(
+    (color: (theme-type: color-scheme), typography: Roboto, density: 0),
     (
-      color: (
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
-      ),
-      typography: Roboto,
-      density: 0,
+      primary: light-dark(#006b60, #82d5c7),
+      on-primary: light-dark(#ffffff, #003731),
+      primary-container: light-dark(#9ef2e3, #006b5f),
+      on-primary-container: light-dark(#2e4c47, #ffffff),
+      primary-fixed: #9ef2e3,
+      primary-fixed-dim: #82d5c7,
+      on-primary-fixed: #00201c,
+      on-primary-fixed-variant: #2e4c47,
+      secondary: light-dark(#4b645f, #b1ccc6),
+      on-secondary: light-dark(#ffffff, #1c3530),
+      secondary-container: light-dark(#cae6df, #334b47),
+      on-secondary-container: light-dark(#334b47, #cce8e2),
+      secondary-fixed: #cae6df,
+      secondary-fixed-dim: #b1ccc6,
+      on-secondary-fixed: #06201c,
+      on-secondary-fixed-variant: #334b47,
+      tertiary: light-dark(#45627a, #accae5),
+      on-tertiary: light-dark(#ffffff, #143349),
+      tertiary-container: light-dark(#c5e3ff, #2d4a60),
+      on-tertiary-container: light-dark(#30495d, #cbe6ff),
+      tertiary-fixed: #c5e3ff,
+      tertiary-fixed-dim: #accae5,
+      on-tertiary-fixed: #001e30,
+      on-tertiary-fixed-variant: #30495d,
+      surface: light-dark(#f4fbf8, #0e1513),
+      on-surface: light-dark(#171d1b, #dde4e1),
+      surface-variant: light-dark(#dde4e1, #303634),
+      on-surface-variant: light-dark(#3f4946, #bec9c5),
+      surface-bright: light-dark(#f4fbf8, #343b39),
+      surface-dim: light-dark(#d5dbd9, #0e1513),
+      surface-container-lowest: light-dark(#ffffff, #090f0e),
+      surface-container-low: light-dark(#eff5f2, #171d1b),
+      surface-container: light-dark(#e9efec, #1a211f),
+      surface-container-high: light-dark(#e3eae7, #252b2a),
+      surface-container-highest: light-dark(#dde4e1, #303634),
+      surface-tint: var(--mat-sys-primary),
+      background: var(--mat-sys-surface),
+      on-background: var(--mat-sys-on-surface),
+      outline: light-dark(#6f7976, #88938f),
+      outline-variant: light-dark(#bec9c5, #3f4946),
+      inverse-surface: light-dark(#252b2a, #dde4e1),
+      inverse-on-surface: light-dark(#e9efec, #303634),
+      inverse-primary: light-dark(#82d5c7, #006b60),
+      error: light-dark(#b3261e, #f2b8b5),
+      on-error: light-dark(#ffffff, #601410),
+      error-container: light-dark(#f9dedc, #8c1d18),
+      on-error-container: light-dark(#8c1d18, #f9dedc),
+    )
+  );
+}
+
+.account-menu {
+  @include mat.menu-overrides(
+    (
+      container-shape: 16px,
+      container-color: var(--mat-sys-surface-container-high),
     )
   );
 }

@@ -2,7 +2,6 @@
   max-width: var(--page-max-width);
   margin: 0 auto;
   padding: 20px;
-  background: var(--gh-canvas-inset);
   min-height: 100vh;
 }
 

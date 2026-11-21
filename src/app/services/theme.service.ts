@@ -1,4 +1,4 @@
-import { Injectable, PLATFORM_ID, computed, inject, signal } from '@angular/core';
+import { Injectable, OnDestroy, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 export type ThemePreference = 'light' | 'dark' | 'system';
@@ -7,7 +7,7 @@ export type ResolvedTheme = 'light' | 'dark';
 const STORAGE_KEY = 'app-theme';
 
 @Injectable({ providedIn: 'root' })
-export class ThemeService {
+export class ThemeService implements OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
   private mediaQuery: MediaQueryList | null = null;
   private readonly onSystemChange = (): void => this.syncResolvedTheme();
@@ -29,6 +29,10 @@ export class ThemeService {
     this.syncResolvedTheme();
   }
 
+  ngOnDestroy(): void {
+    this.mediaQuery?.removeEventListener('change', this.onSystemChange);
+  }
+
   setPreference(preference: ThemePreference): void {
     this.preferenceSignal.set(preference);
 
@@ -36,10 +40,14 @@ export class ThemeService {
       return;
     }
 
-    if (preference === 'system') {
-      localStorage.removeItem(STORAGE_KEY);
-    } else {
-      localStorage.setItem(STORAGE_KEY, preference);
+    try {
+      if (preference === 'system') {
+        localStorage.removeItem(STORAGE_KEY);
+      } else {
+        localStorage.setItem(STORAGE_KEY, preference);
+      }
+    } catch {
+      // The current document can still apply the preference without storage.
     }
 
     this.syncResolvedTheme();
@@ -55,9 +63,13 @@ export class ThemeService {
       return 'system';
     }
 
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored === 'light' || stored === 'dark' || stored === 'system') {
-      return stored;
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored === 'light' || stored === 'dark' || stored === 'system') {
+        return stored;
+      }
+    } catch {
+      // Use the system preference if storage is unavailable.
     }
 
     return 'system';
