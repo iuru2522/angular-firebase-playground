@@ -8,7 +8,7 @@ import { OfflineFallbackComponent } from './offline-fallback/offline-fallback.co
 import { FileBugComponent } from './file-bug/file-bug.component';
 import { BugListComponent } from './bug-list/bug-list.component';
 import { BugDetailsComponent } from './bug-details/bug-details.component';
-import { authGuard } from './auth.guard';
+import { authGuard, guestOnlyGuard } from './auth.guard';
 import { RoleGuard } from './guards/role.guard';
 import { UserRole } from './models';
 import { AdminUsersTableComponent } from './admin/admin-users-table/admin-users-table.component';
@@ -22,9 +22,9 @@ import { AccountDeactivatedComponent } from './account-deactivated/account-deact
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
-  { path: 'signin', component: SigninComponent },
+  { path: 'signin', component: SigninComponent, canActivate: [guestOnlyGuard] },
   { path: 'register', component: RegisterComponent },
-  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [guestOnlyGuard] },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: 'account-deactivated', component: AccountDeactivatedComponent },
   { path: 'offline', component: OfflineFallbackComponent },

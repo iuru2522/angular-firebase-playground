@@ -1,4 +1,4 @@
-<section class="access-card" aria-labelledby="access-heading">
+<section class="access-card access-card--form" aria-labelledby="access-heading">
   <h1 id="access-heading">Welcome Back</h1>
   <p>Sign in to your BugTracker account.</p>
   <form class="access-form" [formGroup]="signinForm" (ngSubmit)="onSubmit()" [attr.aria-busy]="isSubmitting()">
@@ -15,7 +15,7 @@
       <mat-label>Password</mat-label>
       <input matInput [type]="showPassword() ? 'text' : 'password'" formControlName="password" autocomplete="current-password">
 
-      <button mat-icon-button matSuffix type="button" (click)="showPassword.update(toggleVisibility)"
+      <button mat-icon-button matSuffix type="button" (click)="$event.stopPropagation(); showPassword.update(toggleVisibility)"
         [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
         <mat-icon aria-hidden="true">{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
       </button>

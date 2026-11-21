@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { TestCaseService } from '../services/test-case.service';
 
 import { TestCaseFormComponent } from './test-case-form.component';
 
@@ -8,7 +10,11 @@ describe('TestCaseFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestCaseFormComponent]
+      imports: [TestCaseFormComponent],
+      providers: [
+        provideRouter([]),
+        { provide: TestCaseService, useValue: {} },
+      ],
     })
     .compileComponents();
 

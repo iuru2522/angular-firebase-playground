@@ -1,4 +1,4 @@
-<section class="access-card" aria-labelledby="access-heading">
+<section class="access-card access-card--form" aria-labelledby="access-heading">
   <h1 id="access-heading">Create Account</h1>
   <p>Set up your BugTracker account.</p>
   <form class="access-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()" [attr.aria-busy]="isSubmitting()">
@@ -21,7 +21,7 @@
       <mat-label>Password</mat-label>
       <input matInput [type]="showPassword() ? 'text' : 'password'" formControlName="password" autocomplete="new-password">
 
-      <button mat-icon-button matSuffix type="button" (click)="showPassword.update(toggleVisibility)"
+      <button mat-icon-button matSuffix type="button" (click)="$event.stopPropagation(); showPassword.update(toggleVisibility)"
         [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
         <mat-icon aria-hidden="true">{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
       </button>
@@ -31,7 +31,7 @@
       <mat-label>Confirm Password</mat-label>
       <input matInput [type]="showConfirmation() ? 'text' : 'password'" formControlName="confirmPassword" autocomplete="new-password" [errorStateMatcher]="confirmationErrors">
 
-      <button mat-icon-button matSuffix type="button" (click)="showConfirmation.update(toggleVisibility)"
+      <button mat-icon-button matSuffix type="button" (click)="$event.stopPropagation(); showConfirmation.update(toggleVisibility)"
         [attr.aria-label]="showConfirmation() ? 'Hide confirm password' : 'Show confirm password'">
         <mat-icon aria-hidden="true">{{ showConfirmation() ? 'visibility_off' : 'visibility' }}</mat-icon>
       </button>
