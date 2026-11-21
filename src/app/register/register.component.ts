@@ -1,5 +1,9 @@
+import { ErrorStateMatcher } from '@angular/material/core';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
@@ -12,7 +16,7 @@ interface RegisterForm {
 }
 @Component({
   selector: 'app-register',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [ReactiveFormsModule, RouterModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule],
   templateUrl: './register.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -20,6 +24,14 @@ export class RegisterComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
+  readonly showPassword = signal(false);
+  readonly toggleVisibility = (visible: boolean) => !visible;
+  readonly showConfirmation = signal(false);
+  readonly confirmationErrors: ErrorStateMatcher = {
+    isErrorState: (control, form) =>
+      !!control && (control.touched || !!form?.submitted) &&
+      (control.invalid || !!control.parent?.hasError('passwordMismatch')),
+  };
   readonly isSubmitting = signal(false);
   readonly error = signal<string | null>(null);
   readonly successMessage = signal<string | null>(null);
@@ -44,22 +56,26 @@ export class RegisterComponent {
   }, { validators: this.passwordMatchValidator });
 
   async onSubmit(): Promise<void> {
-    if (this.registerForm.valid && !this.isSubmitting()) {
-      const { email, password, displayName } = this.registerForm.getRawValue();
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
+    }
+    if (!this.isSubmitting() && !this.successMessage()) {
+      const { email, password } = this.registerForm.getRawValue();
 
       this.isSubmitting.set(true);
       this.error.set(null);
       this.successMessage.set(null);
 
       try {
-        const userCredential = await firstValueFrom(this.authService.registerWithEmail(email, password));
+        await firstValueFrom(this.authService.registerWithEmail(email, password));
         this.successMessage.set('Registration successful! Redirecting...');
 
         setTimeout(() => {
           this.router.navigate(['/']);
         }, 1500);
 
-      } catch (error: any) {
+      } catch (error: unknown) {
         this.error.set(this.getErrorMessage(error));
       } finally {
         this.isSubmitting.set(false);
@@ -68,18 +84,19 @@ export class RegisterComponent {
   }
 
   async onGoogleSignIn(): Promise<void> {
-  try {
-    this.isSubmitting.set(true);
-    this.error.set(null);
-    await this.authService.loginWithGoogle();
-    this.router.navigate(['/']);
-  } catch (error: any) {
-    console.error('Google sign-in failed:', error);
-    this.error.set(this.getErrorMessage(error));
-  } finally {
-    this.isSubmitting.set(false);
+    if (this.isSubmitting() || this.successMessage()) return;
+    try {
+      this.isSubmitting.set(true);
+      this.error.set(null);
+      await this.authService.loginWithGoogle();
+      this.router.navigate(['/']);
+    } catch (error: unknown) {
+      console.error('Google sign-in failed:', error);
+      this.error.set(this.getErrorMessage(error));
+    } finally {
+      this.isSubmitting.set(false);
+    }
   }
-}
 
   private passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password')?.value;
@@ -88,8 +105,9 @@ export class RegisterComponent {
     return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
-  private getErrorMessage(error: any): string {
-    switch (error.code) {
+  private getErrorMessage(error: unknown): string {
+    const code = typeof error === 'object' && error !== null && 'code' in error ? error.code : undefined;
+    switch (code) {
       case 'auth/email-already-in-use':
         return 'This email is already registered. Please use a different email or try signing in.';
       case 'auth/weak-password':
@@ -99,7 +117,7 @@ export class RegisterComponent {
       case 'auth/operation-not-allowed':
         return 'Email/password registration is not enabled. Please contact support.';
       default:
-        return error.message || 'Registration failed. Please try again.';
+        return 'Registration failed. Please try again.';
     }
   }
 

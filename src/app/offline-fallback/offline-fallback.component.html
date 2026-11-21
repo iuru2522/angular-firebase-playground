@@ -1,28 +1,9 @@
-<div class="status-page">
-  <div class="status-card">
-    <h2>Service Temporarily Unavailable</h2>
-    <p>We're experiencing connectivity issues with our authentication service.</p>
-    <p>Please try again in a few moments or check your internet connection.</p>
-
-    <div class="status-actions">
-      <button (click)="retry()" class="status-btn">
-        Retry Connection
-      </button>
-      <a routerLink="/" class="status-btn status-btn--muted">
-        Go to Home
-      </a>
-    </div>
-
-    <div class="error-details">
-      <details>
-        <summary>Technical Details</summary>
-        <p>This error typically occurs when:</p>
-        <ul>
-          <li>Firebase services are temporarily unavailable</li>
-          <li>Network connectivity issues</li>
-          <li>Firebase project configuration problems</li>
-        </ul>
-      </details>
-    </div>
+<section class="access-card access-card--recovery" aria-labelledby="access-offline">
+  <p class="access-eyebrow">Account access</p>
+  <h1 id="access-offline">Connection unavailable</h1>
+  <p>BugTracker can’t connect right now. Check your internet connection and try again.</p>
+  <div class="access-actions">
+    <button mat-flat-button type="button" (click)="retry()">Retry</button>
+    <a mat-stroked-button routerLink="/">Back to Home</a>
   </div>
-</div>
+</section>

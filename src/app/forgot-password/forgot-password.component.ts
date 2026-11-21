@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { firstValueFrom } from 'rxjs';
 
@@ -10,14 +12,13 @@ interface ForgotPasswordForm {
 }
 @Component({
   selector: 'app-forgot-password',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [ReactiveFormsModule, RouterModule, MatButtonModule, MatFormFieldModule, MatInputModule],
   templateUrl: './forgot-password.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ForgotPasswordComponent {
 
   private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
 
   readonly isSubmitting = signal(false);
   readonly error = signal<string | null>(null);
@@ -31,7 +32,11 @@ export class ForgotPasswordComponent {
   })
 
   async onSubmit(): Promise<void> {
-    if (this.forgotPasswordForm.valid && !this.isSubmitting()) {
+    if (this.forgotPasswordForm.invalid) {
+      this.forgotPasswordForm.markAllAsTouched();
+      return;
+    }
+    if (!this.isSubmitting()) {
       const { email } = this.forgotPasswordForm.getRawValue();
 
       this.isSubmitting.set(true);
@@ -40,20 +45,31 @@ export class ForgotPasswordComponent {
 
       try {
         await firstValueFrom(this.authService.sendPasswordResetEmail(email));
-        this.successMessage.set('Password reset email sent! Check your inbox and spam folder.');
-        this.forgotPasswordForm.reset();
-      } catch (error: any) {
-        this.error.set(this.getErrorMessage(error));
+        this.confirmReset();
+      } catch (error: unknown) {
+        const code = typeof error === 'object' && error !== null && 'code' in error ? error.code : undefined;
+        if (code === 'auth/user-not-found') {
+          this.confirmReset();
+        } else {
+          this.error.set(this.getErrorMessage(code));
+        }
       } finally {
         this.isSubmitting.set(false);
       }
     }
   }
 
-  private getErrorMessage(error: any): string {
-    switch (error.code) {
-      case 'auth/user-not-found':
-        return 'No account found with this email address.';
+  useDifferentEmail(): void {
+    this.successMessage.set(null);
+    this.forgotPasswordForm.reset();
+  }
+
+  private confirmReset(): void {
+    this.successMessage.set('If an account exists for that email, we’ll send a link to reset your password.');
+  }
+
+  private getErrorMessage(code: unknown): string {
+    switch (code) {
       case 'auth/invalid-email':
         return 'Please enter a valid email address.';
       case 'auth/too-many-requests':
@@ -65,7 +81,7 @@ export class ForgotPasswordComponent {
       case 'auth/unauthorized-domain':
         return 'This domain is not authorized. Please contact support.';
       default:
-        return error.message || 'Failed to send reset email. Please try again. If the problem persists, check your spam folder or contact support.';
+        return 'Could not send a reset link. Please try again.';
     }
   }
 

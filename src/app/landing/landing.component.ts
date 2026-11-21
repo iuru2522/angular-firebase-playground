@@ -1,3 +1,4 @@
+import { MatButtonModule } from '@angular/material/button';
 import { Component, inject, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -11,7 +12,7 @@ import { UserRole, USER_ROLE_LABELS, USER_ROLE_DESCRIPTIONS } from '../models';
   styleUrls: ['./landing.component.css'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink]
+  imports: [MatButtonModule, CommonModule, RouterLink]
 })
 export class LandingComponent {
   private readonly userService = inject(UserService);
