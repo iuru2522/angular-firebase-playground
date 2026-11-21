@@ -5,7 +5,6 @@
   min-height: 100%;
   box-sizing: border-box;
   padding: clamp(16px, 4vw, 36px);
-  background: var(--gh-canvas-inset);
 }
 
 .auth-card {

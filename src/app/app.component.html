@@ -1,105 +1,102 @@
 @if (isAuthenticated()) {
-  <aside class="app-sidebar" aria-label="Main navigation">
-    <div class="app-sidebar__brand">
-      <div class="app-sidebar__brand-icon" aria-hidden="true">
-        <mat-icon>bug_report</mat-icon>
-      </div>
-      <div>
-        <h1 class="app-sidebar__brand-title">BugTracker</h1>
-        <p class="app-sidebar__brand-subtitle">Dev Ops Workspace</p>
-      </div>
-    </div>
-
-    <button type="button" class="app-sidebar__create-btn">
-      <mat-icon aria-hidden="true">add</mat-icon>
-      <span>Create Issue</span>
-    </button>
-
-    <nav class="app-sidebar__nav">
-      <a
-        routerLink="/"
-        routerLinkActive="app-sidebar__link--active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="app-sidebar__link"
-      >
-        <mat-icon aria-hidden="true">dashboard</mat-icon>
-        <span>Home</span>
-      </a>
-      <a routerLink="/settings" routerLinkActive="app-sidebar__link--active" class="app-sidebar__link">
-        <mat-icon aria-hidden="true">settings</mat-icon>
-        <span>Settings</span>
-      </a>
+  @for (layout of navigationLayouts; track layout.className) {
+    <nav class="app-navigation" [class]="layout.className" aria-label="Main navigation">
+      @if (layout.className === 'app-navigation--rail') {
+        <div class="app-navigation__brand" aria-hidden="true">BT</div>
+      }
+      @for (item of layout.items; track item.path) {
+        <a
+          class="app-navigation__link"
+          [class.app-navigation__link--create]="item.path === '/file-bug'"
+          [routerLink]="item.path"
+          routerLinkActive="app-navigation__link--active"
+          [routerLinkActiveOptions]="navigationMatch"
+          ariaCurrentWhenActive="page"
+        >
+          <span class="app-navigation__indicator"><mat-icon aria-hidden="true">{{ item.icon }}</mat-icon></span>
+          <span>{{ item.label }}</span>
+        </a>
+      }
     </nav>
-  </aside>
+  }
 }
 
-<div class="app-shell" [class.app-shell--with-sidebar]="isAuthenticated()">
+<div class="app-shell" [class.app-shell--signed-in]="isAuthenticated()">
   <mat-toolbar class="main-toolbar">
-    <span class="toolbar-spacer"></span>
+    <a class="app-brand" routerLink="/">
+      <span class="app-brand__icon" aria-hidden="true">
+        @if (isAuthenticated()) {
+          BT
+        } @else {
+          <mat-icon>bug_report</mat-icon>
+        }
+      </span>
+      <span>BugTracker</span>
+    </a>
 
-    <div class="nav-auth-status">
+    <div class="toolbar-actions">
       <button
         type="button"
         mat-icon-button
         class="theme-toggle"
         (click)="toggleTheme()"
-        [attr.aria-label]="
-          themeService.resolvedTheme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
-        "
-        [attr.title]="
-          themeService.resolvedTheme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
-        "
+        [attr.aria-label]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+        [attr.title]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
       >
-        <mat-icon aria-hidden="true">
-          {{ themeService.resolvedTheme() === 'dark' ? 'light_mode' : 'dark_mode' }}
-        </mat-icon>
+        <mat-icon aria-hidden="true">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
       </button>
 
+      @if (user(); as account) {
+        <span class="toolbar-account-name">{{ accountName() }}</span>
+        <button
+          type="button"
+          mat-icon-button
+          class="account-trigger"
+          [matMenuTriggerFor]="accountMenu"
+          [attr.aria-label]="'Account menu for ' + accountName()"
+          [disabled]="isLoading()"
+        >
+          <span class="account-trigger__initials" aria-hidden="true">{{ accountInitials() }}</span>
+        </button>
+        <mat-menu #accountMenu="matMenu" class="account-menu" xPosition="before" aria-label="Account">
+          <div class="account-menu__content">
+            <div class="account-menu__identity">
+              <span class="account-menu__avatar" aria-hidden="true">{{ accountInitials() }}</span>
+              <div class="account-menu__details">
+                <strong>{{ accountName() }}</strong>
+                @if (account.email && account.email !== accountName()) {
+                  <span>{{ account.email }}</span>
+                }
+              </div>
+            </div>
+            <button type="button" mat-menu-item class="account-menu__logout" (click)="logout()">
+              <mat-icon aria-hidden="true">logout</mat-icon>
+              <span>Logout</span>
+            </button>
+            <button type="button" mat-menu-item class="account-menu__close" aria-label="Close account menu">
+              <mat-icon aria-hidden="true">close</mat-icon>
+            </button>
+          </div>
+        </mat-menu>
+      } @else if (!isLoading()) {
+        <a mat-button routerLink="/signin">Sign In</a>
+        <a mat-flat-button routerLink="/register">Sign Up</a>
+      }
       @if (isLoading()) {
-        <span class="loading">Loading...</span>
-      } @else if (error()) {
-        <span class="error">Error: {{ error() }}</span>
-      } @else if (isAuthenticated()) {
-        <div class="user-info">
-          <span>Welcome, {{ user()?.displayName || user()?.email }}</span>
-          <button type="button" class="toolbar-cta toolbar-cta--danger" (click)="logout()">
-            <mat-icon aria-hidden="true">logout</mat-icon>
-            Logout
-          </button>
-        </div>
-      } @else {
-        <div class="auth-buttons">
-          @if (isGuestAuthShell()) {
-            <a routerLink="/signin" class="toolbar-cta toolbar-cta--primary">
-              <mat-icon aria-hidden="true">login</mat-icon>
-              Sign In
-            </a>
-            <a routerLink="/register" class="toolbar-cta toolbar-cta--secondary">
-              <mat-icon aria-hidden="true">person_add</mat-icon>
-              Sign Up
-            </a>
-          } @else {
-            <button mat-raised-button color="accent" (click)="signIn()">
-              <mat-icon>login</mat-icon>
-              Sign In
-            </button>
-            <button mat-raised-button (click)="signUp()">
-              <mat-icon>person_add</mat-icon>
-              Sign Up
-            </button>
-          }
-        </div>
+        <span class="toolbar-status" role="status">Loading…</span>
       }
     </div>
   </mat-toolbar>
 
-  @if (showOfflineFallback()) {
-    <app-offline-fallback />
-  } @else {
-    <div class="app-container">
-      <main class="app-main">
-        <router-outlet />
-      </main>
-    </div>
+  @if (error(); as message) {
+    <p class="app-error" role="alert">{{ message }}</p>
   }
+
+  <main class="app-main">
+    @if (showOfflineFallback()) {
+      <app-offline-fallback />
+    } @else {
+      <router-outlet />
+    }
+  </main>
 </div>
