@@ -1,69 +1,32 @@
-<div class="page-container page-container--narrow">
-  <h2>User Management</h2>
-  <p class="page-subtitle description">Manage user roles and permissions</p>
-  
-  <div class="users-list">
-    @if (currentUser(); as currentUser) {
-      <div class="current-user-card">
-        <h3>Current User</h3>
-        <div class="user-card">
-          <div class="user-info">
-            <img [src]="currentUser.photoURL || '/assets/default-avatar.png'" 
-                 alt="Profile" class="avatar">
-            <div class="user-details">
-              <h4>{{ currentUser.displayName }}</h4>
-              <p class="email">{{ currentUser.email }}</p>
-              <span class="role-badge role-{{ currentUser.role }}">
-                {{ getRoleLabel(currentUser.role) }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    }
-    
-    <div class="admin-actions">
-      <h3>Admin Actions</h3>
-      
-      @if (actionMessage()) {
-        <div class="action-feedback" [class.success]="!actionMessage()?.includes('Failed')" [class.error]="actionMessage()?.includes('Failed')">
-          {{ actionMessage() }}
-        </div>
-      }
-      
-      <div class="action-grid">
-        <button class="action-card" (click)="showUserList()">
-          <h4>📋 View All Users</h4>
-          <p>See all registered users</p>
-        </button>
-        
-        <button class="action-card" (click)="manageRoles()">
-          <h4>🔑 Manage Roles</h4>
-          <p>Assign and modify user roles</p>
-        </button>
-        
-        <button class="action-card" (click)="viewSystemStats()">
-          <h4>📊 System Stats</h4>
-          <p>View usage statistics</p>
-        </button>
-        
-        <button class="action-card" (click)="exportData()">
-          <h4>💾 Export Data</h4>
-          <p>Download user data</p>
-        </button>
-      </div>
+<section class="admin-page" aria-labelledby="management-title">
+  <header class="admin-header">
+    <div>
+      <h1 id="management-title">User Management</h1>
+      <p>Manage user access and roles.</p>
     </div>
+  </header>
 
-    <div class="role-overview">
-      <h3>Role Overview</h3>
-      <div class="roles-grid">
-        @for (role of userRoles; track role) {
-          <div class="role-card">
-            <span class="role-badge role-{{ role }}">{{ getRoleLabel(role) }}</span>
-            <p class="role-desc">{{ getRoleDescription(role) }}</p>
-          </div>
+  <div class="management-grid">
+    <section class="admin-panel">
+      <h2>Users and roles</h2>
+      <p>Open the directory to review accounts, change roles, or manage account access.</p>
+      <a mat-flat-button routerLink="/admin/users-table">View all users</a>
+    </section>
+    @if (currentUser(); as user) {
+      <section class="admin-panel">
+        <h2>Current user</h2>
+        <p><strong>{{ user.displayName || user.email }}</strong></p>
+        @if (user.displayName) { <p>{{ user.email }}</p> }
+        <p>{{ labels[user.role] }}</p>
+      </section>
+    }
+    <section class="admin-panel management-roles">
+      <h2>Role overview</h2>
+      <dl>
+        @for (role of roles; track role) {
+          <div><dt>{{ labels[role] }}</dt><dd>{{ descriptions[role] }}</dd></div>
         }
-      </div>
-    </div>
+      </dl>
+    </section>
   </div>
-</div>
+</section>

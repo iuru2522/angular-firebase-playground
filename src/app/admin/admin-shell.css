@@ -1,0 +1,53 @@
+.admin-page {
+  width: min(100%, 76rem);
+  margin-inline: auto;
+  color: var(--mat-sys-on-surface);
+  overflow-wrap: anywhere;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-block-end: 1.5rem;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(1.65rem, 4vw, 2.25rem);
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 1.15rem;
+}
+
+p {
+  margin-block: 0.45rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.admin-panel {
+  padding: clamp(1rem, 4vw, 1.5rem);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 1rem;
+  background: var(--mat-sys-surface-container-lowest);
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+
+@media (max-width: 599px) {
+  .admin-header {
+    flex-direction: column;
+  }
+}
