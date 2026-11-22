@@ -14,6 +14,7 @@ import { UserRole } from './models';
 import { AdminUsersTableComponent } from './admin/admin-users-table/admin-users-table.component';
 import { TestCasesComponent } from './test-cases/test-cases.component';
 import { TestCaseFormComponent } from './test-case-form/test-case-form.component';
+import { TestCaseDetailsComponent } from './test-cases/test-case-details.component';
 import { Settings } from './settings/settings';
 import { RegisterComponent } from './register/register.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
@@ -69,8 +70,15 @@ export const routes: Routes = [
   },
   {
     path: 'test-cases-form',
-    component: TestCaseFormComponent
+    component: TestCaseFormComponent,
+    canDeactivate: [(form: TestCaseFormComponent) => form.canLeave()]
   },
+  {
+    path: 'test-cases-form/:id',
+    component: TestCaseFormComponent,
+    canDeactivate: [(form: TestCaseFormComponent) => form.canLeave()]
+  },
+  { path: 'test-cases/:id', component: TestCaseDetailsComponent },
   {
     path: 'require-auth',
     component: RequireAuthComponent,

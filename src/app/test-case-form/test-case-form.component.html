@@ -1,183 +1,103 @@
-<div class="page-container page-container--form">
-  <div class="page-header page-header--simple form-intro">
-    <h2 class="form-title">Add New Test Case</h2>
-    <p class="form-subtitle page-subtitle">Create a comprehensive test case with detailed information.</p>
-  </div>
-
-  @if (successMessage()) {
-    <div class="alert alert-success" role="alert">
-      {{ successMessage() }}
+<section class="test-page">
+  @if (missing()) {
+    <div class="test-panel">
+      <h1>Test case not found</h1>
+      <p>This test case is unavailable in the current app session.</p>
+      <a mat-flat-button routerLink="/test-cases">Back to test cases</a>
     </div>
-  }
-
-  @if (error()) {
-    <div class="alert alert-error" role="alert">
-      {{ error() }}
-    </div>
-  }
-
-  <form [formGroup]="testCaseForm" (ngSubmit)="onSave()" class="page-card test-case-form">
-    <div class="form-section">
-      <h3 class="section-title">Basic Information</h3>
-
-      <div class="form-group">
-        <label for="title" class="form-label required">Title</label>
-        <input 
-          id="title" 
-          type="text" 
-          formControlName="title" 
-          class="form-control"
-          [class.error]="testCaseForm.get('title')?.invalid && testCaseForm.get('title')?.touched"
-          placeholder="Enter descriptive test case title"
-          aria-describedby="title-error"
-        >
-        
-        @if (testCaseForm.get('title')?.invalid && testCaseForm.get('title')?.touched) {
-          <div id="title-error" class="error-message" role="alert">
-            @if (testCaseForm.get('title')?.errors?.['required']) {
-              <span>Title is required.</span>
-            }
-            @if (testCaseForm.get('title')?.errors?.['minlength']) {
-              <span>Title must be at least 3 characters.</span>
-            }
-          </div>
-        }
+  } @else {
+    <header class="test-header">
+      <div>
+        <h1>{{ editId() ? 'Edit Test Case' : 'Add New Test Case' }}</h1>
+        <p>{{ editId() || 'Define what the test validates.' }}</p>
       </div>
-
-      <div class="form-group">
-        <label for="testCaseId" class="form-label required">Test Case ID</label>
-        <input 
-          id="testCaseId" 
-          type="text" 
-          formControlName="testCaseId" 
-          class="form-control"
-          [class.error]="testCaseForm.get('testCaseId')?.invalid && testCaseForm.get('testCaseId')?.touched"
-          placeholder="TC-001"
-          aria-describedby="testCaseId-error"
-        >
-
-        @if (testCaseForm.get('testCaseId')?.invalid && testCaseForm.get('testCaseId')?.touched) {
-          <div id="testCaseId-error" class="error-message" role="alert">
-            @if (testCaseForm.get('testCaseId')?.errors?.['required']) {
-              <span>Test Case ID is required</span>
-            }
-            @if (testCaseForm.get('testCaseId')?.errors?.['pattern']) {
-              <span>Format: TC-001 (TC- followed by numbers)</span>
-            }
-          </div>
-        }
-      </div>
-
-      <div class="form-group">
-        <label for="description" class="form-label required">Description</label>
-        <textarea 
-          id="description" 
-          formControlName="description" 
-          class="form-control textarea"
-          [class.error]="testCaseForm.get('description')?.invalid && testCaseForm.get('description')?.touched"
-          placeholder="Detailed explanation of what this test case validates..." 
-          rows="4"
-          aria-describedby="description-error"
-        ></textarea>
-
-        @if (testCaseForm.get('description')?.invalid && testCaseForm.get('description')?.touched) {
-          <div id="description-error" class="error-message" role="alert">
-            @if (testCaseForm.get('description')?.errors?.['required']) {
-              <span>Description is required.</span>
-            }
-            @if (testCaseForm.get('description')?.errors?.['minlength']) {
-              <span>Description must be at least 10 characters</span>
-            }
-          </div>
-        }
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="testType" class="form-label required">Test Type</label>
-          <select 
-            id="testType" 
-            formControlName="testType" 
-            class="form-control select"
-            [class.error]="testCaseForm.get('testType')?.invalid && testCaseForm.get('testType')?.touched"
-            aria-describedby="testType-error"
-          >
-            <option value="" disabled>Select test type</option>
-            @for (option of testTypeOptions; track option.value) {
-              <option [value]="option.value">{{ option.label }}</option>
-            }
-          </select>
-
-          @if (testCaseForm.get('testType')?.invalid && testCaseForm.get('testType')?.touched) {
-            <div id="testType-error" class="error-message" role="alert">
-              <span>Test Type is required</span>
-            </div>
+      <a mat-stroked-button routerLink="/test-cases">Back to test cases</a>
+    </header>
+    <form class="test-panel test-form" [formGroup]="form" (ngSubmit)="save()" novalidate>
+      <h2>Basic information</h2>
+      @let title = form.controls.title;
+      @let identifier = form.controls.testCaseId;
+      @let description = form.controls.description;
+      <fieldset [disabled]="saving()">
+        <div class="test-field">
+          <label for="title">Title</label>
+          <input id="title" formControlName="title" required [attr.aria-invalid]="title.touched && title.invalid || null"
+            [attr.aria-describedby]="title.touched && title.invalid ? 'title-error' : null" />
+          @if (title.touched && title.invalid) {
+            <p class="test-error" id="title-error">Enter at least 3 characters.</p>
           }
         </div>
-
-        <div class="form-group">
-          <label for="priority" class="form-label required">Priority</label>
-          <select 
-            id="priority" 
-            formControlName="priority" 
-            class="form-control select"
-            [class.error]="testCaseForm.get('priority')?.invalid && testCaseForm.get('priority')?.touched"
-            aria-describedby="priority-error"
-          >
-            @for (option of priorityOptions; track option.value) {
-              <option [value]="option.value">{{ option.label }}</option>
-            }
-          </select>
-
-          @if (testCaseForm.get('priority')?.invalid && testCaseForm.get('priority')?.touched) {
-            <div id="priority-error" class="error-message" role="alert">
-              <span>Priority is required</span>
-            </div>
+        <div class="test-field">
+          <label for="testCaseId">Test case ID</label>
+          <input id="testCaseId" formControlName="testCaseId" placeholder="TC-001" required
+            [attr.aria-invalid]="identifier.touched && identifier.invalid || null"
+            [attr.aria-describedby]="identifier.touched && identifier.invalid ? 'id-help id-error' : 'id-help'" />
+          <p id="id-help">{{ editId() ? 'The ID stays the same when editing.' : 'Enter an unused ID in the format TC-123.' }}</p>
+          @if (identifier.touched && identifier.invalid) {
+            <p id="id-error" class="test-error" role="alert">
+              @if (identifier.hasError('required')) {
+                Enter a test case ID.
+              } @else if (identifier.hasError('duplicate')) {
+                This test case ID already exists. Enter a different ID.
+              } @else {
+                Enter TC- followed by digits.
+              }
+            </p>
           }
         </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="status" class="form-label required">Status</label>
-          <select 
-            id="status" 
-            formControlName="status" 
-            class="form-control select"
-            aria-describedby="status-help"
-          >
-            @for (option of statusOptions; track option.value) {
-              <option [value]="option.value">{{ option.label }}</option>
-            }
-          </select>
-          <small id="status-help" class="form-text">Current status of the test case</small>
+        <div class="test-field">
+          <label for="description">Description</label>
+          <textarea id="description" formControlName="description" rows="4" required
+            [attr.aria-invalid]="description.touched && description.invalid || null"
+            [attr.aria-describedby]="description.touched && description.invalid ? 'description-error' : null"></textarea>
+          @if (description.touched && description.invalid) {
+            <p id="description-error" class="test-error">Enter at least 10 characters.</p>
+          }
         </div>
+        <h2>Classification</h2>
+        <div class="test-classification">
+          <div class="test-field">
+            <label for="testType">Test type</label>
+            <select id="testType" formControlName="testType" required
+              [attr.aria-invalid]="form.controls.testType.touched && form.controls.testType.invalid || null"
+              [attr.aria-describedby]="form.controls.testType.touched && form.controls.testType.invalid ? 'type-error' : null">
+              <option value="" disabled>Select type</option>
+              @for (type of types; track type) { <option [value]="type">{{ type | titlecase }}</option> }
+            </select>
+            @if (form.controls.testType.touched && form.controls.testType.invalid) {
+              <p id="type-error" class="test-error">Choose a test type.</p>
+            }
+          </div>
+          <div class="test-field">
+            <label for="priority">Priority</label>
+            <select id="priority" formControlName="priority">
+              @for (priority of priorities; track priority) { <option [value]="priority">{{ priority | titlecase }}</option> }
+            </select>
+          </div>
+          <div class="test-field">
+            <label for="status">Status</label>
+            <select id="status" formControlName="status">
+              @for (status of statuses; track status) { <option [value]="status">{{ status }}</option> }
+            </select>
+          </div>
+        </div>
+      </fieldset>
+      @if (saveError()) {
+        <p class="test-feedback test-error-banner" role="alert">Could not save. Your entries are still here. Try again.</p>
+      }
+      <div class="test-actions">
+        <button mat-flat-button type="submit" [disabled]="saving()">{{ editId() ? 'Save changes' : 'Save test case' }}</button>
+        <a mat-stroked-button routerLink="/test-cases" [disabled]="saving()">Cancel</a>
       </div>
-    </div>
+    </form>
+  }
+</section>
 
-    <div class="form-actions">
-      <button 
-        type="submit" 
-        class="btn btn-primary" 
-        [disabled]="testCaseForm.invalid || isSubmitting()"
-        [class.is-submitting]="isSubmitting()"
-        [attr.aria-busy]="isSubmitting() ? true : null"
-      >
-        @if (isSubmitting()) {
-          <span>Creating...</span>
-        } @else {
-          <span>Save Test Case</span>
-        }
-      </button>
-      
-      <button 
-        type="button" 
-        class="btn btn-secondary" 
-        (click)="onCancel()" 
-        [disabled]="isSubmitting()"
-      >
-        Cancel
-      </button>
-    </div>
-  </form>
-</div>
+<ng-template #discard>
+  <h2 mat-dialog-title>Discard changes?</h2>
+  <mat-dialog-content>Your unsaved changes will be lost.</mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-stroked-button type="button" [mat-dialog-close]="false">Keep editing</button>
+    <button mat-flat-button type="button" [mat-dialog-close]="true">Discard changes</button>
+  </mat-dialog-actions>
+</ng-template>

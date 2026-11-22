@@ -1,68 +1,74 @@
-.form-intro {
-  text-align: center;
+.test-form {
+  max-width: 48rem;
 }
 
-.form-title {
-  color: var(--gh-fg-default);
-  margin: 0 0 10px 0;
-  font-size: var(--font-size-xl);
-  font-weight: 600;
-}
-
-.form-subtitle {
-  color: var(--gh-fg-muted);
-  margin: 0;
-  font-size: var(--font-size-md);
-}
-
-.form-section {
-  margin-bottom: 30px;
-}
-
-.section-title {
-  color: var(--gh-fg-default);
-  margin: 0 0 25px 0;
-  font-size: 1.5rem;
-  font-weight: 600;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--gh-border-default);
-}
-
-.form-row {
+fieldset {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 20px;
+  border: 0;
+  padding: 0;
+  margin: 1rem 0;
+  min-width: 0;
+  gap: 0.875rem;
 }
 
-.form-actions {
-  padding: 20px;
+.test-field {
+  display: grid;
+  gap: 0.35rem;
 }
 
-.textarea {
-  min-height: 100px;
+.test-field p {
+  margin: 0;
+  font-size: 0.875rem;
 }
 
-@media (max-width: 768px) {
-  .form-title {
-    font-size: 1.5rem;
-  }
+.test-field label {
+  font-weight: 500;
+}
 
-  .form-row {
+input, textarea, select {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.7rem;
+  font: inherit;
+  color: var(--mat-sys-on-surface);
+  background: var(--mat-sys-surface-container-lowest);
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: 0.5rem;
+}
+
+input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="true"] {
+  border-color: var(--mat-sys-error);
+}
+
+.test-field .test-error {
+  color: var(--mat-sys-error);
+}
+
+.test-error-banner {
+  color: var(--mat-sys-on-error-container);
+  background: var(--mat-sys-error-container);
+  margin-bottom: 1rem;
+}
+
+.test-classification {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 0.75rem;
+}
+
+@media (max-width: 599px) {
+  .test-classification {
     grid-template-columns: 1fr;
-  }
-
-  .form-actions {
-    flex-direction: column;
-  }
-
-  .btn {
-    width: 100%;
-  }
-}
-
-@media (min-width: 992px) {
-  .form-row {
-    grid-template-columns: 1fr 1fr;
   }
 }
