@@ -1,0 +1,44 @@
+@if (protectedDashboard()) {
+  <h1 class="workspace-page-title">Protected Dashboard</h1>
+}
+
+<header [class]="protectedDashboard() ? 'workspace-card workspace-account' : 'workspace-welcome'">
+  @if (protectedDashboard()) {
+    <h2>Account details</h2>
+    <p class="workspace-identity">{{ name() }}</p>
+    @if (user().email !== name()) {
+      <p>{{ user().email }}</p>
+    }
+  } @else {
+    <h1>Welcome back, {{ name() }}</h1>
+  }
+  <span class="workspace-role">{{ roleLabel() }}</span>
+  <p>{{ description() }}</p>
+</header>
+
+<div class="workspace-grid">
+  <section class="workspace-card" aria-labelledby="workspace-actions-heading">
+    <h2 id="workspace-actions-heading">{{ roleLabel() }} actions</h2>
+    <div class="workspace-actions">
+      @for (action of actions(); track action.route; let first = $first) {
+        @if (first) {
+          <a mat-flat-button [routerLink]="action.route">{{ action.label }}</a>
+        } @else {
+          <a mat-stroked-button [routerLink]="action.route">{{ action.label }}</a>
+        }
+      }
+      @if (protectedDashboard()) {
+        <a mat-stroked-button routerLink="/settings">Settings</a>
+      }
+    </div>
+  </section>
+
+  <section class="workspace-card" aria-labelledby="workspace-permissions-heading">
+    <h2 id="workspace-permissions-heading">Your permissions</h2>
+    <ul class="workspace-permissions">
+      @for (permission of permissions(); track permission) {
+        <li><mat-icon aria-hidden="true">check_circle_outline</mat-icon>{{ permission }}</li>
+      }
+    </ul>
+  </section>
+</div>
