@@ -1,138 +1,118 @@
-.back-btn {
-  background: var(--gh-btn-bg-hover);
-  color: var(--gh-fg-default);
-  border: 1px solid var(--gh-border-default);
-  padding: 10px 20px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-block;
-  border-radius: var(--radius-sm);
+.admin-filters {
+  display: grid;
+  gap: 0.55rem;
+  margin-block-end: 1rem;
 }
 
-.back-btn:hover {
-  background: var(--gh-btn-bg-hover);
+label {
+  font-weight: 500;
 }
 
-.users-table {
-  width: 100%;
-  border-collapse: collapse;
+input,
+select {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: 0.5rem;
+  font: inherit;
+  color: var(--mat-sys-on-surface);
+  background: var(--mat-sys-surface-container-lowest);
 }
 
-.users-table th {
-  background: var(--gh-surface-overlay);
-  color: var(--gh-fg-default);
-  padding: 15px;
-  text-align: left;
-  font-weight: 600;
-  border-bottom: 2px solid var(--gh-border-default);
+input {
+  width: min(100%, 27rem);
 }
 
-.users-table td {
-  padding: 15px;
-  border-bottom: 1px solid var(--gh-border-default);
-  color: var(--gh-fg-default);
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
 }
 
-.users-table tr:hover {
-  background: var(--gh-row-hover);
+.filter-selected {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
 }
 
-.users-table tr.current-user {
-  background: color-mix(in srgb, var(--gh-focus) 12%, transparent);
+.directory {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.user-cell {
-  min-width: 200px;
+.directory-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 20rem) auto;
+  align-items: start;
+  gap: 0.8rem 1.25rem;
 }
 
-.user-info {
-  display: flex;
+.directory-you {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.role-controls {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.role-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 12px;
+  gap: 0.5rem;
 }
 
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
+.account-controls {
+  grid-column: -2 / -1;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 0.45rem;
 }
 
-.user-name {
-  font-weight: 600;
-  color: var(--gh-fg-default);
+.status-chip {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: 1rem;
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
 }
 
-.current-user-badge {
-  background: var(--gh-focus);
-  color: var(--gh-accent-fg);
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: var(--font-size-xs);
-  font-weight: 600;
+.status-chip.inactive {
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface-variant);
 }
 
-.role-select {
-  padding: 6px 12px;
-  border: 1px solid var(--gh-border-default);
-  border-radius: 4px;
-  background: var(--gh-canvas-default);
-  color: var(--gh-fg-default);
-  min-width: 140px;
+.row-feedback {
+  grid-column: 1 / -1;
+  padding: 0.65rem 0.8rem;
+  margin: 0;
+  border-radius: 0.55rem;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
 }
 
-.role-select:disabled {
-  background: var(--gh-surface-muted);
-  cursor: not-allowed;
+.row-error {
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
 }
 
-.no-edit {
-  color: var(--gh-fg-muted);
-  font-style: italic;
-}
+@media (max-width: 959px) {
+  .directory-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
 
-.empty-state {
-  text-align: center;
-  color: var(--gh-fg-muted);
-  padding: 40px;
-}
-
-.status-toggle-btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 20px;
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-}
-
-.status-toggle-btn.active {
-  background: var(--gh-accent);
-  color: var(--gh-accent-fg);
-}
-
-.status-toggle-btn.inactive {
-  background: var(--gh-danger);
-  color: var(--gh-accent-fg);
-}
-
-.status-toggle-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
-}
-
-.status-toggle-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid transparent;
-  border-top: 2px solid var(--gh-accent-fg);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+  .account-controls {
+    grid-column: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
 }

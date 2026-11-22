@@ -117,10 +117,6 @@ export class UserService {
                     const data = doc.data();
                     return this.mapToAppUser({ id: doc.id, ...data });
                 });
-            }),
-            catchError(error => {
-                console.error('Error fetching users:', error);
-                return of([]);
             })
         );
     }
