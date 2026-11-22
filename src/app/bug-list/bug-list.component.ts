@@ -1,75 +1,68 @@
-import { ChangeDetectionStrategy, Component, signal, computed, inject } from '@angular/core';
-import { BugService, Bug } from '../services/bug.service';
+import { DatePipe, TitleCasePipe, ViewportScroller } from '@angular/common';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, Injector, OnDestroy, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { take } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Bug, BugService } from '../services/bug.service';
+import { BugListState } from './bug-list-state';
 
 @Component({
   selector: 'app-bug-list',
-  imports: [],
+  imports: [DatePipe, TitleCasePipe, MatButtonModule, RouterLink],
   templateUrl: './bug-list.component.html',
   styleUrl: './bug-list.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
-export class BugListComponent {
-
-  private router = inject(Router);
-  private bugService = inject(BugService);
-
-
-  isLoading = signal(false);
-  searchTerm = signal('');
-  selectedSeverity = signal('');
-  bugs = toSignal(this.bugService.bugs$, { initialValue: [] });
+export class BugListComponent implements OnDestroy {
+  private readonly bugService = inject(BugService);
+  private readonly viewport = inject(ViewportScroller);
+  private readonly injector = inject(Injector);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
+  protected readonly state = inject(BugListState);
+  protected readonly bugs = toSignal(this.bugService.bugs$, { initialValue: [] });
+  protected readonly loading = signal(true);
+  protected readonly loadError = signal(false);
+  protected readonly feedback = this.router.currentNavigation()?.extras.state?.['bugReportFeedback'] as string | undefined;
+  protected readonly hasFilters = computed(() => !!(this.state.search().trim() || this.state.severity()));
+  protected readonly filteredBugs = computed(() => {
+    const search = this.state.search().trim().toLowerCase().replace(/^#/, '');
+    const severity = this.state.severity();
+    return this.bugs().filter((bug) =>
+      (!severity || bug.severity === severity) &&
+      [bug.id, bug.title, bug.description].some((value) => value.toLowerCase().includes(search)),
+    );
+  });
 
   constructor() {
-    this.loadBugs()
+    void this.load();
   }
 
-  async loadBugs(): Promise<void>{
-    this.isLoading.set(true);
-    try{
+  protected async load(): Promise<void> {
+    this.loading.set(true);
+    this.loadError.set(false);
+    try {
       await this.bugService.loadBugs();
-    }catch (error){
-      console.error('Error loading bugs', error);
-    } finally{
-      this.isLoading.set(false);
+      if (!this.destroyRef.destroyed) {
+        afterNextRender(() => this.viewport.scrollToPosition(this.state.position), { injector: this.injector });
+      }
+    } catch {
+      this.loadError.set(true);
+    } finally {
+      this.loading.set(false);
     }
   }
 
-  filteredBugs = computed(() => {
-    const bugs = this.bugs()
-    const search = this.searchTerm().toLowerCase();
-    const severity = this.selectedSeverity();
-
-    return bugs.filter(bug => {
-      const matchesSearch = bug.title.toLowerCase().includes(search) || bug.description.toLowerCase().includes(search);
-      const matchesSeverity = !severity || bug.severity === severity;
-
-      return matchesSearch && matchesSeverity
-    })
-  })
-
-  updateSearchTerm(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.searchTerm.set(target.value);
+  protected setSeverity(event: Event): void {
+    this.state.severity.set((event.target as HTMLSelectElement).value as Bug['severity'] | '');
   }
 
-  updateSeverityFilter(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    this.selectedSeverity.set(target.value);
+  protected clearFilters(): void {
+    this.state.search.set('');
+    this.state.severity.set('');
   }
 
-  formatDate(date: Date): string {
-    return date.toLocaleDateString();
-  }
-
-  viewBug(bugId: string): void{
-    this.router.navigate(['/bug-details', bugId]);
-  }
-
-  editBug(bugId: string): void {
-    this.router.navigate(['/bug-edit', bugId]);
+  ngOnDestroy(): void {
+    if (!this.loading() && !this.loadError()) this.state.position = this.viewport.getScrollPosition();
   }
 }

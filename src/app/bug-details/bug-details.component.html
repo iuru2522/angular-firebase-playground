@@ -1,63 +1,54 @@
-<div class="page-container">
-  @if (bug()) {
-    <div class="page-card bug-details-card">
-      <div class="bug-header">
-        <div class="bug-title-section">
-          <h1 class="bug-title">{{ bug()!.title }}</h1>
-          <span class="bug-id">#{{ bug()!.id }}</span>
-        </div>
-        
-        <div class="bug-meta">
-          <span [class]="'severity-badge severity-' + bug()!.severity">
-            {{ bug()!.severity }}
-          </span>
-          <span [class]="'status-badge status-' + bug()!.status">
-            {{ bug()!.status }}
-          </span>
+<section class="reports">
+  @let state = result();
+  @switch (state.status) {
+    @case ('loading') {
+      <div class="reports-state" role="status"><h1>Loading bug report</h1></div>
+    }
+    @case ('error') {
+      <div class="reports-state">
+        <h1 role="alert">Could not load this report</h1>
+        <p>Try loading the report again or return to the list.</p>
+        <div class="reports-actions">
+          <button type="button" mat-flat-button (click)="load()">Try again</button>
+          <a mat-stroked-button routerLink="/bug-list">Back to bug reports</a>
         </div>
       </div>
-
-      <div class="bug-content">
-        <div class="bug-section">
-          <h3>Description</h3>
-          <p class="bug-description">{{ bug()!.description }}</p>
+    }
+    @case ('missing') {
+      <div class="reports-state">
+        <h1>Bug not found</h1>
+        <p>The bug report you're looking for doesn't exist.</p>
+        <a mat-flat-button routerLink="/bug-list">Back to bug reports</a>
+      </div>
+    }
+    @case ('ready') {
+      @let bug = state.bug;
+      <header class="reports-header">
+        <div>
+          <p>Bug Reports / #{{ bug.id }}</p>
+          <h1>{{ bug.title }}</h1>
+          <div class="report-badges">
+            <span class="severity-badge severity-{{ bug.severity }}">Severity: {{ bug.severity | titlecase }}</span>
+            <span class="status-badge status-{{ bug.status }}">Status: {{ bug.status.replace('-', ' ') | titlecase }}</span>
+          </div>
         </div>
-
-        <div class="bug-info-grid">
-          <div class="info-item">
-            <label>Reporter:</label>
-            <span>{{ bug()!.reporter }}</span>
-          </div>
-          
-          <div class="info-item">
-            <label>Created:</label>
-            <span>{{ formatDate(bug()!.createdAt) }}</span>
-          </div>
-          
-          <div class="info-item">
-            <label>Last Updated:</label>
-            <span>{{ formatDate(bug()!.updatedAt) }}</span>
-          </div>
-          
-          @if (bug()!.assignee) {
-            <div class="info-item">
-              <label>Assignee:</label>
-              <span>{{ bug()!.assignee }}</span>
-            </div>
+        <div class="reports-actions">
+          <a mat-stroked-button routerLink="/bug-list">Back to results</a>
+          <a mat-flat-button [routerLink]="['/bug-edit', bug.id]">Edit bug</a>
+        </div>
+      </header>
+      <article class="reports-panel">
+        <h2>Description</h2>
+        <p class="report-description">{{ bug.description }}</p>
+        <dl class="report-metadata">
+          <div><dt>Reporter</dt><dd>{{ bug.reporter }}</dd></div>
+          <div><dt>Created</dt><dd>{{ bug.createdAt | date:'medium' }}</dd></div>
+          <div><dt>Last updated</dt><dd>{{ bug.updatedAt | date:'medium' }}</dd></div>
+          @if (bug.assignee) {
+            <div><dt>Assignee</dt><dd>{{ bug.assignee }}</dd></div>
           }
-        </div>
-      </div>
-
-      <div class="bug-actions">
-        <button type="button" class="btn btn-primary" (click)="editBug()">Edit Bug</button>
-        <button type="button" class="btn btn-secondary" (click)="goBack()">Back to List</button>
-      </div>
-    </div>
-  } @else {
-    <div class="not-found">
-      <h2>Bug Not Found</h2>
-      <p>The bug you're looking for doesn't exist.</p>
-      <button type="button" class="btn btn-primary" (click)="goBack()">Back to List</button>
-    </div>
+        </dl>
+      </article>
+    }
   }
-</div>
+</section>
