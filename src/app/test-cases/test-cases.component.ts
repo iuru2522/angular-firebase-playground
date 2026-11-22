@@ -1,46 +1,32 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { DatePipe, NgTemplateOutlet, TitleCasePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
+import { Router, RouterLink } from '@angular/router';
 import { TestCase } from '../models';
 import { TestCaseService } from '../services/test-case.service';
 
 @Component({
   selector: 'app-test-cases',
-  imports: [CommonModule],
+  imports: [DatePipe, NgTemplateOutlet, TitleCasePipe, MatButtonModule, MatDialogModule, MatMenuModule, RouterLink],
   templateUrl: './test-cases.component.html',
-  styleUrl: './test-cases.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./test-case-shell.css', './test-cases.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestCasesComponent {
-  private router = inject(Router);
-  private testCaseService = inject(TestCaseService);
+  private readonly service = inject(TestCaseService);
+  private readonly dialog = inject(MatDialog);
+  protected readonly testCases = this.service.testCases;
+  protected readonly feedback = inject(Router).currentNavigation()?.extras.state?.['testCaseFeedback'] as string | undefined;
 
-  testCases = this.testCaseService.testCases;
-
-  onAddNew() {
-    this.router.navigate(['/test-cases-form']);
+  protected confirmDelete(template: TemplateRef<{ $implicit: TestCase }>, testCase: TestCase): void {
+    const dialog = this.dialog.open<{ $implicit: TestCase }, TestCase, boolean>(template, {
+      data: testCase,
+      width: '28rem',
+    });
+    dialog.afterClosed().subscribe((confirmed) => {
+      if (confirmed) this.service.deleteTestCase(testCase.id);
+    });
   }
-
-  onView(testCase: TestCase) {
-    this.router.navigate(['/test-cases', testCase.id]);
-  }
-
-  onEdit(testCase: TestCase){
-    this.router.navigate(['/test-cases-form', testCase.id]);
-  }
-
-  getStatusClass(status: string): string {
-    return `status-${status.toLowerCase()}`;
-  }
-
-  getPriorityClass(priority: string): string {
-    return `priority-${priority.toLowerCase()}`;
-  }
-
-   onDelete(testCaseId: string) {
-    if (confirm('Are you sure you want to delete this test case?')) {
-      this.testCaseService.deleteTestCase(testCaseId);
-    }
-  }
-
 }
