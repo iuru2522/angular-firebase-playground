@@ -31,7 +31,8 @@ export const routes: Routes = [
   {
     path: 'file-bug',
     component: FileBugComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
+    canDeactivate: [(component: FileBugComponent) => component.canLeave()]
   },
   {
     path: 'bug-list',
@@ -46,7 +47,8 @@ export const routes: Routes = [
   {
     path: 'bug-edit/:id',
     component: FileBugComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
+    canDeactivate: [(component: FileBugComponent) => component.canLeave()]
   },
   {
     path: 'admin/users',

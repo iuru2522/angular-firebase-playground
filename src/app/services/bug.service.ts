@@ -79,7 +79,6 @@ export class BugService {
 
         const bugsCollection = collection(this.firebase.firestore, 'bugs');
         await addDoc(bugsCollection, newBug);
-        this.loadBugs();
     }
 
     async loadBugs(): Promise<void>{
@@ -127,6 +126,5 @@ export class BugService {
             severity: bugData.severity,
             updatedAt: Timestamp.now()
         });
-        this.loadBugs();
     }
 }

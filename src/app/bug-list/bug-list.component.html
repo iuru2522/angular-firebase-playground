@@ -1,73 +1,95 @@
-<div class="page-container">
-    <div class="page-header">
-        <h2>Bug Reports</h2>
-        <div class="controls">
-            <input type="text" class="search-box" placeholder="Search bugs..." [value]="searchTerm()"
-                (input)="updateSearchTerm($event)">
-            <select class="filter-select" [value]="selectedSeverity()" (change)="updateSeverityFilter($event)">
-                <option value="">All Severities</option>
-                <option value="critical">Critical</option>
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
-                <option value="low">Low</option>
-            </select>
-
-
-
-        </div>
+<section class="reports" aria-labelledby="reports-title">
+  <header class="reports-header">
+    <div>
+      <h1 id="reports-title">Bug Reports</h1>
+      <p>Search and review issues in the workspace.</p>
     </div>
+    @if (loading() || loadError() || bugs().length > 0 || hasFilters()) {
+      <a mat-flat-button routerLink="/file-bug">File a bug</a>
+    }
+  </header>
 
-    <div class="page-card page-card--flush">
+  @if (feedback) {
+    <p class="reports-notice" role="status">{{ feedback }}</p>
+  }
 
-        @if(isLoading()){
-        <div class="loading-state">
-            <div class="spinner"></div>
-            <p>Loading bugs...</p>
-        </div>
-        } @else if (filteredBugs().length === 0){
-        <div class="empty-state">
-            <div class="empty-state-icon">🐛</div>
-            <h3>No bugs found</h3>
-            <p>No bug reports match your current filters.</p>
-        </div>
-        } @else {
-        <table class="bug-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Severity</th>
-                    <th>Reporter</th>
-                    <th>Status</th>
-                    <th>Created</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
+  @if (loading() || loadError() || bugs().length > 0 || hasFilters()) {
+    <div class="reports-filters">
+      <label>Search bugs
+        <input #search type="search" placeholder="Search by title or ID" [value]="state.search()"
+          (input)="state.search.set(search.value)" />
+      </label>
+      <label>Severity
+        <select [value]="state.severity()" (change)="setSeverity($event)">
+          <option value="">All severities</option>
+          <option value="critical">Critical</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+      </label>
+    </div>
+  }
 
-            <tbody>
-                @for (bug of filteredBugs(); track bug.id){
-                <tr>
-                    <td class="bug-id">#{{bug.id}}</td>
-                    <td>{{bug.title}}</td>
-                    <td>
-                        <span [class]="'severity-badge severity-' + bug.severity">
-                            {{bug.severity}}
-                        </span>
-                    </td>
-                    <td>{{bug.reporter}}</td>
-                    <td>{{bug.status}}</td>
-                    <td>{{formatDate(bug.createdAt)}}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-small btn-view" (click)="viewBug(bug.id)">View</button>
-                            <button class="btn-small btn-edit" (click)="editBug(bug.id)">Edit</button>
-                        </div>
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
-
+  @if (loading()) {
+    <div class="reports-state" role="status">
+      <h2>Loading bug reports</h2>
+      <p>Fetching the latest reports…</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="reports-state">
+      <h2 role="alert">Could not load bug reports</h2>
+      <p>Your filters are still available. Try loading the reports again.</p>
+      <button mat-flat-button type="button" (click)="load()">Try again</button>
+    </div>
+  } @else if (!bugs().length && !hasFilters()) {
+    <div class="reports-state">
+      <h2>No bug reports yet</h2>
+      <p>File the first bug report for this workspace.</p>
+      <a mat-flat-button routerLink="/file-bug">File a bug</a>
+    </div>
+  } @else {
+    <p class="reports-count" role="status">
+      {{ filteredBugs().length }} {{ filteredBugs().length === 1 ? 'report' : 'reports' }}
+    </p>
+    @if (!filteredBugs().length) {
+      <div class="reports-state">
+        <h2>No matching bug reports</h2>
+        <p>Try a different search or clear the filters.</p>
+        <button mat-stroked-button type="button" (click)="clearFilters()">Clear filters</button>
+      </div>
+    } @else {
+      <table class="reports-table" aria-label="Bug reports">
+        <thead>
+          <tr><th scope="col">ID</th><th scope="col">Title</th><th scope="col">Severity</th>
+            <th scope="col">Status</th><th scope="col">Reporter</th><th scope="col">Created</th></tr>
+        </thead>
+        <tbody>
+          @for (bug of filteredBugs(); track bug.id) {
+            <tr>
+              <td>#{{ bug.id }}</td>
+              <td><a [routerLink]="['/bug-details', bug.id]">{{ bug.title }}</a></td>
+              <td><span class="severity-badge severity-{{ bug.severity }}">{{ bug.severity | titlecase }}</span></td>
+              <td><span class="status-badge status-{{ bug.status }}">{{ bug.status.replace('-', ' ') | titlecase }}</span></td>
+              <td>{{ bug.reporter }}</td>
+              <td>{{ bug.createdAt | date:'mediumDate' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      <ul class="reports-cards" aria-label="Bug reports">
+        @for (bug of filteredBugs(); track bug.id) {
+          <li>
+            <span class="report-id">#{{ bug.id }}</span>
+            <a [routerLink]="['/bug-details', bug.id]">{{ bug.title }}</a>
+            <div class="report-badges">
+              <span class="severity-badge severity-{{ bug.severity }}">Severity: {{ bug.severity | titlecase }}</span>
+              <span class="status-badge status-{{ bug.status }}">Status: {{ bug.status.replace('-', ' ') | titlecase }}</span>
+            </div>
+            <p>{{ bug.reporter }} · {{ bug.createdAt | date:'mediumDate' }}</p>
+          </li>
         }
-    </div>
-</div>
+      </ul>
+    }
+  }
+</section>

@@ -1,48 +1,93 @@
-<div class="page-container page-container--form">
-    <h2 class="page-title">{{ isEditMode() ? 'Edit Bug Report' : 'File a Bug Report' }}</h2>
+<section class="reports">
+  <header class="reports-header">
+    <div>
+      <h1>{{ editing() ? 'Edit Bug Report' : 'File a Bug Report' }}</h1>
+      @if (bugId(); as id) {
+        <p>Bug Reports / #{{ id }}</p>
+      } @else {
+        <p>Describe the issue and include steps to reproduce it.</p>
+      }
+    </div>
+  </header>
 
-    <form class="page-card" [formGroup]="bugForm" (ngSubmit)="onSubmit()">
-
-
-        <div class="form-group">
-            <label for="title">Bug title *</label>
-            <input type="text" id="title" formControlName="title" placeholder="Brief description of the bug">
+  @switch (loadState()) {
+    @case ('loading') {
+      <div class="reports-state" role="status"><h2>Loading bug report</h2></div>
+    }
+    @case ('error') {
+      <div class="reports-state">
+        <h2 role="alert">Could not load this report</h2>
+        <div class="reports-actions">
+          <button type="button" mat-flat-button (click)="load()">Try again</button>
+          <a mat-stroked-button routerLink="/bug-list">Back to bug reports</a>
         </div>
-        <div class="form-group">
-            <label for="description">Description *</label>
-            <textarea id="description" rows="5" formControlName="description"
-                placeholder="Detailed description of the bug and steps to reproduce"></textarea>
+      </div>
+    }
+    @case ('missing') {
+      <div class="reports-state">
+        <h2>Bug not found</h2>
+        <p>The bug report you're trying to edit doesn't exist.</p>
+        <a mat-flat-button routerLink="/bug-list">Back to bug reports</a>
+      </div>
+    }
+    @case ('ready') {
+      <form class="reports-panel report-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        @let invalidTitle = (submitted() || form.controls.title.touched) && form.controls.title.invalid;
+        @let invalidDescription = (submitted() || form.controls.description.touched) && form.controls.description.invalid;
+        <fieldset [disabled]="submitting()" class="report-form-fields">
+          <label for="title">Bug title <span aria-hidden="true">*</span></label>
+          <input id="title" formControlName="title" required placeholder="Brief description of the bug"
+            [attr.aria-invalid]="invalidTitle || null" [attr.aria-describedby]="invalidTitle ? 'title-error' : null" />
+          @if (invalidTitle) {
+            <p id="title-error" class="reports-error">Enter a title with at least 3 characters.</p>
+          }
+          <label for="description">Description <span aria-hidden="true">*</span></label>
+          <textarea id="description" formControlName="description" required rows="6"
+            placeholder="Steps to reproduce:&#10;Expected result:&#10;Actual result:"
+            [attr.aria-invalid]="invalidDescription || null"
+            [attr.aria-describedby]="invalidDescription ? 'description-help description-error' : 'description-help'"></textarea>
+          <p id="description-help">Include steps to reproduce, the expected result, and what actually happened.</p>
+          @if (invalidDescription) {
+            <p id="description-error" class="reports-error">Enter a description with at least 10 characters.</p>
+          }
+          <label for="severity">Severity</label>
+          <select id="severity" formControlName="severity" aria-describedby="severity-help">
+            <option value="low">Low</option><option value="medium">Medium</option>
+            <option value="high">High</option><option value="critical">Critical</option>
+          </select>
+          <p id="severity-help">Low is the default. Choose a higher severity if the impact is greater.</p>
+        </fieldset>
+
+        @if (saveError()) {
+          <p class="reports-notice reports-notice--error" role="alert">
+            Could not save the bug report. Your entries are still here. Try again.
+          </p>
+        }
+        <div class="reports-actions">
+          <button type="submit" mat-flat-button [disabled]="submitting()">
+            {{ submitting() ? 'Saving…' : editing() ? 'Update bug' : 'Submit bug' }}
+          </button>
+          <a mat-stroked-button routerLink="/" [disabled]="submitting()">Cancel</a>
         </div>
+        @if (submitting()) {
+          <p role="status">Saving bug report…</p>
+        }
+      </form>
+    }
+  }
+</section>
 
-        <div class="form-group">
-            <label for="severity">Severity</label>
-            <select id="severity" formControlName="severity">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-                <option value="critical">Critical</option>
-            </select>
-        </div>
-
-        <div class="form-actions">
-            <button
-                type="submit"
-                class="btn btn-primary"
-                [disabled]="bugForm.invalid || isSubmitting()"
-                [class.is-submitting]="isSubmitting()"
-                [attr.aria-busy]="isSubmitting() ? true : null"
-            >
-                @if (isSubmitting()) {
-                    {{ isEditMode() ? 'Updating...' : 'Submitting...' }}
-                } @else {
-                    {{ isEditMode() ? 'Update Bug Report' : 'Submit Bug Report' }}
-                }
-            </button>
-            <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="isSubmitting()">
-                Cancel
-            </button>
-        </div>
-
-    </form>
-
-</div>
+<ng-template #discardDialog>
+  <h2 mat-dialog-title>Leave without saving?</h2>
+  <mat-dialog-content>
+    @if (bugId(); as id) {
+      Changes to #{{ id }} will be lost.
+    } @else {
+      Your draft will be lost.
+    }
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button type="button" mat-stroked-button [mat-dialog-close]="false">Keep editing</button>
+    <button type="button" mat-flat-button [mat-dialog-close]="true">Discard changes</button>
+  </mat-dialog-actions>
+</ng-template>
