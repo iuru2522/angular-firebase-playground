@@ -1,6 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine, isMainModule } from '@angular/ssr/node';
 import express from 'express';
+import { readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import AppServerModule from './main.server';
@@ -9,6 +10,7 @@ import { clientAuthPaths } from './app/client-auth-paths';
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 const indexHtml = join(serverDistFolder, 'index.server.html');
+const clientIndexHtml = readFileSync(join(browserDistFolder, 'index.csr.html'), 'utf8');
 
 const app = express();
 const commonEngine = new CommonEngine();
@@ -39,7 +41,7 @@ app.use(
  * Handle all other requests by rendering the Angular application.
  */
 app.get(clientAuthPaths.map((path) => '/' + path), (_req, res) => {
-  res.sendFile(join(browserDistFolder, 'index.csr.html'));
+  res.type('html').set('Cache-Control', 'public, max-age=0').send(clientIndexHtml);
 });
 
 app.get('/{*path}', (req, res, next) => {
